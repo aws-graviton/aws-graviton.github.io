@@ -1,0 +1,358 @@
+<!DOCTYPE HTML>
+<html lang="en" class="light sidebar-visible" dir="ltr">
+    <head>
+        <!-- Book generated using mdBook -->
+        <meta charset="UTF-8">
+        <title>Appendix — Additional resources - AWS Graviton technical guide</title>
+
+
+        <!-- Custom HTML head -->
+
+        <meta name="description" content="Technical guidance for developers to use the Arm based AWS Graviton instances">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <meta name="theme-color" content="#ffffff">
+
+        <link rel="icon" href="../favicon.svg">
+        <link rel="shortcut icon" href="../favicon.png">
+        <link rel="stylesheet" href="../css/variables.css">
+        <link rel="stylesheet" href="../css/general.css">
+        <link rel="stylesheet" href="../css/chrome.css">
+        <link rel="stylesheet" href="../css/print.css" media="print">
+
+        <!-- Fonts -->
+        <link rel="stylesheet" href="../FontAwesome/css/font-awesome.css">
+        <link rel="stylesheet" href="../fonts/fonts.css">
+
+        <!-- Highlight.js Stylesheets -->
+        <link rel="stylesheet" id="highlight-css" href="../highlight.css">
+        <link rel="stylesheet" id="tomorrow-night-css" href="../tomorrow-night.css">
+        <link rel="stylesheet" id="ayu-highlight-css" href="../ayu-highlight.css">
+
+        <!-- Custom theme stylesheets -->
+
+
+        <!-- Provide site root and default themes to javascript -->
+        <script>
+            const path_to_root = "../";
+            const default_light_theme = "light";
+            const default_dark_theme = "navy";
+            window.path_to_searchindex_js = "../searchindex.js";
+        </script>
+        <!-- Start loading toc.js asap -->
+        <script src="../toc.js"></script>
+    </head>
+    <body>
+    <div id="mdbook-help-container">
+        <div id="mdbook-help-popup">
+            <h2 class="mdbook-help-title">Keyboard shortcuts</h2>
+            <div>
+                <p>Press <kbd>←</kbd> or <kbd>→</kbd> to navigate between chapters</p>
+                <p>Press <kbd>S</kbd> or <kbd>/</kbd> to search in the book</p>
+                <p>Press <kbd>?</kbd> to show this help</p>
+                <p>Press <kbd>Esc</kbd> to hide this help</p>
+            </div>
+        </div>
+    </div>
+    <div id="body-container">
+        <!-- Work around some values being stored in localStorage wrapped in quotes -->
+        <script>
+            try {
+                let theme = localStorage.getItem('mdbook-theme');
+                let sidebar = localStorage.getItem('mdbook-sidebar');
+
+                if (theme.startsWith('"') && theme.endsWith('"')) {
+                    localStorage.setItem('mdbook-theme', theme.slice(1, theme.length - 1));
+                }
+
+                if (sidebar.startsWith('"') && sidebar.endsWith('"')) {
+                    localStorage.setItem('mdbook-sidebar', sidebar.slice(1, sidebar.length - 1));
+                }
+            } catch (e) { }
+        </script>
+
+        <!-- Set the theme before any content is loaded, prevents flash -->
+        <script>
+            const default_theme = window.matchMedia("(prefers-color-scheme: dark)").matches ? default_dark_theme : default_light_theme;
+            let theme;
+            try { theme = localStorage.getItem('mdbook-theme'); } catch(e) { }
+            if (theme === null || theme === undefined) { theme = default_theme; }
+            const html = document.documentElement;
+            html.classList.remove('light')
+            html.classList.add(theme);
+            html.classList.add("js");
+        </script>
+
+        <input type="checkbox" id="sidebar-toggle-anchor" class="hidden">
+
+        <!-- Hide / unhide sidebar before it is displayed -->
+        <script>
+            let sidebar = null;
+            const sidebar_toggle = document.getElementById("sidebar-toggle-anchor");
+            if (document.body.clientWidth >= 1080) {
+                try { sidebar = localStorage.getItem('mdbook-sidebar'); } catch(e) { }
+                sidebar = sidebar || 'visible';
+            } else {
+                sidebar = 'hidden';
+                sidebar_toggle.checked = false;
+            }
+            if (sidebar === 'visible') {
+                sidebar_toggle.checked = true;
+            } else {
+                html.classList.remove('sidebar-visible');
+            }
+        </script>
+
+        <nav id="sidebar" class="sidebar" aria-label="Table of contents">
+            <!-- populated by js -->
+            <mdbook-sidebar-scrollbox class="sidebar-scrollbox"></mdbook-sidebar-scrollbox>
+            <noscript>
+                <iframe class="sidebar-iframe-outer" src="../toc.html"></iframe>
+            </noscript>
+            <div id="sidebar-resize-handle" class="sidebar-resize-handle">
+                <div class="sidebar-resize-indicator"></div>
+            </div>
+        </nav>
+
+        <div id="page-wrapper" class="page-wrapper">
+
+            <div class="page">
+                <div id="menu-bar-hover-placeholder"></div>
+                <div id="menu-bar" class="menu-bar sticky">
+                    <div class="left-buttons">
+                        <label id="sidebar-toggle" class="icon-button" for="sidebar-toggle-anchor" title="Toggle Table of Contents" aria-label="Toggle Table of Contents" aria-controls="sidebar">
+                            <i class="fa fa-bars"></i>
+                        </label>
+                        <button id="theme-toggle" class="icon-button" type="button" title="Change theme" aria-label="Change theme" aria-haspopup="true" aria-expanded="false" aria-controls="theme-list">
+                            <i class="fa fa-paint-brush"></i>
+                        </button>
+                        <ul id="theme-list" class="theme-popup" aria-label="Themes" role="menu">
+                            <li role="none"><button role="menuitem" class="theme" id="default_theme">Auto</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="light">Light</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="rust">Rust</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="coal">Coal</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="navy">Navy</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="ayu">Ayu</button></li>
+                        </ul>
+                        <button id="search-toggle" class="icon-button" type="button" title="Search (`/`)" aria-label="Toggle Searchbar" aria-expanded="false" aria-keyshortcuts="/ s" aria-controls="searchbar">
+                            <i class="fa fa-search"></i>
+                        </button>
+                    </div>
+
+                    <h1 class="menu-title">AWS Graviton technical guide</h1>
+
+                    <div class="right-buttons">
+                        <a href="../print.html" title="Print this book" aria-label="Print this book">
+                            <i id="print-button" class="fa fa-print"></i>
+                        </a>
+                        <a href="https://github.com/aws/aws-graviton-getting-started" title="Git repository" aria-label="Git repository">
+                            <i id="git-repository-button" class="fa fa-github"></i>
+                        </a>
+
+                    </div>
+                </div>
+
+                <div id="search-wrapper" class="hidden">
+                    <form id="searchbar-outer" class="searchbar-outer">
+                        <div class="search-wrapper">
+                            <input type="search" id="searchbar" name="searchbar" placeholder="Search this book ..." aria-controls="searchresults-outer" aria-describedby="searchresults-header">
+                            <div class="spinner-wrapper">
+                                <i class="fa fa-spinner fa-spin"></i>
+                            </div>
+                        </div>
+                    </form>
+                    <div id="searchresults-outer" class="searchresults-outer hidden">
+                        <div id="searchresults-header" class="searchresults-header"></div>
+                        <ul id="searchresults">
+                        </ul>
+                    </div>
+                </div>
+
+                <!-- Apply ARIA attributes after the sidebar and the sidebar toggle button are added to the DOM -->
+                <script>
+                    document.getElementById('sidebar-toggle').setAttribute('aria-expanded', sidebar === 'visible');
+                    document.getElementById('sidebar').setAttribute('aria-hidden', sidebar !== 'visible');
+                    Array.from(document.querySelectorAll('#sidebar a')).forEach(function(link) {
+                        link.setAttribute('tabIndex', sidebar === 'visible' ? 0 : -1);
+                    });
+                </script>
+
+                <div id="content" class="content">
+                    <main>
+                        <h1 id="appendix"><a class="header" href="#appendix">Appendix:</a></h1>
+<p><a href="./README.html">Graviton Performance Runbook toplevel</a></p>
+<p>This Appendix contains additional information for engineers that want to go deeper on a particular topic, such as using different PMU counters to understand how the code is executing on the hardware, discussion on load generators, and additional tools to help with code observability.</p>
+<h2 id="useful-graviton-pmu-events-and-ratios"><a class="header" href="#useful-graviton-pmu-events-and-ratios">Useful Graviton PMU Events and ratios</a></h2>
+<p>The following list of counter ratios has been curated to list events useful for performance debugging. The more extensive list of counters is contained in the following references:</p>
+<ul>
+<li><a href="https://developer.arm.com/documentation/102105/latest">Arm ARM</a></li>
+<li><a href="https://developer.arm.com/documentation/100616/0400/debug-descriptions/performance-monitor-unit/pmu-events">Neoverse N1 TRM</a></li>
+<li><a href="https://developer.arm.com/documentation/PJDOC-466751330-547673/r4p1?lang=en&amp;rev=0">Neoverse N1 PMU Guide</a></li>
+<li><a href="https://developer.arm.com/documentation/101427/latest/">Neoverse V1 TRM</a></li>
+<li><a href="https://developer.arm.com/documentation/109708/latest/">Neoverse V1 PMU Guide</a></li>
+<li><a href="https://developer.arm.com/documentation/102375/latest/">Neoverse V2 TRM</a></li>
+<li><a href="https://developer.arm.com/documentation/109528/0100">Neoverse V2 PMU Guide</a></li>
+</ul>
+<p>|METRIC	|Counter #1	|Counter #2	|Formula	|Description	|
+|---	|---	|---	|---	|---	|
+|IPC	|0x8 (INST_RETIRED)	|0x11 (CPU_CYCLES)	|#1 / #2	|Instructions per cycle, metric to understand how much parallelism in the core is left unused.	|
+|Stalls Frontend PKC	|0x23 (STALL_FRONTEND)	|0x11 (CPU_CYCLES)	|(#1 / #2) * 1000	|Stalls per kilo-cycle caused by frontend not having an instruction available for dispatch stage to issue.	|
+|Stalls Backend PKC	|0x24 (STALL_BACKEND)	|0x11 (CPU_CYCLES)	|(#1 / #2) * 1000	|Stalls per kilo-cycle caused by backend preventing instruction dispatch from frontend due to ALUs IQ full, LSQ full, MCQ full.	|
+|Core Mem BW	|0x37	| 	|(#1 * 64) / (sample period)	|Read demand memory bandwidth estimate (excludes writes, prefetch, tablewalks) in Bytes / s from a core.	|
+|LLC MPKI	|0x37 (LLC_CACHE_MISS_RD)	|0x8 (INST_RETIRED)	|(#1 / #2) * 1000	|From the cores perspective, is the LLC operating well, infer if it should be increased	|
+|BMPKI	|0x10 (BR_MIS_PRED)	|0x8 (INST_RETIRED)	|(#1 / #2) * 1000	|Branch Miss per Kilo Instruction, metric to understand if branch prediction logic is on average performing well or not. Branches exist every ~4 instructions, BMPKI &gt; 10 is not good.	|
+|L2C Inst MPKI	|0x108 (L2_REFILL_IFETCH)	|0x8	|(#1 / #2) * 1000	|Instruction fetch miss from L2 MPKI, infer if code size and fetch misses are stalling core	|
+|L1C Inst MPKI	|0x1 (L1I_CACHE_REFILL)	|0x8	|(#1 / #2) * 1000	|Instruction fetch miss L1 MPKI, &gt;20 is generally an indicator of code size pressure	|
+|L2 MPKI	|0x17 (L2D_CACHE_REFILL)	|0x8	|(#1 / #2) * 1000	|L2 Cache overall MPKI,	|
+|L1C Data MPKI	|0x4 (L1_DATA_REFILL)	|0x8	|(#1 / #2) * 1000	|L1 Data cache overall MPKI.	|
+|Old Atomics failures	|0x6E (STREX_FAIL_SPEC)	|0x8	|(#1 / #2) * 1000	|PKI of store-exclusive failures, indicates software not using LSE in production.	|
+|L2 TLB MPKI	|0x2D	|0x8	|(#1 / #2) *1000	|L2 TLB MPKI	|
+|L1I TLB MPKI	|0x2	|0x8	|(#1 / #2) * 1000	|Instruction L1 TLB MPKI	|
+|L1I Page Walk PKI	|0x35	|0x8	|(#1 / #2) * 1000	|Instruction PKI that requires a page-table walk	|
+|L1D TLB MPKI	|0x5	|0x8	|(#1 / #2) * 1000	|Data L1 TLB MPKI	|
+|L1D Page Walk PKI	|0x34	|0x8	|(#1 / #2) * 1000	|Data PKI that requires a page-table walk	|</p>
+<h2 id="load-generators"><a class="header" href="#load-generators">Load generators</a></h2>
+<p>There are many load generators out there, and most if not all allow for the same basic configurations such as number of simulated clients (or number of connections), number of outstanding requests, target throughput, programmable way to define request mix etc. Pick one that is easy to work with, offers the features needed, is extensible for creating the tests desired, and allows fine grained control over how load is generated. After finding the ideal load generator, it is also important to understand how the load generator creates load to avoid easy measurement mistakes. Load generators fall into two main types: closed and open loop.</p>
+<h3 id="closed-loop"><a class="header" href="#closed-loop"><strong>Closed loop</strong></a></h3>
+<p>A closed loop load generator uses simple, synchronous IO calls for load generation in a similar fashion to below:</p>
+<pre><code class="language-C">void generate_load(socket_t sock)
+{
+   int wret, rret = 0;
+   const char *msg = "GENERATE SOME LOAD";
+   char *buf = (char *)malloc(128);
+   do {
+     wret = write(sock, msg, strlen(msg));
+     rret = read(sock, buf, 128);
+   } while(wret &gt;= 0 &amp;&amp; rret);
+}
+</code></pre>
+<p>This code is simple, and load is increased by creating more threads and connections that sit in a tight loop making requests to the SUT (System Under Test).  Closed loop testers can also be implemented with event loops that multiplex sockets among a few threads, but allow only 1 outstanding request per socket, which requires more connections to drive more concurrent load.  The <a href="https://github.com/wg/wrk">Wrk</a> load generator is an example of this. Some pitfalls with closed-loop testing:</p>
+<ol>
+<li>Maximum load achievable is coupled to the observed round-trip network latency between the driver and the SUT, if one SUT is further away than another from the load generator, it will see less throughput with the same number of connections.</li>
+<li>Not good for testing non-client facing services, like middle-layer web-caches, that leverage request pipelining on small number of connections.</li>
+<li>Can quickly saturate the CPU on the load generator because high loads require many threads and/or connections.</li>
+</ol>
+<p>Advantages of closed loop testers are: many to choose from, highly configurable and approximate client behavior well.
+Closed loop load generator suggestions (we highly recommend the Wrk2 load generator):</p>
+<ol>
+<li><a href="https://github.com/giltene/wrk2">Wrk2</a></li>
+<li><a href="https://github.com/wg/wrk">Wrk</a></li>
+<li><a href="https://jmeter.apache.org/">JMeter</a></li>
+</ol>
+<h3 id="open-loop"><a class="header" href="#open-loop"><strong>Open loop</strong></a></h3>
+<p>Open-loop generators generate load in an asynchronous fashion. They use non-blocking IO to send requests onto a small set of connections regardless of whether a response was returned for the previous request or not. Since open-loop generators send requests regardless of responses received, they can approximate a greater variety of load scenarios because the sending side will send requests according to a specified time schedule (i.e. every 100us on average following an exponential distribution) instead of waiting until responses from the SUT before generating new requests. This allows an open-loop tester to load the SUT more completely and be less sensitive to latency of the network connection to the SUT.</p>
+<p>Some pitfalls of open-loop testing:</p>
+<ol>
+<li>Not common</li>
+<li>Less configurable</li>
+<li>Can not be used with SUTs that only allow synchronous connections.  For instance, many DBMS engines like <a href="https://www.postgresql.org/docs/current/libpq-async.html">Postgresql only allow a single command to be issued per connection</a>.</li>
+</ol>
+<p>Advantages of open loop testers are they are more accurate in measuring latency of an application than closed-loop testers.</p>
+<p>Open loop load generator suggestions:</p>
+<ol>
+<li><a href="https://github.com/epfl-dcsl/lancet-tool">Lancet</a>, <a href="https://www.usenix.org/system/files/atc19-kogias-lancet.pdf">Usenix paper</a></li>
+<li><a href="https://github.com/leverich/mutilate">Mutilate</a></li>
+<li><a href="https://github.com/shaygalon/memcache-perf">MCPerf</a></li>
+<li><a href="https://trex-tgn.cisco.com/">TRex</a> - This is for high performance stateless network testing</li>
+</ol>
+<h2 id="ebpf-extended-berkley-packet-filter--inspecting-fine-grained-code-behavior"><a class="header" href="#ebpf-extended-berkley-packet-filter--inspecting-fine-grained-code-behavior">eBPF (extended Berkley Packet Filter) — “Inspecting fine-grained code behavior”</a></h2>
+<p>If you find a specific function that is mis-behaving, either putting the CPU to sleep more often, or taking longer to execute, but manual code inspection and flamegraphs are not yielding results, you can use eBPF to obtain detailed statistics on the function’s behavior. This can be leveraged for investigating reasons a function causes large latency spikes. Or measuring if it behaves differently on one machine compared to the other. These tools are useful for measuring a very specific issue, are extremely powerful and flexible. Warning: these tools can also have high overhead as they measure an event every time it happens compared to the sampling methods used in the previous sections.  If measuring something that happens millions of times a second, any injected eBPF will also run at that rate.</p>
+<ol>
+<li>Install the BCC tools</li>
+</ol>
+<pre><code class="language-bash"># AL2 
+%&gt; sudo `amazon-linux-extras enable BCC
+%&gt; sudo yum install bcc
+  
+# Ubuntu
+%&gt; sudo apt-get install linux-headers-$(uname -r) bpfcc-tools`
+</code></pre>
+<ol start="2">
+<li>Write an eBPF program in C that can be embedded in a python file</li>
+<li>Run the eBPF program using the python to interface via the BCC tools and collect the statistics</li>
+<li>Review the statistics and compare against the x86 SUT to compare.</li>
+</ol>
+<p>Example eBPF programs can be found: https://github.com/iovisor/bcc.</p>
+<h3 id="capturing-coherent-mesh-network-hardware-event-counters"><a class="header" href="#capturing-coherent-mesh-network-hardware-event-counters">Capturing Coherent Mesh Network hardware event counters</a></h3>
+<p>The CMN PMU counts events such as requests to DRAM (memory bandwidth), virtual memory manangement events,
+I/O bus requests and coherence snoop events. These metrics can be used to assess an application's utilization
+of such system level resources and if resources are used efficiently.
+CMN counters are only accessible on metal-type instances and certain OSes and kernels.</p>
+<div class="table-wrapper"><table><thead><tr><th>Distro</th><th>Kernel</th><th>Graviton2 (6g)</th><th>Graviton3 (7g)</th><th>Graviton4 (8g)</th></tr></thead><tbody>
+<tr><td>Ubuntu-20.04</td><td>5.15</td><td>yes</td><td>no</td><td>no</td></tr>
+<tr><td>Ubuntu-20.04</td><td>&gt;=5.19</td><td>yes</td><td>yes</td><td>no</td></tr>
+<tr><td>Ubuntu-22.04</td><td>&gt;=5.19</td><td>yes</td><td>yes</td><td>no</td></tr>
+<tr><td>Ubuntu-24.04</td><td>&gt;=6.8.0</td><td>yes</td><td>yes</td><td>yes</td></tr>
+<tr><td>AL2023</td><td>6.1.2</td><td>yes</td><td>yes</td><td>no</td></tr>
+</tbody></table>
+</div>
+<p>General procedure on Ubuntu</p>
+<pre><code>sudo apt install linux-modules-extra-aws
+sudo modprobe arm-cmn
+ls /sys/devices/arm_cmn_0/events
+</code></pre>
+<p>On AL2023/AL2:</p>
+<pre><code>sudo modprobe arm_cmn
+ls /sys/devices/arm_cmn_0/events
+</code></pre>
+<p>Examples for capturing events:</p>
+<pre><code>sudo perf stat -e /arm_cmn_0/hnf_mc_reqs/ sleep 15 #count of memory request
+sudo perf stat -e /arm_cmn_0/rnid_rxdat_flits/ sleep 15 #count AXI 'master' read requests
+sudo perf stat -e /arm_cmn_0/rnid_txdat_flits/ sleep 15 #count AXI 'master' write requests
+</code></pre>
+<p>For further information about specific events and useful ratios, please refer to:</p>
+<p><a href="https://developer.arm.com/documentation/100180/0302/?lang=en">ARM documentation for Graviton2's CMN-600</a></p>
+<p><a href="https://developer.arm.com/documentation/101481/0200/?lang=en">ARM documentation for Graviton3's CMN-650</a></p>
+<p><a href="https://developer.arm.com/documentation/102308/latest/">ARM documentation for Graviton4's CMN-700</a></p>
+
+                    </main>
+
+                    <nav class="nav-wrapper" aria-label="Page navigation">
+                        <!-- Mobile navigation buttons -->
+                            <a rel="prev" href="../perfrunbook/optimization_recommendation.html" class="mobile-nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
+                                <i class="fa fa-angle-left"></i>
+                            </a>
+
+                            <a rel="next prefetch" href="../perfrunbook/references.html" class="mobile-nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
+                                <i class="fa fa-angle-right"></i>
+                            </a>
+
+                        <div style="clear: both"></div>
+                    </nav>
+                </div>
+            </div>
+
+            <nav class="nav-wide-wrapper" aria-label="Page navigation">
+                    <a rel="prev" href="../perfrunbook/optimization_recommendation.html" class="nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
+                        <i class="fa fa-angle-left"></i>
+                    </a>
+
+                    <a rel="next prefetch" href="../perfrunbook/references.html" class="nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
+                        <i class="fa fa-angle-right"></i>
+                    </a>
+            </nav>
+
+        </div>
+
+
+
+
+        <script>
+            window.playground_copyable = true;
+        </script>
+
+
+        <script src="../elasticlunr.min.js"></script>
+        <script src="../mark.min.js"></script>
+        <script src="../searcher.js"></script>
+
+        <script src="../clipboard.min.js"></script>
+        <script src="../highlight.js"></script>
+        <script src="../book.js"></script>
+
+        <!-- Custom JS scripts -->
+
+
+
+    </div>
+    </body>
+</html>

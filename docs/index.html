@@ -1,0 +1,426 @@
+<!DOCTYPE HTML>
+<html lang="en" class="light sidebar-visible" dir="ltr">
+    <head>
+        <!-- Book generated using mdBook -->
+        <meta charset="UTF-8">
+        <title>Introduction / Case Studies - AWS Graviton technical guide</title>
+
+
+        <!-- Custom HTML head -->
+
+        <meta name="description" content="Technical guidance for developers to use the Arm based AWS Graviton instances">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <meta name="theme-color" content="#ffffff">
+
+        <link rel="icon" href="favicon.svg">
+        <link rel="shortcut icon" href="favicon.png">
+        <link rel="stylesheet" href="css/variables.css">
+        <link rel="stylesheet" href="css/general.css">
+        <link rel="stylesheet" href="css/chrome.css">
+        <link rel="stylesheet" href="css/print.css" media="print">
+
+        <!-- Fonts -->
+        <link rel="stylesheet" href="FontAwesome/css/font-awesome.css">
+        <link rel="stylesheet" href="fonts/fonts.css">
+
+        <!-- Highlight.js Stylesheets -->
+        <link rel="stylesheet" id="highlight-css" href="highlight.css">
+        <link rel="stylesheet" id="tomorrow-night-css" href="tomorrow-night.css">
+        <link rel="stylesheet" id="ayu-highlight-css" href="ayu-highlight.css">
+
+        <!-- Custom theme stylesheets -->
+
+
+        <!-- Provide site root and default themes to javascript -->
+        <script>
+            const path_to_root = "";
+            const default_light_theme = "light";
+            const default_dark_theme = "navy";
+            window.path_to_searchindex_js = "searchindex.js";
+        </script>
+        <!-- Start loading toc.js asap -->
+        <script src="toc.js"></script>
+    </head>
+    <body>
+    <div id="mdbook-help-container">
+        <div id="mdbook-help-popup">
+            <h2 class="mdbook-help-title">Keyboard shortcuts</h2>
+            <div>
+                <p>Press <kbd>←</kbd> or <kbd>→</kbd> to navigate between chapters</p>
+                <p>Press <kbd>S</kbd> or <kbd>/</kbd> to search in the book</p>
+                <p>Press <kbd>?</kbd> to show this help</p>
+                <p>Press <kbd>Esc</kbd> to hide this help</p>
+            </div>
+        </div>
+    </div>
+    <div id="body-container">
+        <!-- Work around some values being stored in localStorage wrapped in quotes -->
+        <script>
+            try {
+                let theme = localStorage.getItem('mdbook-theme');
+                let sidebar = localStorage.getItem('mdbook-sidebar');
+
+                if (theme.startsWith('"') && theme.endsWith('"')) {
+                    localStorage.setItem('mdbook-theme', theme.slice(1, theme.length - 1));
+                }
+
+                if (sidebar.startsWith('"') && sidebar.endsWith('"')) {
+                    localStorage.setItem('mdbook-sidebar', sidebar.slice(1, sidebar.length - 1));
+                }
+            } catch (e) { }
+        </script>
+
+        <!-- Set the theme before any content is loaded, prevents flash -->
+        <script>
+            const default_theme = window.matchMedia("(prefers-color-scheme: dark)").matches ? default_dark_theme : default_light_theme;
+            let theme;
+            try { theme = localStorage.getItem('mdbook-theme'); } catch(e) { }
+            if (theme === null || theme === undefined) { theme = default_theme; }
+            const html = document.documentElement;
+            html.classList.remove('light')
+            html.classList.add(theme);
+            html.classList.add("js");
+        </script>
+
+        <input type="checkbox" id="sidebar-toggle-anchor" class="hidden">
+
+        <!-- Hide / unhide sidebar before it is displayed -->
+        <script>
+            let sidebar = null;
+            const sidebar_toggle = document.getElementById("sidebar-toggle-anchor");
+            if (document.body.clientWidth >= 1080) {
+                try { sidebar = localStorage.getItem('mdbook-sidebar'); } catch(e) { }
+                sidebar = sidebar || 'visible';
+            } else {
+                sidebar = 'hidden';
+                sidebar_toggle.checked = false;
+            }
+            if (sidebar === 'visible') {
+                sidebar_toggle.checked = true;
+            } else {
+                html.classList.remove('sidebar-visible');
+            }
+        </script>
+
+        <nav id="sidebar" class="sidebar" aria-label="Table of contents">
+            <!-- populated by js -->
+            <mdbook-sidebar-scrollbox class="sidebar-scrollbox"></mdbook-sidebar-scrollbox>
+            <noscript>
+                <iframe class="sidebar-iframe-outer" src="toc.html"></iframe>
+            </noscript>
+            <div id="sidebar-resize-handle" class="sidebar-resize-handle">
+                <div class="sidebar-resize-indicator"></div>
+            </div>
+        </nav>
+
+        <div id="page-wrapper" class="page-wrapper">
+
+            <div class="page">
+                <div id="menu-bar-hover-placeholder"></div>
+                <div id="menu-bar" class="menu-bar sticky">
+                    <div class="left-buttons">
+                        <label id="sidebar-toggle" class="icon-button" for="sidebar-toggle-anchor" title="Toggle Table of Contents" aria-label="Toggle Table of Contents" aria-controls="sidebar">
+                            <i class="fa fa-bars"></i>
+                        </label>
+                        <button id="theme-toggle" class="icon-button" type="button" title="Change theme" aria-label="Change theme" aria-haspopup="true" aria-expanded="false" aria-controls="theme-list">
+                            <i class="fa fa-paint-brush"></i>
+                        </button>
+                        <ul id="theme-list" class="theme-popup" aria-label="Themes" role="menu">
+                            <li role="none"><button role="menuitem" class="theme" id="default_theme">Auto</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="light">Light</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="rust">Rust</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="coal">Coal</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="navy">Navy</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="ayu">Ayu</button></li>
+                        </ul>
+                        <button id="search-toggle" class="icon-button" type="button" title="Search (`/`)" aria-label="Toggle Searchbar" aria-expanded="false" aria-keyshortcuts="/ s" aria-controls="searchbar">
+                            <i class="fa fa-search"></i>
+                        </button>
+                    </div>
+
+                    <h1 class="menu-title">AWS Graviton technical guide</h1>
+
+                    <div class="right-buttons">
+                        <a href="print.html" title="Print this book" aria-label="Print this book">
+                            <i id="print-button" class="fa fa-print"></i>
+                        </a>
+                        <a href="https://github.com/aws/aws-graviton-getting-started" title="Git repository" aria-label="Git repository">
+                            <i id="git-repository-button" class="fa fa-github"></i>
+                        </a>
+
+                    </div>
+                </div>
+
+                <div id="search-wrapper" class="hidden">
+                    <form id="searchbar-outer" class="searchbar-outer">
+                        <div class="search-wrapper">
+                            <input type="search" id="searchbar" name="searchbar" placeholder="Search this book ..." aria-controls="searchresults-outer" aria-describedby="searchresults-header">
+                            <div class="spinner-wrapper">
+                                <i class="fa fa-spinner fa-spin"></i>
+                            </div>
+                        </div>
+                    </form>
+                    <div id="searchresults-outer" class="searchresults-outer hidden">
+                        <div id="searchresults-header" class="searchresults-header"></div>
+                        <ul id="searchresults">
+                        </ul>
+                    </div>
+                </div>
+
+                <!-- Apply ARIA attributes after the sidebar and the sidebar toggle button are added to the DOM -->
+                <script>
+                    document.getElementById('sidebar-toggle').setAttribute('aria-expanded', sidebar === 'visible');
+                    document.getElementById('sidebar').setAttribute('aria-hidden', sidebar !== 'visible');
+                    Array.from(document.querySelectorAll('#sidebar a')).forEach(function(link) {
+                        link.setAttribute('tabIndex', sidebar === 'visible' ? 0 : -1);
+                    });
+                </script>
+
+                <div id="content" class="content">
+                    <main>
+                        <h1 id="aws-graviton-technical-guide"><a class="header" href="#aws-graviton-technical-guide">AWS Graviton Technical Guide</a></h1>
+<p>This repository provides technical guidance for users and developers using <a href="https://aws.amazon.com/ec2/graviton/">Amazon EC2 instances powered by AWS Graviton processors</a> (including the latest generation Graviton4 processors). While it calls out specific features of the Graviton processors themselves, this repository is also generally useful for anyone running code on Arm-based systems.</p>
+<h1 id="contents"><a class="header" href="#contents">Contents</a></h1>
+<ul>
+<li><a href="#transitioning-to-graviton">Transitioning to Graviton</a></li>
+<li><a href="#building-for-graviton2-graviton3-and-graviton3e">Building for Graviton</a></li>
+<li><a href="optimizing.html">Optimizing for Graviton</a></li>
+<li><a href="SIMD_and_vectorization.html">Taking advantage of Arm Advanced SIMD instructions</a></li>
+<li><a href="#recent-software-updates-relevant-to-graviton">Recent software updates relevant to Graviton</a></li>
+<li>Language-specific considerations
+<ul>
+<li><a href="c-c++.html">C/C++</a></li>
+<li><a href="golang.html">Go</a></li>
+<li><a href="java.html">Java</a></li>
+<li><a href="dotnet.html">.NET</a></li>
+<li><a href="nodejs.html">Node.JS</a></li>
+<li><a href="php.html">PHP</a></li>
+<li><a href="python.html">Python</a></li>
+<li><a href="rust.html">Rust</a></li>
+</ul>
+</li>
+<li><a href="containers.html">Containers on Graviton</a></li>
+<li><a href="software/ChromeAndPuppeteer.html">Headless website testing with Chrome and Puppeteer on Graviton</a></li>
+<li><a href="#lambda-on-graviton">Lambda on Graviton</a></li>
+<li><a href="os.html">Operating Systems support</a></li>
+<li><a href="isv.html">Third-party Software Vendors</a></li>
+<li><a href="amis_cf_sm.html">Finding and managing AMIs for Graviton, with AWS SystemManager or CloudFormation</a></li>
+<li><a href="dpdk_spdk.html">DPDK, SPDK, and other datapath software</a></li>
+<li><a href="machinelearning/pytorch.html">PyTorch</a></li>
+<li><a href="machinelearning/llama.cpp.html">llama.cpp</a></li>
+<li><a href="R.html">R</a></li>
+<li><a href="machinelearning/tensorflow.html">TensorFlow</a></li>
+<li><a href="DataAnalytics.html">Spark on Graviton</a></li>
+<li><a href="#known-issues-and-workarounds">Known issues and workarounds</a></li>
+<li><a href="managed_services.html">AWS Managed Services available on Graviton</a></li>
+<li><a href="perfrunbook/README.html">Graviton Performance Runbook</a></li>
+<li><a href="arm64-assembly-optimization.html">Assembly Optimization Guide for Graviton Arm64 Processors</a></li>
+<li><a href="#additional-resources">Additional resources</a></li>
+<li><a href="howtoresources.html">How To Resources</a></li>
+<li><a href="#blog-posts">Blog Posts</a></li>
+<li><a href="#case-studies">Case Studies</a></li>
+</ul>
+<h1 id="transitioning-to-graviton"><a class="header" href="#transitioning-to-graviton">Transitioning to Graviton</a></h1>
+<p>If you are new to Graviton and want to understand how to identify target workloads, how to plan a transition project, how to test your workloads on AWS Graviton and finally how deploy in production, please read <a href="transition-guide.html">the key considerations to take into account when transitioning workloads to AWS Graviton based Amazon EC2 instances</a>.</p>
+<h1 id="building-for-graviton"><a class="header" href="#building-for-graviton">Building for Graviton</a></h1>
+<p>|Processor	|Graviton2	|Graviton3(E)	| Graviton4 |
+|---	|---	|---	|--- |
+|Instances	|<a href="https://aws.amazon.com/ec2/instance-types/m6g/">M6g/M6gd</a>, <a href="https://aws.amazon.com/ec2/instance-types/c6g/">C6g/C6gd/C6gn</a>, <a href="https://aws.amazon.com/ec2/instance-types/r6g/">R6g/R6gd</a>, <a href="https://aws.amazon.com/ec2/instance-types/t4g">T4g</a>, <a href="https://aws.amazon.com/ec2/instance-types/x2/">X2gd</a>, <a href="https://aws.amazon.com/ec2/instance-types/g5g/">G5g</a>, and <a href="https://aws.amazon.com/ec2/instance-types/i4g/">I4g/Im4gn/Is4gen</a>	|<a href="https://aws.amazon.com/ec2/instance-types/c7g/">C7g/C7gd/C7gn</a>, <a href="https://aws.amazon.com/ec2/instance-types/m7g/">M7g/M7gd</a>, <a href="https://aws.amazon.com/ec2/instance-types/r7g/">R7g/R7gd</a>, and <a href="https://aws.amazon.com/ec2/instance-types/hpc7g/">Hpc7g</a>	|<a href="https://aws.amazon.com/ec2/instance-types/c8g/">C8g</a>, <a href="https://aws.amazon.com/ec2/instance-types/m8g/">M8g</a>, <a href="https://aws.amazon.com/ec2/instance-types/r8g/">R8g</a>, <a href="https://aws.amazon.com/ec2/instance-types/x8g/">X8g</a>, and <a href="https://aws.amazon.com/ec2/instance-types/i8g/">I8g</a> |
+|Core	|<a href="https://developer.arm.com/documentation/100616/0301">Neoverse-N1</a>	|<a href="https://developer.arm.com/documentation/101427/latest/">Neoverse-V1</a>	|<a href="https://developer.arm.com/documentation/102375/latest">Neoverse-V2</a> |
+|Frequency	|2500MHz	|2600MHz	|2800MHz (2700MHz for 48xlarge) |
+|Turbo supported	|No	|No	|No |
+|Software Optimization Guide (Instruction Throughput and Latency)|<a href="https://developer.arm.com/documentation/pjdoc466751330-9707/latest/">SWOG</a>|<a href="https://developer.arm.com/documentation/pjdoc466751330-9685/latest/">SWOG</a> |<a href="https://developer.arm.com/documentation/PJDOC-466751330-593177/latest/">SWOG</a> |
+|Interconnect	|CMN-600	|CMN-650	|CMN-700 |
+|Architecture revision	|ARMv8.2-a	|ARMv8.4-a	|Armv9.0-a |
+|<a href="https://developer.arm.com/documentation/ka006014/latest/">32bit Backward Compatibility</a> |Userspace only |Userspace only |No support |
+|Additional  features	|fp16, rcpc, dotprod, crypto	|sve, rng, bf16, int8	|sve2, sve-int8, sve-bf16, sve-bitperm, sve-crypto |
+|Recommended <code>-mcpu</code> flag	(<a href="c-c++.html#enabling-arm-architecture-specific-features">more information</a>)|<code>neoverse-n1</code> |<code>neoverse-512tvb</code> |<code>neoverse-512tvb</code> |
+|RNG Instructions	|No	|Yes	|Yes |
+|SIMD instructions	|2x Neon 128bit vectors	|4x Neon 128bit vectors / 2x SVE 256bit	|4x Neon/SVE 128bit vectors |
+|LSE (atomic mem operations)	|yes	|yes	|yes |
+|Pointer Authentication	|no	|yes	|yes |
+|Branch Target Identification |no |no |yes |
+|Cores	|64	|64	|96 per socket (192 for 2-socket 48xlarge) |
+|L1 cache (per core)	|64kB inst / 64kB data	|64kB inst / 64kB data	|64kB inst / 64kB data |
+|L2 cache (per core)	|1MB	|1MB	|2MB |
+|LLC (shared)	|32MB	|32MB	|36MB |
+|DRAM	|8x DDR4	|8x DDR5	|12x DDR5 |
+|DDR Encryption	|yes	|yes	|yes |</p>
+<h1 id="optimizing-for-graviton"><a class="header" href="#optimizing-for-graviton">Optimizing for Graviton</a></h1>
+<p>Please refer to <a href="optimizing.html">optimizing</a> for general debugging and profiling information.  For detailed checklists on optimizing and debugging performance on Graviton, see our <a href="perfrunbook/README.html">performance runbook</a>.</p>
+<p>Different architectures and systems have differing capabilities, which means some tools you might be familiar with on one architecture don't have equivalent on AWS Graviton. Documented <a href="Monitoring_Tools_on_Graviton.html">Monitoring Tools</a> with some of these utilities.</p>
+<p>Furthermore, different generations of Graviton support different features, as noted in the table above. For example,
+Graviton3 supports SVE but Graviton2 does not. Graviton4 supports SVE2 and SVE. For some applications it may be
+advantageous to implement performance critical kernels to make use of the highest performing feature set available which
+may not be known until runtime. For this, the best practice is to consult HWCAPS. For details on how to do this, see
+<a href="runtime-feature-detection.html">our guide on HWCAPS runtime feature detection</a>.</p>
+<h1 id="recent-software-updates-relevant-to-graviton"><a class="header" href="#recent-software-updates-relevant-to-graviton">Recent software updates relevant to Graviton</a></h1>
+<p>There is a huge amount of activity in the Arm software ecosystem and improvements are being
+made on a daily basis. As a general rule later versions of compilers, language runtimes, and applications
+should be used whenever possible. The table below includes known recent changes to popular
+packages that improve performance (if you know of others please let us know).</p>
+<div class="table-wrapper"><table><thead><tr><th>Package</th><th style="text-align: center">Version</th><th>Improvements</th></tr></thead><tbody>
+<tr><td>bazel</td><td style="text-align: center"><a href="https://github.com/bazelbuild/bazel/releases">3.4.1+</a></td><td>Pre-built bazel binary for Graviton/Arm64. <a href="#bazel-on-linux">See below</a> for installation.</td></tr>
+<tr><td>Cassandra</td><td style="text-align: center">4.0+</td><td>Supports running on Java/Corretto 11, improving overall performance</td></tr>
+<tr><td>FFmpeg</td><td style="text-align: center">6.0+</td><td>Improved performance of libswscale by 50% with better NEON vectorization which improves the performance and scalability of FFmpeg multi-threaded encoders. The changes are available in FFmpeg version 4.3, with further improvements to scaling and motion estimation available in 5.1. Additional improvements to both are available in 6. For encoding h.265, build with the master branch of x265 because the released version of 3.5 does not include important optimizations for Graviton. For more information about FFmpeg on Graviton, read the blog post on AWS Open Source Blog, <a href="https://aws.amazon.com/blogs/opensource/optimized-video-encoding-with-ffmpeg-on-aws-graviton-processors/">Optimized Video Encoding with FFmpeg on AWS Graviton Processors</a>.</td></tr>
+<tr><td>HAProxy</td><td style="text-align: center">2.4+</td><td>A <a href="https://github.com/haproxy/haproxy/issues/958">serious bug</a> was fixed. Additionally, building with <code>CPU=armv81</code> improves HAProxy performance by 4x so please rebuild your code with this flag.</td></tr>
+<tr><td>MariaDB</td><td style="text-align: center">10.4.14+</td><td>Default build now uses -moutline-atomics, general correctness bugs for Graviton fixed.</td></tr>
+<tr><td>mongodb</td><td style="text-align: center">4.2.15+ / 4.4.7+ / 5.0.0+</td><td>Improved performance on graviton, especially for internal JS engine. LSE support added in <a href="https://jira.mongodb.org/browse/SERVER-56347">SERVER-56347</a>.</td></tr>
+<tr><td>MySQL</td><td style="text-align: center">8.0.23+</td><td>Improved spinlock behavior, compiled with -moutline-atomics if compiler supports it.</td></tr>
+<tr><td>PostgreSQL</td><td style="text-align: center">15+</td><td>General scalability improvements plus additional <a href="https://commitfest.postgresql.org/37/3527/">improvements to spin-locks specifically for Arm64</a></td></tr>
+<tr><td>.NET</td><td style="text-align: center"><a href="https://dotnet.microsoft.com/download/dotnet/5.0">5+</a></td><td><a href="https://devblogs.microsoft.com/dotnet/Arm64-performance-in-net-5/">.NET 5 significantly improved performance for ARM64</a>. Here's an associated <a href="https://aws.amazon.com/blogs/compute/powering-net-5-with-aws-graviton2-benchmark-results/">AWS Blog</a> with some performance results.</td></tr>
+<tr><td>OpenH264</td><td style="text-align: center"><a href="https://github.com/cisco/openh264/releases/tag/v2.1.1">2.1.1+</a></td><td>Pre-built Cisco OpenH264 binary for Graviton/Arm64.</td></tr>
+<tr><td>PCRE2</td><td style="text-align: center">10.34+</td><td>Added NEON vectorization to PCRE's JIT to match first and pairs of characters. This may improve performance of matching by up to 8x. This fixed version of the library now is shipping with Ubuntu 20.04 and PHP 8.</td></tr>
+<tr><td>PHP</td><td style="text-align: center">7.4+</td><td>PHP 7.4 includes a number of performance improvements that increase perf by up to 30%</td></tr>
+<tr><td>pip</td><td style="text-align: center">19.3+</td><td>Enable installation of python wheel binaries on Graviton</td></tr>
+<tr><td>PyTorch</td><td style="text-align: center">2.0+</td><td>Optimize Inference latency and throughput on Graviton. <a href="machinelearning/pytorch.html">AWS DLCs and python wheels are available</a>.</td></tr>
+<tr><td>ruby</td><td style="text-align: center">3.0+</td><td>Enable arm64 optimizations that improve performance by as much as 40%. These changes have also been back-ported to the Ruby shipping with AmazonLinux2, Fedora, and Ubuntu 20.04.</td></tr>
+<tr><td>Spark</td><td style="text-align: center">3.0+</td><td>Supports running on Java/Corretto 11, improving overall performance.</td></tr>
+<tr><td>zlib</td><td style="text-align: center">1.2.8+</td><td>For the best performance on Graviton please use <a href="https://github.com/cloudflare/zlib">zlib-cloudflare</a>.</td></tr>
+</tbody></table>
+</div>
+<h1 id="containers-on-graviton"><a class="header" href="#containers-on-graviton">Containers on Graviton</a></h1>
+<p>You can run Docker, Kubernetes, Amazon ECS, and Amazon EKS on Graviton. Amazon ECR supports multi-arch containers.
+Please refer to <a href="containers.html">containers</a> for information about running container-based workloads on Graviton.</p>
+<h1 id="lambda-on-graviton"><a class="header" href="#lambda-on-graviton"><a href="/aws-lambda/README.html">Lambda on Graviton</a></a></h1>
+<p><a href="https://aws.amazon.com/lambda/">AWS Lambda</a> now allows you to configure new and existing functions to run on Arm-based AWS Graviton2 processors in addition to x86-based functions. Using this processor architecture option allows you to get up to 34% better price performance. Duration charges are 20 percent lower than the current pricing for x86 with <a href="https://aws.amazon.com/blogs/aws/new-for-aws-lambda-1ms-billing-granularity-adds-cost-savings/">millisecond granularity</a>. This also applies to duration charges when using <a href="https://aws.amazon.com/blogs/aws/new-provisioned-concurrency-for-lambda-functions/">Provisioned Concurrency</a>. Compute <a href="https://aws.amazon.com/blogs/aws/savings-plan-update-save-up-to-17-on-your-lambda-workloads/">Savings Plans</a> supports Lambda functions powered by Graviton2.</p>
+<p>The <a href="/aws-lambda/README.html">Lambda</a> page highlights some of the migration considerations and also provides some simple to deploy demos you can use to explore how to build and migrate to Lambda functions using Arm/Graviton2.</p>
+<h1 id="operating-systems"><a class="header" href="#operating-systems">Operating Systems</a></h1>
+<p>Please check <a href="os.html">os.md</a> for more information about which operating system to run on Graviton based instances.</p>
+<h1 id="known-issues-and-workarounds"><a class="header" href="#known-issues-and-workarounds">Known issues and workarounds</a></h1>
+<h2 id="postgres"><a class="header" href="#postgres">Postgres</a></h2>
+<p>Postgres performance can be heavily impacted by not using <a href="https://github.com/aws/aws-graviton-getting-started/blob/main/c-c%2B%2B.md#large-system-extensions-lse">LSE</a>.
+Today, postgres binaries from distributions (e.g. Ubuntu) are not built with <code>-moutline-atomics</code> or <code>-march=armv8.2-a</code> which would enable LSE.  Note: Amazon RDS for PostgreSQL isn't impacted by this.</p>
+<p>In November 2021 PostgreSQL started to distribute Ubuntu 20.04 packages optimized with <code>-moutline-atomics</code>.
+For Ubuntu 20.04, we recommend using the PostgreSQL PPA instead of the packages distributed by Ubuntu Focal.
+Please follow <a href="https://www.postgresql.org/download/linux/ubuntu/">the instructions to set up the PostgreSQL PPA.</a></p>
+<h2 id="python-installation-on-some-linux-distros"><a class="header" href="#python-installation-on-some-linux-distros">Python installation on some Linux distros</a></h2>
+<p>The default installation of pip on some Linux distributions is old (&lt;19.3) to install binary wheel packages released for Graviton.  To work around this, it is recommended to upgrade your pip installation using:</p>
+<pre><code>sudo python3 -m pip install --upgrade pip
+</code></pre>
+<h2 id="bazel-on-linux"><a class="header" href="#bazel-on-linux">Bazel on Linux</a></h2>
+<p>The <a href="https://www.bazel.build/">Bazel build tool</a> now releases a pre-built binary for arm64. As of October 2020, this is not available in their custom Debian repo, and Bazel does not officially provide an RPM. Instead, we recommend using the <a href="https://docs.bazel.build/versions/master/install-bazelisk.html">Bazelisk installer</a>, which will replace your <code>bazel</code> command and <a href="https://github.com/bazelbuild/bazelisk/blob/master/README.md">keep bazel up to date</a>.</p>
+<p>Below is an example using the <a href="https://github.com/bazelbuild/bazelisk/releases/latest">latest Arm binary release of Bazelisk</a> as of October 2020:</p>
+<pre><code>wget https://github.com/bazelbuild/bazelisk/releases/download/v1.7.1/bazelisk-linux-arm64
+chmod +x bazelisk-linux-arm64
+sudo mv bazelisk-linux-arm64 /usr/local/bin/bazel
+bazel
+</code></pre>
+<p>Bazelisk itself should not require further updates, as its only purpose is to keep Bazel updated.</p>
+<h2 id="zlib-on-linux"><a class="header" href="#zlib-on-linux">zlib on Linux</a></h2>
+<p>Linux distributions, in general, use the original zlib without any optimizations. zlib-cloudflare has been updated to provide better and faster compression on Arm and x86. To use zlib-cloudflare:</p>
+<pre><code>git clone https://github.com/cloudflare/zlib.git
+cd zlib
+./configure --prefix=$HOME
+make
+make install
+</code></pre>
+<p>Make sure to have the full path to your lib at $HOME/lib in /etc/ld.so.conf and run ldconfig.</p>
+<p>For JDKs that dynamically link to the system zlib, you can set LD_LIBRARY_PATH to point to the directory where your newly built version of zlib-cloudflare is located or load that library with LD_PRELOAD.</p>
+<p>You can check the libz that JDK is dynamically linked against with:</p>
+<pre><code>$ ldd /Java/jdk-11.0.8/lib/libzip.so | grep libz
+libz.so.1 =&gt; /lib/x86_64-linux-gnu/libz.so.1 (0x00007ffff7783000)
+</code></pre>
+<p>NOTE: Linux versions of OpenJDK and Amazon Corretto 17+ dynamically link to zlib. Earlier versions of Corretto bundled zlib directly and this behavior can vary by JDK vendor and platform.</p>
+<h1 id="blog-posts"><a class="header" href="#blog-posts">Blog Posts</a></h1>
+<h2 id="hpc"><a class="header" href="#hpc">HPC</a></h2>
+<ul>
+<li><a href="https://aws.amazon.com/blogs/hpc/application-deep-dive-into-the-graviton3e-based-amazon-ec2-hpc7g-instance/">Application deep-dive into the AWS Graviton3E-based Amazon EC2 Hpc7g instance</a></li>
+<li><a href="https://rescale.com/blog/rescale-automates-the-deployment-of-ansys-ls-dyna-and-ansys-fluent-workloads-on-amazon-ec2-hpc7g-instances/">Rescale Automates the Deployment of Ansys LS-DYNA and Ansys Fluent Workloads on Amazon EC2 Hpc7g Instances</a></li>
+<li><a href="https://aws.amazon.com/blogs/hpc/lattice-boltzmann-simulation-with-palabos-on-aws-using-graviton-based-amazon-ec2-hpc7g-instances/">Lattice Boltzmann simulation with Palabos on AWS using Graviton-based Amazon EC2 Hpc7g instances</a></li>
+<li><a href="https://aws.amazon.com/blogs/hpc/instance-sizes-in-the-amazon-ec2-hpc7-family-a-different-experience/">Instance sizes in the Amazon EC2 Hpc7 family – a different experience</a></li>
+<li><a href="https://aws.amazon.com/blogs/hpc/checkpointing-hpc-applications-using-the-spot-instance-two-minute-notification-from-amazon-ec2/">Checkpointing HPC applications using the Spot Instance two-minute notification from Amazon EC2</a></li>
+<li><a href="https://aws.amazon.com/blogs/hpc/best-practices-for-running-molecular-dynamics-simulations-on-aws-graviton3e/">Best practices for running molecular dynamics simulations on AWS Graviton3E</a></li>
+</ul>
+<h2 id="machine-learning"><a class="header" href="#machine-learning">Machine Learning</a></h2>
+<ul>
+<li><a href="https://aws.amazon.com/blogs/machine-learning/optimized-pytorch-2-0-inference-with-aws-graviton-processors/">Optimized PyTorch 2.0 inference with AWS Graviton processors</a></li>
+<li><a href="https://aws.amazon.com/blogs/machine-learning/reduce-amazon-sagemaker-inference-cost-with-aws-graviton/">Reduce Amazon SageMaker inference cost with AWS Graviton</a></li>
+<li><a href="https://pytorch.org/blog/optimized-pytorch-w-graviton/">PyTorch blog: Optimized PyTorch 2.0 Inference with AWS Graviton processors</a></li>
+<li><a href="https://pytorch.org/tutorials/recipes/inference_tuning_on_aws_graviton.html">PyTorch Inference Performance Tuning on AWS Graviton Processors</a></li>
+<li><a href="https://pytorch.org/blog/accelerated-pytorch-inference/">PyTorch blog: Accelerated PyTorch inference with torch.compile on AWS Graviton processors</a></li>
+<li><a href="https://aws.amazon.com/blogs/machine-learning/sprinklr-improves-performance-by-20-and-reduces-cost-by-25-for-machine-learning-inference-on-aws-graviton3/">Sprinklr improves performance by 20% and reduces cost by 25% for machine learning inference on AWS Graviton3</a></li>
+<li><a href="https://aws.amazon.com/blogs/machine-learning/run-machine-learning-inference-workloads-on-aws-graviton-based-instances-with-amazon-sagemaker/">Run machine learning inference workloads on AWS Graviton-based instances with Amazon SageMaker</a></li>
+<li><a href="https://aws.amazon.com/blogs/machine-learning/accelerate-nlp-inference-with-onnx-runtime-on-aws-graviton-processors">Accelerate NLP inference with ONNX Runtime on AWS Graviton processors</a></li>
+<li><a href="https://community.arm.com/arm-community-blogs/b/infrastructure-solutions-blog/posts/best-in-class-llm-performance-on-arm-neoverse-v1-based-aws-graviton3-servers">Best-in-class LLM Performance on Arm Neoverse V1 based AWS Graviton3 CPUs</a></li>
+<li><a href="https://community.arm.com/arm-community-blogs/b/infrastructure-solutions-blog/posts/accelerating-sentiment-analysis-on-arm-neoverse-cpus">Accelerating Popular Hugging Face Models using Arm Neoverse</a></li>
+<li><a href="https://community.aws/content/2eazHYzSfcY9flCGKsuGjpwqq1B/run-llms-on-cpu-with-amazon-sagemaker-real-time-inference?lang=en">Run LLMs on CPU with Amazon SageMaker Real-time Inference</a></li>
+<li><a href="https://aws.amazon.com/blogs/machine-learning/accelerating-large-scale-neural-network-training-on-cpus-with-thirdai-and-aws-graviton/">Accelerating large-scale neural network training on CPUs with ThirdAI and AWS Graviton</a></li>
+<li><a href="https://github.com/pytorch/serve/tree/usecase/rag_based_llm/examples/usecases/RAG_based_LLM_serving#enhancing-llm-serving-with-torch-compiled-rag-on-aws-graviton">Enhancing LLM Serving with Torch Compiled RAG on AWS Graviton</a></li>
+<li><a href="https://dev.to/aws-heroes/intro-to-llama-on-graviton-1dc">Intro to Llama on Graviton</a></li>
+<li><a href="https://community.aws/content/2pViH36qEfqDYwv0kEysJ0kqDp4/small-language-models-slms-inference-with-llama-cpp-on-graviton4">Small Language Models (SLMs) inference with llama.cpp on Graviton4</a></li>
+<li><a href="machinelearning/llama.cpp.html">Run DeepSeek R1 LLM Inference on AWS Graviton</a></li>
+<li><a href="https://community.aws/content/2rhRJI6cxBa1Ib5f3TjsfPadpXs/deploying-deepseek-r1-distill-llama-70b-for-batch-inference-on-aws-graviton4">DeepSeek-R1 Distill Model on CPU with AWS Graviton4 for batch inference</a></li>
+</ul>
+<h2 id="other"><a class="header" href="#other">Other</a></h2>
+<ul>
+<li><a href="https://aws.amazon.com/blogs/opensource/optimized-video-encoding-with-ffmpeg-on-aws-graviton-processors/">Optimized Video Encoding with FFmpeg on AWS Graviton Processors</a></li>
+<li><a href="https://aws.amazon.com/blogs/opensource/video-encoding-on-graviton-in-2025/">Video Encoding on Graviton in 2025</a></li>
+<li><a href="https://aws.amazon.com/blogs/compute/using-amazon-aperf-to-go-from-50-below-to-36-above-performance-target/">Using Amazon APerf to go from 50% below to 36% above performance target</a></li>
+</ul>
+<h1 id="case-studies"><a class="header" href="#case-studies">Case Studies</a></h1>
+<h2 id="hpc-1"><a class="header" href="#hpc-1">HPC</a></h2>
+<ul>
+<li><a href="https://aws.amazon.com/solutions/case-studies/encored-technologies-case-study/">Encored Technologies Successfully Built an HPC on AWS for Weather Research &amp; Forecasting (WRF)</a></li>
+<li><a href="https://aws.amazon.com/solutions/case-studies/arm-ltd-case-study/">Arm Scales Performance for Chip Design Using Amazon FSx for NetApp ONTAP</a></li>
+<li><a href="https://aws.amazon.com/solutions/case-studies/case-study-institut-pasteur/?nc1=h_ls">The Institut Pasteur and AWS are analysing the world's DNA, using a public database</a></li>
+</ul>
+<h2 id="other-1"><a class="header" href="#other-1">Other</a></h2>
+<ul>
+<li><a href="https://aws.amazon.com/solutions/case-studies/sprinklr-case-study/">Lower Latency and Costs Using AWS Graviton2–Based Instances with Sprinklr</a></li>
+</ul>
+<h1 id="additional-resources"><a class="header" href="#additional-resources">Additional resources</a></h1>
+<ul>
+<li><a href="https://aws.amazon.com/ec2/graviton/">AWS Graviton</a></li>
+<li><a href="https://developer.arm.com/documentation/pjdoc466751330-9707/latest">Neoverse N1 Software Optimization Guide</a></li>
+<li><a href="https://documentation-service.arm.com/static/60119835773bb020e3de6fee">Armv8 reference manual</a></li>
+<li><a href="https://pkgs.org/">Package repository search tool</a></li>
+</ul>
+<p><strong>Feedback?</strong> ec2-arm-dev-feedback@amazon.com</p>
+
+                    </main>
+
+                    <nav class="nav-wrapper" aria-label="Page navigation">
+                        <!-- Mobile navigation buttons -->
+
+                            <a rel="next prefetch" href="transition-guide.html" class="mobile-nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
+                                <i class="fa fa-angle-right"></i>
+                            </a>
+
+                        <div style="clear: both"></div>
+                    </nav>
+                </div>
+            </div>
+
+            <nav class="nav-wide-wrapper" aria-label="Page navigation">
+
+                    <a rel="next prefetch" href="transition-guide.html" class="nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
+                        <i class="fa fa-angle-right"></i>
+                    </a>
+            </nav>
+
+        </div>
+
+
+
+
+        <script>
+            window.playground_copyable = true;
+        </script>
+
+
+        <script src="elasticlunr.min.js"></script>
+        <script src="mark.min.js"></script>
+        <script src="searcher.js"></script>
+
+        <script src="clipboard.min.js"></script>
+        <script src="highlight.js"></script>
+        <script src="book.js"></script>
+
+        <!-- Custom JS scripts -->
+
+
+
+    </div>
+    </body>
+</html>

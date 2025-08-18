@@ -1,0 +1,362 @@
+<!DOCTYPE HTML>
+<html lang="en" class="light sidebar-visible" dir="ltr">
+    <head>
+        <!-- Book generated using mdBook -->
+        <meta charset="UTF-8">
+        <title>Debugging performance — “What part of the system is slow?” - AWS Graviton technical guide</title>
+
+
+        <!-- Custom HTML head -->
+
+        <meta name="description" content="Technical guidance for developers to use the Arm based AWS Graviton instances">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <meta name="theme-color" content="#ffffff">
+
+        <link rel="icon" href="../favicon.svg">
+        <link rel="shortcut icon" href="../favicon.png">
+        <link rel="stylesheet" href="../css/variables.css">
+        <link rel="stylesheet" href="../css/general.css">
+        <link rel="stylesheet" href="../css/chrome.css">
+        <link rel="stylesheet" href="../css/print.css" media="print">
+
+        <!-- Fonts -->
+        <link rel="stylesheet" href="../FontAwesome/css/font-awesome.css">
+        <link rel="stylesheet" href="../fonts/fonts.css">
+
+        <!-- Highlight.js Stylesheets -->
+        <link rel="stylesheet" id="highlight-css" href="../highlight.css">
+        <link rel="stylesheet" id="tomorrow-night-css" href="../tomorrow-night.css">
+        <link rel="stylesheet" id="ayu-highlight-css" href="../ayu-highlight.css">
+
+        <!-- Custom theme stylesheets -->
+
+
+        <!-- Provide site root and default themes to javascript -->
+        <script>
+            const path_to_root = "../";
+            const default_light_theme = "light";
+            const default_dark_theme = "navy";
+            window.path_to_searchindex_js = "../searchindex.js";
+        </script>
+        <!-- Start loading toc.js asap -->
+        <script src="../toc.js"></script>
+    </head>
+    <body>
+    <div id="mdbook-help-container">
+        <div id="mdbook-help-popup">
+            <h2 class="mdbook-help-title">Keyboard shortcuts</h2>
+            <div>
+                <p>Press <kbd>←</kbd> or <kbd>→</kbd> to navigate between chapters</p>
+                <p>Press <kbd>S</kbd> or <kbd>/</kbd> to search in the book</p>
+                <p>Press <kbd>?</kbd> to show this help</p>
+                <p>Press <kbd>Esc</kbd> to hide this help</p>
+            </div>
+        </div>
+    </div>
+    <div id="body-container">
+        <!-- Work around some values being stored in localStorage wrapped in quotes -->
+        <script>
+            try {
+                let theme = localStorage.getItem('mdbook-theme');
+                let sidebar = localStorage.getItem('mdbook-sidebar');
+
+                if (theme.startsWith('"') && theme.endsWith('"')) {
+                    localStorage.setItem('mdbook-theme', theme.slice(1, theme.length - 1));
+                }
+
+                if (sidebar.startsWith('"') && sidebar.endsWith('"')) {
+                    localStorage.setItem('mdbook-sidebar', sidebar.slice(1, sidebar.length - 1));
+                }
+            } catch (e) { }
+        </script>
+
+        <!-- Set the theme before any content is loaded, prevents flash -->
+        <script>
+            const default_theme = window.matchMedia("(prefers-color-scheme: dark)").matches ? default_dark_theme : default_light_theme;
+            let theme;
+            try { theme = localStorage.getItem('mdbook-theme'); } catch(e) { }
+            if (theme === null || theme === undefined) { theme = default_theme; }
+            const html = document.documentElement;
+            html.classList.remove('light')
+            html.classList.add(theme);
+            html.classList.add("js");
+        </script>
+
+        <input type="checkbox" id="sidebar-toggle-anchor" class="hidden">
+
+        <!-- Hide / unhide sidebar before it is displayed -->
+        <script>
+            let sidebar = null;
+            const sidebar_toggle = document.getElementById("sidebar-toggle-anchor");
+            if (document.body.clientWidth >= 1080) {
+                try { sidebar = localStorage.getItem('mdbook-sidebar'); } catch(e) { }
+                sidebar = sidebar || 'visible';
+            } else {
+                sidebar = 'hidden';
+                sidebar_toggle.checked = false;
+            }
+            if (sidebar === 'visible') {
+                sidebar_toggle.checked = true;
+            } else {
+                html.classList.remove('sidebar-visible');
+            }
+        </script>
+
+        <nav id="sidebar" class="sidebar" aria-label="Table of contents">
+            <!-- populated by js -->
+            <mdbook-sidebar-scrollbox class="sidebar-scrollbox"></mdbook-sidebar-scrollbox>
+            <noscript>
+                <iframe class="sidebar-iframe-outer" src="../toc.html"></iframe>
+            </noscript>
+            <div id="sidebar-resize-handle" class="sidebar-resize-handle">
+                <div class="sidebar-resize-indicator"></div>
+            </div>
+        </nav>
+
+        <div id="page-wrapper" class="page-wrapper">
+
+            <div class="page">
+                <div id="menu-bar-hover-placeholder"></div>
+                <div id="menu-bar" class="menu-bar sticky">
+                    <div class="left-buttons">
+                        <label id="sidebar-toggle" class="icon-button" for="sidebar-toggle-anchor" title="Toggle Table of Contents" aria-label="Toggle Table of Contents" aria-controls="sidebar">
+                            <i class="fa fa-bars"></i>
+                        </label>
+                        <button id="theme-toggle" class="icon-button" type="button" title="Change theme" aria-label="Change theme" aria-haspopup="true" aria-expanded="false" aria-controls="theme-list">
+                            <i class="fa fa-paint-brush"></i>
+                        </button>
+                        <ul id="theme-list" class="theme-popup" aria-label="Themes" role="menu">
+                            <li role="none"><button role="menuitem" class="theme" id="default_theme">Auto</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="light">Light</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="rust">Rust</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="coal">Coal</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="navy">Navy</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="ayu">Ayu</button></li>
+                        </ul>
+                        <button id="search-toggle" class="icon-button" type="button" title="Search (`/`)" aria-label="Toggle Searchbar" aria-expanded="false" aria-keyshortcuts="/ s" aria-controls="searchbar">
+                            <i class="fa fa-search"></i>
+                        </button>
+                    </div>
+
+                    <h1 class="menu-title">AWS Graviton technical guide</h1>
+
+                    <div class="right-buttons">
+                        <a href="../print.html" title="Print this book" aria-label="Print this book">
+                            <i id="print-button" class="fa fa-print"></i>
+                        </a>
+                        <a href="https://github.com/aws/aws-graviton-getting-started" title="Git repository" aria-label="Git repository">
+                            <i id="git-repository-button" class="fa fa-github"></i>
+                        </a>
+
+                    </div>
+                </div>
+
+                <div id="search-wrapper" class="hidden">
+                    <form id="searchbar-outer" class="searchbar-outer">
+                        <div class="search-wrapper">
+                            <input type="search" id="searchbar" name="searchbar" placeholder="Search this book ..." aria-controls="searchresults-outer" aria-describedby="searchresults-header">
+                            <div class="spinner-wrapper">
+                                <i class="fa fa-spinner fa-spin"></i>
+                            </div>
+                        </div>
+                    </form>
+                    <div id="searchresults-outer" class="searchresults-outer hidden">
+                        <div id="searchresults-header" class="searchresults-header"></div>
+                        <ul id="searchresults">
+                        </ul>
+                    </div>
+                </div>
+
+                <!-- Apply ARIA attributes after the sidebar and the sidebar toggle button are added to the DOM -->
+                <script>
+                    document.getElementById('sidebar-toggle').setAttribute('aria-expanded', sidebar === 'visible');
+                    document.getElementById('sidebar').setAttribute('aria-hidden', sidebar !== 'visible');
+                    Array.from(document.querySelectorAll('#sidebar a')).forEach(function(link) {
+                        link.setAttribute('tabIndex', sidebar === 'visible' ? 0 : -1);
+                    });
+                </script>
+
+                <div id="content" class="content">
+                    <main>
+                        <h1 id="debugging-performance--what-part-of-the-system-is-slow"><a class="header" href="#debugging-performance--what-part-of-the-system-is-slow">Debugging performance — “What part of the system is slow?”</a></h1>
+<p><a href="./README.html">Graviton Performance Runbook toplevel</a></p>
+<p>When debugging performance, start by measuring high level system behavior to pinpoint what part of the system performs differently when compared with a control instance.  Are the CPUs being saturated or under-saturated?  Is the network or disk behaving differently than expected?  Did a mis-configuration creep in that went undetected when validating the SUT application setup?</p>
+<h2 id="check-cpu-usage"><a class="header" href="#check-cpu-usage">Check CPU-usage</a></h2>
+<ol>
+<li>Check the <code>cpu-iowait</code> time. High <code>cpu-iowait</code> indicates a bottleneck in disk operations. In this case, provision EBS volumes with more IOPs or use local disk instances to determine if the Graviton CPU is performing faster. Otherwise, high iowait time will lead to performance results that are similar between instances since disk operations, not CPU performance, is the bottleneck.</li>
+</ol>
+<pre><code class="language-bash"># Terminal one
+%&gt; &lt;start load generator or benchmark&gt;
+  
+# Terminal two
+%&gt; cd ~/aws-gravition-getting-started/perfrunbook/utilities
+%&gt; python3 ./measure_and_plot_basic_sysstat_stats.py --stat cpu-iowait --time 60
+</code></pre>
+<ol start="2">
+<li>Check the <code>cpu-user</code> and <code>cpu-kernel</code> time at your chosen load point. Check to see if Graviton2 has higher or lower cpu time  than the x86 comparison system-under-test.</li>
+</ol>
+<pre><code class="language-bash"># Terminal one
+%&gt; &lt;start load generator or benchmark&gt;
+  
+# Terminal two
+%&gt; cd ~/aws-gravition-getting-started/perfrunbook/utilities
+%&gt; python3 ./measure_and_plot_basic_sysstat_stats.py --stat cpu-user --time 60
+# To get kernel time, do cpu-kernel
+  
+# Example output
+100 ++-----------------------+------------------------+------------------------+------------------------+------------------------+-----------------------++
+    + ***       ***       ***+   *********         *******                     *** ****           **** ****           ****       +                      * +
+    **   *******   *******   ****          ********       *  ***********      *   *    *****     *    *    *        **    ******    ***************    *  |
+    |                                     *                **                *              *   *           *     **            *  *               *   *  |
+    |                                                                   ** **                * *             *** *              * *                 * *   |
+    |                                                                     *                   *                 *                *                   *    |
+    |                                                                                                                                                     |
+ 80 ++                                                                                                                                                   ++
+    |                                                                                                                                                     |
+    |                                                                                                                                                     |
+    |                                                                                                                                                     |
+    |                                                                                                                                                     |
+    |                                                                                                                                                     |
+ 60 ++                                                                                                                                                   ++
+    |                                                                                                                                                     |
+    |                                                                                                                                                     |
+    |                                                                                                                                                     |
+    |                                                                                                                                                     |
+    |                                                                                                                                                     |
+    |                                                                                                                                                     |
+ 40 ++                                                                                                                                                   ++
+    |                                                                                                                                                     |
+    |                                                                                                                                                     |
+    |                                                                                                                                                     |
+    |                                                                                                                                                     |
+    |                                                                                                                                                     |
+ 20 ++                                                                                                                                                   ++
+    |                                                                                                                                                     |
+    |                                                                                                                                                     |
+    |                                                                                                                                                     |
+    |                                                                                                                                                     |
+    |                                                                                                                                                     |
+    +                        +                        +                        +                        +                        +                        +
+  0 ++-----------------------+------------------------+------------------------+------------------------+------------------------+-----------------------++
+    0                        10                       20                       30                       40                       50                       60
+                                                                           Time (s)
+</code></pre>
+<ol start="3">
+<li>If CPU usage is higher or equal to the x86 system, proceed to profile for hot-functions in <a href="./debug_code_perf.html">Section 5.b</a>.</li>
+<li>If CPU usage is lower, proceed to <a href="./debug_code_perf.html">Section 5.b</a> to profile which functions are putting threads to sleep and causing the CPU to go idle more than the x86 system.</li>
+</ol>
+<h2 id="check-system-memory-usage"><a class="header" href="#check-system-memory-usage">Check system memory usage</a></h2>
+<p>It is also advisable to check memory consumption using <code>sysstat -r ALL</code> or <code>htop</code>.  Verify the system is not under memory pressure during testing.</p>
+<h2 id="check-network-usage"><a class="header" href="#check-network-usage">Check network usage</a></h2>
+<ol>
+<li>Check for bursts of connections coming from the load-generator using</li>
+</ol>
+<pre><code class="language-bash"># On load-generator
+%&gt; &lt;start test&gt;
+  
+# On SUT
+%&gt; cd ~/aws-gravition-getting-started/perfrunbook/utilities
+%&gt; python3 ./measure_and_plot_basic_sysstat_stats.py --stat new-connections --time 60
+</code></pre>
+<ol start="2">
+<li>If seeing bursts, verify this is expected behavior for your load generator.  Bursts can cause performance degradation for each new connection, especially if it has to do an RSA signing operation for TLS connection establishment.</li>
+<li>Check on SUT for hot connections (connections that are more heavily used than others) by running: <code>watch netstat -t</code></li>
+<li>The example below shows the use of <code>netstat -t</code> to watch TCP connections with one being hot as indicated by its non-zero <code>Send-Q</code> value while all other connections have a value of 0. This can lead to one core being saturated by network processing on the SUT, bottlenecking the rest of the system.</li>
+</ol>
+<pre><code class="language-bash">%&gt; watch netstat -t
+    Every 2.0s: netstat -t
+    ip-172-31-9-146: Tue Jan 12 23:01:35 2021
+      
+    Active Internet connections (w/o servers)
+    Proto Recv-Q Send-Q Local Address           Foreign Address         State
+    tcp        0      0 ip-172-31-9-146.ec2:ssh 72-21-196-67.amaz:62519 ESTABLISHED
+    tcp        0 345958 ip-172-31-9-146.ec2:ssh 72-21-196-67.amaz:25884 ESTABLISHED
+    tcp        0      0 ip-172-31-9-146.ec2:ssh 72-21-196-67.amaz:18144 ESTABLISHED
+</code></pre>
+<ol start="5">
+<li>Go back and verify the load generator is providing the expected traffic.</li>
+<li>Check <code>sar -n DEV 1</code> to see throughput and packets per second, and overall packet rate the system is getting per device. Check and verify you are not hitting ENA throttles.</li>
+<li><a href="https://docs.aws.amazon.com/AWSEC2/latest/UserGuide/monitoring-network-performance-ena.html">Metrics in cloudwatch</a>: <code>bw_in_allowance_exceeded</code>, <code>bw_out_allowance_exceeded</code>, <code>conntrack_allowance_exceeded</code>, <code>linklocal_allowance_exceeded</code>, <code>pps_allowance_exceeded</code> for your instances can be inspected to see if networking throttles are being hit.  If they are, your network is the botteneck and should be increased.</li>
+<li>If hitting ENA throttles, provision a larger instance to get more bandwidth if possible.  IO bottlenecks tend to mask any CPU performance gains.</li>
+</ol>
+<h2 id="check-runtime-behavior"><a class="header" href="#check-runtime-behavior">Check Runtime behavior</a></h2>
+<p>Checking how your chosen runtime is behaving should be done before moving on to more in depth studies. Basic runtime tunables such as Garbage Collection need to be checked to ensure there is no unexpected behavior. We describe how to perform such standard checks for the Java runtime in the following.  Below we describe how to perform some standard checks for the Java runtime.  We are not able to provide recommended tools or methodologies for checking high level behavior of other popular runtimes such as Python or NodeJS at the moment.</p>
+<h3 id="java-runtime"><a class="header" href="#java-runtime">Java Runtime</a></h3>
+<p>When running Java applications, monitor for differences in behavior using JFR (Java Flight Recorder) to record JVM behavior and view with JMC (Java Mission Control). These can expose different execution behaviors as reasons for performance differences.</p>
+<ol>
+<li>Enable a JFR recording for your application by adding <code>-XX:+FlightRecorder -XX:StartFlightRecording=delay=&lt;X&gt;s,duration=&lt;X&gt;s,name=&lt;name&gt;,filename=path/to/recording.jfr</code> to the JVM command line.
+<ol>
+<li>Get <a href="https://www.oracle.com/java/technologies/javase/products-jmc8-downloads.html">Java Mission Control</a></li>
+<li>Download the resulting JFR file to local machine</li>
+<li>Open up the JFR file with Mission Control</li>
+</ol>
+</li>
+<li>Check for Garbage Collection (GC) behavior
+<ol>
+<li>Longer collectionpauses,</li>
+<li>Check if more objects/references are are live between collections compared to x86.</li>
+<li>The image below shows JMC’s GC pane, showing pause times, heap size and references remaining after each collection.
+<img src="./images/jmc_example_image.png" alt="" /></li>
+</ol>
+</li>
+<li>The same information can be gathered by enabling GC logging and then processing the log output. Enter <code>-Xlog:gc*,gc+age=trace,gc+ref=debug,gc+ergo=trace</code> on the Java command line and re-start your application.</li>
+<li>If longer GC pauses are seen, this could be happening because objects are living longer on Graviton and the GC has to scan them.  To help debug this gather an off-cpu profile (<a href="./debug_code_perf.html">see Section 5.b</a>) to look for threads that are sleeping more often and potentially causing heap objects to live longer.</li>
+<li>Check for debug flags that are still enabled but should be disabled, such as: <code>-XX:-OmitStackTraceInFastThrow</code> which logs and generates stack traces for all exceptions, even if they are not fatal exceptions.</li>
+<li>Check there are no major differences in JVM ergonomics between Graviton and x86, run:</li>
+</ol>
+<pre><code class="language-bash">%&gt; java -XX:+PrintFlagsFinal -version
+# Capture output from x86 and Graviton and then diff the files
+</code></pre>
+
+                    </main>
+
+                    <nav class="nav-wrapper" aria-label="Page navigation">
+                        <!-- Mobile navigation buttons -->
+                            <a rel="prev" href="../perfrunbook/configuring_your_sut.html" class="mobile-nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
+                                <i class="fa fa-angle-left"></i>
+                            </a>
+
+                            <a rel="next prefetch" href="../perfrunbook/debug_code_perf.html" class="mobile-nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
+                                <i class="fa fa-angle-right"></i>
+                            </a>
+
+                        <div style="clear: both"></div>
+                    </nav>
+                </div>
+            </div>
+
+            <nav class="nav-wide-wrapper" aria-label="Page navigation">
+                    <a rel="prev" href="../perfrunbook/configuring_your_sut.html" class="nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
+                        <i class="fa fa-angle-left"></i>
+                    </a>
+
+                    <a rel="next prefetch" href="../perfrunbook/debug_code_perf.html" class="nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
+                        <i class="fa fa-angle-right"></i>
+                    </a>
+            </nav>
+
+        </div>
+
+
+
+
+        <script>
+            window.playground_copyable = true;
+        </script>
+
+
+        <script src="../elasticlunr.min.js"></script>
+        <script src="../mark.min.js"></script>
+        <script src="../searcher.js"></script>
+
+        <script src="../clipboard.min.js"></script>
+        <script src="../highlight.js"></script>
+        <script src="../book.js"></script>
+
+        <!-- Custom JS scripts -->
+
+
+
+    </div>
+    </body>
+</html>

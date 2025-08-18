@@ -1,0 +1,340 @@
+<!DOCTYPE HTML>
+<html lang="en" class="light sidebar-visible" dir="ltr">
+    <head>
+        <!-- Book generated using mdBook -->
+        <meta charset="UTF-8">
+        <title>Third-party Software Vendors - AWS Graviton technical guide</title>
+
+
+        <!-- Custom HTML head -->
+
+        <meta name="description" content="Technical guidance for developers to use the Arm based AWS Graviton instances">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <meta name="theme-color" content="#ffffff">
+
+        <link rel="icon" href="favicon.svg">
+        <link rel="shortcut icon" href="favicon.png">
+        <link rel="stylesheet" href="css/variables.css">
+        <link rel="stylesheet" href="css/general.css">
+        <link rel="stylesheet" href="css/chrome.css">
+        <link rel="stylesheet" href="css/print.css" media="print">
+
+        <!-- Fonts -->
+        <link rel="stylesheet" href="FontAwesome/css/font-awesome.css">
+        <link rel="stylesheet" href="fonts/fonts.css">
+
+        <!-- Highlight.js Stylesheets -->
+        <link rel="stylesheet" id="highlight-css" href="highlight.css">
+        <link rel="stylesheet" id="tomorrow-night-css" href="tomorrow-night.css">
+        <link rel="stylesheet" id="ayu-highlight-css" href="ayu-highlight.css">
+
+        <!-- Custom theme stylesheets -->
+
+
+        <!-- Provide site root and default themes to javascript -->
+        <script>
+            const path_to_root = "";
+            const default_light_theme = "light";
+            const default_dark_theme = "navy";
+            window.path_to_searchindex_js = "searchindex.js";
+        </script>
+        <!-- Start loading toc.js asap -->
+        <script src="toc.js"></script>
+    </head>
+    <body>
+    <div id="mdbook-help-container">
+        <div id="mdbook-help-popup">
+            <h2 class="mdbook-help-title">Keyboard shortcuts</h2>
+            <div>
+                <p>Press <kbd>←</kbd> or <kbd>→</kbd> to navigate between chapters</p>
+                <p>Press <kbd>S</kbd> or <kbd>/</kbd> to search in the book</p>
+                <p>Press <kbd>?</kbd> to show this help</p>
+                <p>Press <kbd>Esc</kbd> to hide this help</p>
+            </div>
+        </div>
+    </div>
+    <div id="body-container">
+        <!-- Work around some values being stored in localStorage wrapped in quotes -->
+        <script>
+            try {
+                let theme = localStorage.getItem('mdbook-theme');
+                let sidebar = localStorage.getItem('mdbook-sidebar');
+
+                if (theme.startsWith('"') && theme.endsWith('"')) {
+                    localStorage.setItem('mdbook-theme', theme.slice(1, theme.length - 1));
+                }
+
+                if (sidebar.startsWith('"') && sidebar.endsWith('"')) {
+                    localStorage.setItem('mdbook-sidebar', sidebar.slice(1, sidebar.length - 1));
+                }
+            } catch (e) { }
+        </script>
+
+        <!-- Set the theme before any content is loaded, prevents flash -->
+        <script>
+            const default_theme = window.matchMedia("(prefers-color-scheme: dark)").matches ? default_dark_theme : default_light_theme;
+            let theme;
+            try { theme = localStorage.getItem('mdbook-theme'); } catch(e) { }
+            if (theme === null || theme === undefined) { theme = default_theme; }
+            const html = document.documentElement;
+            html.classList.remove('light')
+            html.classList.add(theme);
+            html.classList.add("js");
+        </script>
+
+        <input type="checkbox" id="sidebar-toggle-anchor" class="hidden">
+
+        <!-- Hide / unhide sidebar before it is displayed -->
+        <script>
+            let sidebar = null;
+            const sidebar_toggle = document.getElementById("sidebar-toggle-anchor");
+            if (document.body.clientWidth >= 1080) {
+                try { sidebar = localStorage.getItem('mdbook-sidebar'); } catch(e) { }
+                sidebar = sidebar || 'visible';
+            } else {
+                sidebar = 'hidden';
+                sidebar_toggle.checked = false;
+            }
+            if (sidebar === 'visible') {
+                sidebar_toggle.checked = true;
+            } else {
+                html.classList.remove('sidebar-visible');
+            }
+        </script>
+
+        <nav id="sidebar" class="sidebar" aria-label="Table of contents">
+            <!-- populated by js -->
+            <mdbook-sidebar-scrollbox class="sidebar-scrollbox"></mdbook-sidebar-scrollbox>
+            <noscript>
+                <iframe class="sidebar-iframe-outer" src="toc.html"></iframe>
+            </noscript>
+            <div id="sidebar-resize-handle" class="sidebar-resize-handle">
+                <div class="sidebar-resize-indicator"></div>
+            </div>
+        </nav>
+
+        <div id="page-wrapper" class="page-wrapper">
+
+            <div class="page">
+                <div id="menu-bar-hover-placeholder"></div>
+                <div id="menu-bar" class="menu-bar sticky">
+                    <div class="left-buttons">
+                        <label id="sidebar-toggle" class="icon-button" for="sidebar-toggle-anchor" title="Toggle Table of Contents" aria-label="Toggle Table of Contents" aria-controls="sidebar">
+                            <i class="fa fa-bars"></i>
+                        </label>
+                        <button id="theme-toggle" class="icon-button" type="button" title="Change theme" aria-label="Change theme" aria-haspopup="true" aria-expanded="false" aria-controls="theme-list">
+                            <i class="fa fa-paint-brush"></i>
+                        </button>
+                        <ul id="theme-list" class="theme-popup" aria-label="Themes" role="menu">
+                            <li role="none"><button role="menuitem" class="theme" id="default_theme">Auto</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="light">Light</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="rust">Rust</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="coal">Coal</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="navy">Navy</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="ayu">Ayu</button></li>
+                        </ul>
+                        <button id="search-toggle" class="icon-button" type="button" title="Search (`/`)" aria-label="Toggle Searchbar" aria-expanded="false" aria-keyshortcuts="/ s" aria-controls="searchbar">
+                            <i class="fa fa-search"></i>
+                        </button>
+                    </div>
+
+                    <h1 class="menu-title">AWS Graviton technical guide</h1>
+
+                    <div class="right-buttons">
+                        <a href="print.html" title="Print this book" aria-label="Print this book">
+                            <i id="print-button" class="fa fa-print"></i>
+                        </a>
+                        <a href="https://github.com/aws/aws-graviton-getting-started" title="Git repository" aria-label="Git repository">
+                            <i id="git-repository-button" class="fa fa-github"></i>
+                        </a>
+
+                    </div>
+                </div>
+
+                <div id="search-wrapper" class="hidden">
+                    <form id="searchbar-outer" class="searchbar-outer">
+                        <div class="search-wrapper">
+                            <input type="search" id="searchbar" name="searchbar" placeholder="Search this book ..." aria-controls="searchresults-outer" aria-describedby="searchresults-header">
+                            <div class="spinner-wrapper">
+                                <i class="fa fa-spinner fa-spin"></i>
+                            </div>
+                        </div>
+                    </form>
+                    <div id="searchresults-outer" class="searchresults-outer hidden">
+                        <div id="searchresults-header" class="searchresults-header"></div>
+                        <ul id="searchresults">
+                        </ul>
+                    </div>
+                </div>
+
+                <!-- Apply ARIA attributes after the sidebar and the sidebar toggle button are added to the DOM -->
+                <script>
+                    document.getElementById('sidebar-toggle').setAttribute('aria-expanded', sidebar === 'visible');
+                    document.getElementById('sidebar').setAttribute('aria-hidden', sidebar !== 'visible');
+                    Array.from(document.querySelectorAll('#sidebar a')).forEach(function(link) {
+                        link.setAttribute('tabIndex', sidebar === 'visible' ? 0 : -1);
+                    });
+                </script>
+
+                <div id="content" class="content">
+                    <main>
+                        <p>We have compiled a list of Independent Software Vendor (ISV) products publicly listing arm64/Graviton support.
+If your favorite ISV product isn't listed below, it doesn't mean it's not supported.</p>
+<p>We welcome your feedback at ec2-arm-dev-feedback@amazon.com or by opening an issue in this GitHub repo. We also welcome your Pull Requests updating this list.</p>
+<p>Additionally:</p>
+<ul>
+<li>If you are a developer looking for ISV product support for arm64, please also reach out to your ISV.</li>
+<li>If you are an ISV and would like to partner with us, please also reach out to your AWS Partner Network (<a href="https://aws.amazon.com/partners/">APN</a>) contact.</li>
+</ul>
+<div class="table-wrapper"><table><thead><tr><th>Category</th><th>ISV</th><th>Product</th><th>Resources</th></tr></thead><tbody>
+<tr><td>Analytics</td><td><a href="https://partners.amazonaws.com/partners/001E000001OMadFIAT/Confluent,%20Inc.">Confluent</a></td><td><a href="https://www.confluent.io/product/confluent-platform/">Confluent Platform</a></td><td>Announcement: https://www.confluent.io/blog/introducing-confluent-platform-7-6/#arm64-support<br>Documentation: https://docs.confluent.io/platform/current/installation/system-requirements.html</td></tr>
+<tr><td>Analytics</td><td><a href="https://partners.amazonaws.com/partners/001E0000016WxP5IAK/Databricks">Databricks</a></td><td><a href="https://databricks.com/product/data-lakehouse">Databricks Lakehouse</a></td><td>Announcement: https://databricks.com/blog/2022/04/18/announcing-databricks-support-for-aws-graviton2-with-up-to-3x-better-price-performance.html<br>Documentation: https://docs.databricks.com/clusters/graviton.html</td></tr>
+<tr><td>Analytics</td><td><a href="https://partners.amazonaws.com/partners/001E000000UfalSIAR">InterSystems</a></td><td><a href="https://www.intersystems.com/products/intersystems-iris/">IRIS (Community Edition)</a></td><td>Release: https://aws.amazon.com/marketplace/pp/B08629M8S4<br>Announcement: https://community.intersystems.com/post/intersystems-iris-now-available-aws-graviton2-based-amazon-ec2-instances</td></tr>
+<tr><td>Analytics</td><td><a href="https://partners.amazonaws.com/partners/001E000000Rl139IAB/Splunk">Splunk</a></td><td><a href="https://www.splunk.com/en_us/software/splunk-cloud-platform.html">Splunk Cloud Platform</a></td><td>Announcement: https://www.splunk.com/en_us/blog/platform/splunk-embarks-on-aws-graviton-journey-with-amazon-ec2-im4gn-and-is4gen-instances.html</td></tr>
+<tr><td>Analytics</td><td><a href="https://partners.amazonaws.com/partners/0010L00001rFEKcQAO">Starburst</a></td><td><a href="https://www.starburst.io/platform/starburst-enterprise/">Starburst Enterprise</a></td><td>Release: https://aws.amazon.com/marketplace/pp/prodview-2bpppdqlesn6w<br>Announcement: https://docs.starburst.io/361-e/release/release-360-e.html</td></tr>
+<tr><td>Android</td><td><a href="https://partners.amazonaws.com/partners/001E000000Rl0yjIAB">Canonical</a></td><td><a href="https://anbox-cloud.io/">Anbox Cloud</a></td><td>Release: https://aws.amazon.com/marketplace/pp/prodview-aqmdt52vqs5qk<br>Announcement: https://anbox-cloud.io/docs/tut/installing-appliance, https://ubuntu.com/blog/canonical-achieves-aws-graviton-ready-designation</td></tr>
+<tr><td>Android</td><td><a href="https://www.genymobile.com/">Genymobile</a></td><td><a href="https://www.genymotion.com/">Genymotion Cloud</a></td><td>Release: https://aws.amazon.com/marketplace/pp/B08KHVZWMJ<br>Announcement: https://www.genymotion.com/blog/just-launched-arm-native-android-in-the-cloud-environment-on-aws/</td></tr>
+<tr><td>Containers</td><td><a href="https://partners.amazonaws.com/partners/001E000001BxMyKIAV">HashiCorp</a></td><td><a href="https://www.hashicorp.com/products/consul">Consul</a></td><td>Release: https://www.consul.io/downloads<br>Announcement: https://github.com/hashicorp/consul/blob/v0.8.4/CHANGELOG.md</td></tr>
+<tr><td>Containers</td><td><a href="https://partners.amazonaws.com/partners/001E0000016ohrNIAQ">Docker</a></td><td><a href="https://www.docker.com/products/build-cloud/">Docker Build Cloud</a></td><td>Release: https://www.docker.com/products/build-cloud/<br>Announcement: https://www.docker.com/blog/introducing-docker-build-cloud/</td></tr>
+<tr><td>Containers</td><td><a href="https://kinvolk.io">Kinvolk</a></td><td><a href="https://kinvolk.io/flatcar-container-linux/pro/">Flatcar Container Linux</a></td><td>Release: https://kinvolk.io/flatcar-container-linux/releases/<br>Announcement: https://kinvolk.io/docs/flatcar-container-linux/latest/installing/cloud/aws-ec2/</td></tr>
+<tr><td>Containers</td><td><a href="https://partners.amazonaws.com/partners/001E000000Rl0xiIAB">Red Hat</a></td><td><a href="https://www.redhat.com/en/technologies/cloud-computing/openshift/container-platform">OpenShift Container Platform</a></td><td>Release: https://access.redhat.com/documentation/en-us/openshift_container_platform/4.10/html-single/release_notes/index#ocp-4-10-OCP-on-ARM<br>Announcement: https://cloud.redhat.com/blog/introducing-red-hat-openshift-4.10</td></tr>
+<tr><td>Containers</td><td><a href="https://partners.amazonaws.com/partners/001E000000Rl0xiIAB">Red Hat</a></td><td><a href="https://aws.amazon.com/rosa/">ROSA HCP</a></td><td>Release: https://docs.redhat.com/en/documentation/red_hat_openshift_service_on_aws/4/html-single/introduction_to_rosa/index#rosa-sdpolicy-aws-instance-types-graviton_rosa-hcp-instance-types</td></tr>
+<tr><td>Data Science &amp; ML</td><td><a href="https://partners.amazonaws.com/partners/0010L00001qFzbyQAC">Anaconda</a></td><td><a href="https://www.anaconda.com/products/commercial-edition">Anaconda</a></td><td>Release: https://docs.anaconda.com/anaconda/install/graviton2/, https://repo.anaconda.com/pkgs/main/linux-aarch64/<br>Announcement: https://www.anaconda.com/blog/anaconda-aws-graviton2</td></tr>
+<tr><td>Database</td><td><a href="https://aerospike.com/">Aerospike</a></td><td><a href="https://aerospike.com/products/database/">Aerospike Database</a></td><td>Release: <a href="https://aerospike.com/news/press-release/announcing-aerospike-on-graviton3/">Aerospike Showcases New Levels of Database Performance, Price, and Sustainability on Graviton3 at AWS re:Invent</a></td></tr>
+<tr><td>Database</td><td><a href="https://keydb.dev/">EQ Alpha</a></td><td><a href="https://keydb.dev/keydb-pro.html">KeyDB Professional</a></td><td>Release: https://keydb.dev/downloads.html<br>Announcement: https://docs.keydb.dev/blog/2020/03/02/blog-post/</td></tr>
+<tr><td>Database</td><td><a href="https://partners.amazonaws.com/partners/001E000001A1vNOIAZ">Elastic</a></td><td><a href="https://www.elastic.co/elasticsearch/">Elasticsearch</a></td><td>Release: https://www.elastic.co/downloads/elasticsearch<br>Announcement: https://www.elastic.co/blog/elasticsearch-on-arm</td></tr>
+<tr><td>Database</td><td><a href="https://partners.amazonaws.com/partners/001E000001d9pndIAA">Heimdall Data</a></td><td><a href="https://www.heimdalldata.com/overview/">Heimdall Proxy Enterprise Edition</a></td><td>Release: https://aws.amazon.com/marketplace/pp/B08CL15V3N<br>Announcement: https://aws.amazon.com/marketplace/pp/B08CL15V3N</td></tr>
+<tr><td>Database</td><td><a href="https://partners.amazonaws.com/partners/001E000000U0VKNIA3">MongoDB</a></td><td><a href="https://www.mongodb.com/">Server (Community &amp; Enterprise)</a></td><td>Release: https://www.mongodb.com/try/download<br>Announcement: https://docs.mongodb.com/manual/installation/</td></tr>
+<tr><td>Database</td><td><a href="https://www.oracle.com/">Oracle</a></td><td><a href="https://www.oracle.com/">Oracle Instant Client</a></td><td>Release: https://www.oracle.com/database/technologies/instant-client/linux-arm-aarch64-downloads.html<br>Announcement: https://blogs.oracle.com/opal/post/oracle-instant-client-for-linux-arm-aarch64</td></tr>
+<tr><td>Database</td><td><a href="https://arangodb.com/">ArangoDB</a></td><td><a href="https://arangodb.com/arangograph-selfmanaged/">ArangoDB Enterprise</a></td><td>Release: https://arangodb.com/download-arangodb-enterprise/<br>Announcement: https://arangodb.com/download-arangodb-enterprise/install-enterprise/docker-3-12/</td></tr>
+<tr><td>Database</td><td>Couchbase</td><td>Enterprise Edition Server on Amazon Linux 2 - Graviton</td><td><a href="https://aws.amazon.com/marketplace/pp/prodview-fozt4ivft2tsa">AWS Marketplace</a></td></tr>
+<tr><td>Database</td><td>Couchbase</td><td>Enterprise Server on Amazon Linux 2 - Graviton (Gold Support)</td><td><a href="https://aws.amazon.com/marketplace/pp/prodview-fozt4ivft2tsa">AWS Marketplace</a></td></tr>
+<tr><td>DevOps</td><td><a href="https://partners.amazonaws.com/partners/001E000001EsVSNIA3">Buildkite</a></td><td><a href="https://buildkite.com/docs/agent">Agent</a></td><td>Release: https://github.com/buildkite/agent/releases<br>Announcement: https://buildkite.com/blog/buildkites-transition-to-arm</td></tr>
+<tr><td>DevOps</td><td><a href="https://partners.amazonaws.com/partners/001E000001EsVSNIA3">Buildkite</a></td><td><a href="https://buildkite.com/docs/tutorials/elastic-ci-stack-aws">Elastic CI Stack for AWS</a></td><td>Release: https://buildkite.com/changelog/115-aws-elastic-stack-support-for-arm-instances-rocket<br>Announcement: https://buildkite.com/blog/buildkites-transition-to-arm</td></tr>
+<tr><td>DevOps</td><td><a href="https://partners.amazonaws.com/partners/001E000000wLx02IAC">CircleCI</a></td><td><a href="https://circleci.com/">CircleCI</a></td><td>Release: https://circleci.com/docs/2.0/arm-resources/<br>Announcement: https://www.businesswire.com/news/home/20210330005259/en/CircleCI-Extends-Arm-Support-to-its-CICD-Cloud-Offering</td></tr>
+<tr><td>DevOps</td><td><a href="https://partners.amazonaws.com/partners/001E000000wLx02IAC">CircleCI</a></td><td><a href="https://circleci.com/build-environments/runner/">Self-hosted Runner</a></td><td>Release: https://circleci.com/docs/2.0/runner-installation/#supported-platforms<br>Announcement: https://circleci.com/blog/self-hosted-runners-add-arm-support-to-circleci/</td></tr>
+<tr><td>DevOps</td><td><a href="https://partners.amazonaws.com/partners/001E000000UfaS2IAJ">CloudLinux</a></td><td><a href="https://www.kernelcare.com/">KernelCare</a></td><td>Release: https://aws.amazon.com/marketplace/pp/Cloud-Linux-KernelCare/B085ZLFK7B<br>Announcement: https://aws.amazon.com/blogs/apn/live-patching-linux-without-downtime-on-aws-graviton2-instances/</td></tr>
+<tr><td>DevOps</td><td><a href="https://partners.amazonaws.com/partners/001E000000sVvXiIAK">GitHub</a></td><td><a href="https://docs.github.com/en/actions/hosting-your-own-runners">GitHub Actions Self-hosted Runner</a></td><td>Release: https://github.com/actions/runner/releases<br>Announcement: https://github.blog/changelog/2019-12-03-github-actions-self-hosted-runners-on-arm-architectures/</td></tr>
+<tr><td>DevOps</td><td><a href="https://partners.amazonaws.com/partners/001E0000018YWFfIAO">GitLab</a></td><td><a href="https://docs.gitlab.com/runner/">GitLab Runner</a></td><td>Release: https://gitlab-runner-downloads.s3.amazonaws.com/latest/index.html<br>Announcement: https://about.gitlab.com/blog/2020/05/15/gitlab-arm-aws-graviton2-solution/</td></tr>
+<tr><td>DevOps</td><td><a href="https://partners.amazonaws.com/partners/0010h00001d4srXAAQ">Granulate</a></td><td><a href="https://granulate.io/">gAgent</a></td><td>Release: https://docs.granulate.io/gagent/the-gagent<br>Announcement: https://granulate.io/granulate-aws-graviton-computing-optimization/</td></tr>
+<tr><td>DevOps</td><td><a href="https://partners.amazonaws.com/partners/0010L00001v2cHWQAY">Harness (Drone.io)</a></td><td><a href="https://docs.drone.io/runner/overview/">Drone (Runner &amp; Server)</a></td><td>Release: https://docs.drone.io/runner/docker/installation/linux/<br>Announcement: https://blog.drone.io/drone-announces-official-support-for-arm/</td></tr>
+<tr><td>DevOps</td><td><a href="https://partners.amazonaws.com/partners/001E000001BxMyKIAV">HashiCorp</a></td><td><a href="https://www.hashicorp.com/products/terraform">Terraform</a></td><td>Release: https://www.terraform.io/downloads.html<br>Announcement: https://www.hashicorp.com/blog/announcing-hashicorp-terraform-0-14-beta</td></tr>
+<tr><td>DevOps</td><td><a href="https://partners.amazonaws.com/partners/001E000001BxMyKIAV">HashiCorp</a></td><td><a href="https://www.hashicorp.com/products/vault">Vault</a></td><td>Release: https://www.vaultproject.io/downloads<br>Announcement: https://github.com/hashicorp/vault/milestone/17?closed=1</td></tr>
+<tr><td>DevOps</td><td><a href="https://partners.amazonaws.com/partners/001E000000Rp5GkIAJ">Progress (Chef)</a></td><td><a href="https://www.chef.io/products/chef-infra">Chef Infra Client</a></td><td>Release: https://downloads.chef.io/products/infra-client<br>Announcement: https://www.chef.io/press-release/chef-infra-16-empowers-experts-and-simplifies-adoption-for-new-users</td></tr>
+<tr><td>DevOps</td><td><a href="https://partners.amazonaws.com/partners/001E000000Rl12xIAB">Puppet</a></td><td><a href="https://puppet.com/products/puppet-enterprise/">Puppet Enterprise: Agent</a></td><td>Release: https://puppet.com/docs/pe/latest/supported_operating_systems.html<br>Announcement: https://puppet.com/blog/puppet-enterprise-adds-arm-high-sierra-support-ssl-curl-updates/</td></tr>
+<tr><td>DevOps</td><td><a href="https://goteleport.com/">Teleport (Gravitational)</a></td><td><a href="https://goteleport.com/teleport/">Teleport Unified Access Plane</a></td><td>Release: https://goteleport.com/teleport/download/<br>Announcement: https://goteleport.com/teleport/docs/changelog/#500</td></tr>
+<tr><td>DevOps</td><td><a href="https://www.tetrate.io">Tetrate</a></td><td><a href="https://www.tetrate.io/tetrate-istio-subscription/">Tetrate Istio Subscription</a></td><td><a href="https://aws.amazon.com/marketplace/pp/prodview-r2kdhgz2mmocm">AWS Marketplace Subscription</a><br /><a href="https://www.tetrate.io/blog/tetrate-expands-aws-partnership-to-bring-enterprise-grade-istio-for-eks-and-eks-distro/">Announcement</a></td></tr>
+<tr><td>DevOps</td><td><a href="https://partners.amazonaws.com/partners/001E0000019F9EUIA0">Travis CI</a></td><td><a href="https://travis-ci.com/">Travis CI (SaaS)</a></td><td>Release: "arch: arm64-graviton2" https://docs.travis-ci.com/user/multi-cpu-architectures/<br>Announcement: https://blog.travis-ci.com/2020-09-11-arm-on-aws</td></tr>
+<tr><td>Development</td><td><a href="https://www.azul.com/">Azul</a></td><td><a href="https://www.azul.com/products/zulu-enterprise/">Zulu Enterprise OpenJDK</a></td><td>Release: https://www.azul.com/downloads/zulu/<br>Announcement: https://www.azul.com/products/zulu-system-specifications/</td></tr>
+<tr><td>Developer Platform</td><td>Giant Swarm</td><td>Cloud Native Developer Platform SaaS</td><td><a href="https://aws.amazon.com/marketplace/pp/prodview-z7ul33v35nzam">AWS Marketplace</a></td></tr>
+<tr><td>Developer Platform</td><td>Proxima Cloud</td><td>CRM: Next-Generation Pharma CRM</td><td><a href="https://proximacloud.com/">Proxima Cloud</a></td></tr>
+<tr><td>Developer Platform</td><td>DevOps and Cloud Implementation by Armakuni</td><td>DevOps and Cloud Implementation</td><td><a href="https://www.armakuni.com/">Armakuni</a></td></tr>
+<tr><td>Hardened Images</td><td>CIS</td><td>Hardened Image Level 1 on Amazon Linux 2 (ARM)</td><td><a href="https://www.cisecurity.org/cis-hardened-images">CIS</a></td></tr>
+<tr><td>Hardened Images</td><td>CIS</td><td>Hardened Image Level 1 on Ubuntu Linux Server 22.04 LTS (ARM)</td><td><a href="https://www.cisecurity.org/cis-hardened-images">CIS</a></td></tr>
+<tr><td>Hardened Images</td><td>CIS</td><td>Hardened Image Level 1 on Amazon Linux 2023 (ARM)</td><td><a href="https://www.cisecurity.org/cis-hardened-images">CIS</a></td></tr>
+<tr><td>HPC</td><td><a href="https://partners.amazonaws.com/partners/001E0000015pgFUIAY/ANSYS,%20Inc..">Ansys</a></td><td><a href="https://www.ansys.com/products/fluids/ansys-fluent">Fluent</a><br><a href="https://www.ansys.com/products/structures/ansys-ls-dyna">LS-Dyna</a><br><a href="https://www.ansys.com/products/semiconductors/ansys-redhawk-sc">Redhawk-SC</a></td><td>Announcement: <a href="https://www.ansys.com/content/dam/amp/2023/june/quick-request/arm-64-processor-support-announcement-june-2023.pdf">https://www.ansys.com/content/dam/amp/2023/june/quick-request/arm-64-processor-support-announcement-june-2023.pdf)</a><br>Blog: <a href="https://aws.amazon.com/blogs/hpc/application-deep-dive-into-the-graviton3e-based-amazon-ec2-hpc7g-instance/">https://aws.amazon.com/blogs/hpc/application-deep-dive-into-the-graviton3e-based-amazon-ec2-hpc7g-instance/</a></td></tr>
+<tr><td>HPC</td><td><a href="https://partners.amazonaws.com/partners/001E000001JVfzMIAT">CFD Direct</a></td><td><a href="https://cfd.direct/cloud/aws/">CFD Direct From the Cloud</a></td><td>Release: https://aws.amazon.com/marketplace/pp/B08CHKT98H<br>Announcement: https://cfd.direct/cloud/cfddfc-arm-aws-c6g/</td></tr>
+<tr><td>Mobile / Emulation</td><td>Genymotion</td><td>Cloud - Android 13.0 (arm64)</td><td><a href="https://www.genymotion.com/cloud/">Genymotion</a></td></tr>
+<tr><td>Mobile / Emulation</td><td>Genymotion</td><td>Cloud - Android 14.0 (arm64)</td><td><a href="https://www.genymotion.com/cloud/">Genymotion</a></td></tr>
+<tr><td>Networking</td><td><a href="https://partners.amazonaws.com/partners/001E000000Rl12PIAR">F5 (NGINX)</a></td><td><a href="https://www.nginx.com/products/nginx/">NGINX Plus</a></td><td>Release: https://aws.amazon.com/marketplace/pp/Nginx-Software-Inc-NGINX-Plus-Enterprise-Amazon-Li/B07RQN9ZQP<br>Announcement: https://www.prnewswire.com/news-releases/nginx-plus-now-available-for-latest-generation-of-arm-based-64-bit-servers-665653129.html</td></tr>
+<tr><td>Networking</td><td><a href="https://partners.amazonaws.com/partners/0010L00001siBxVQAU/Kong%20Inc.">Kong (API GW)</a></td><td><a href="https://konghq.com/products/kong-gateway">Kong Gateway</a></td><td>Release: https://download.konghq.com/gateway-3.x-amazonlinux-2022/Packages/k/<br>Announcement: https://konghq.com/blog/engineering/validated-aws-graviton3-al2023</td></tr>
+<tr><td>Networking</td><td>Heimdall</td><td>Proxy Enterprise Edition (ARM)</td><td><a href="https://www.heimdalldata.com/">Heimdall Data</a></td></tr>
+<tr><td>Networking</td><td>Heimdall</td><td>Proxy Enterprise PLUS Edition (ARM)</td><td><a href="https://www.heimdalldata.com/">Heimdall Data</a></td></tr>
+<tr><td>Networking</td><td>Netgate</td><td>pfSense Plus Firewall/VPN/Router (ARM64/Graviton)</td><td><a href="https://www.netgate.com/solutions/pfsense/">Netgate</a></td></tr>
+<tr><td>Observability</td><td><a href="https://partners.amazonaws.com/partners/001E000000Rl0vyIAB/AppDynamics">AppDynamics</a></td><td><a href="https://www.appdynamics.com/product/application-performance-monitoring/">AppDynamics APM Platform</a></td><td>Documentation: https://docs.appdynamics.com/appd/22.x/22.3/en/infrastructure-visibility/machine-agent/machine-agent-requirements-and-supported-environments</td></tr>
+<tr><td>Observability</td><td><a href="https://partners.amazonaws.com/partners/0010h00001dpaa1AAA/Cribl,%20Inc.">Cribl</a></td><td><a href="https://cribl.io/logstream/">Cribl LogStream</a></td><td>Release: https://cdn.cribl.io/dl/3.0.1/cribl-3.0.1-719ad848-linux-arm64.tgz<br>Announcement: https://cribl.io/blog/comparing-intel-amd-and-graviton2/</td></tr>
+<tr><td>Observability</td><td><a href="https://partners.amazonaws.com/partners/001E000000Rp57sIAB">Datadog</a></td><td><a href="https://docs.datadoghq.com/agent/">Datadog Agent</a></td><td>Release: https://hub.docker.com/r/datadog/agent<br>Announcement: https://www.datadoghq.com/blog/datadog-arm-agent/</td></tr>
+<tr><td>Observability</td><td><a href="https://partners.amazonaws.com/partners/001E000000texmiIAA">Dynatrace</a></td><td><a href="https://www.dynatrace.com/support/help/setup-and-configuration/dynatrace-oneagent/">OneAgent</a></td><td>Release: https://www.dynatrace.com/support/help/setup-and-configuration/dynatrace-oneagent/oneagent-technology-support/oneagent-platform-and-capability-support-matrix/<br>Announcement: https://www.dynatrace.com/news/blog/get-out-of-the-box-visibility-into-your-arm-platform-early-adopter/</td></tr>
+<tr><td>Observability</td><td><a href="https://partners.amazonaws.com/partners/0010h00001cBmQtAAK">Grafana Labs</a></td><td><a href="https://grafana.com/products/enterprise/">Grafana Enterprise</a></td><td>Release: https://grafana.com/grafana/download?edition=enterprise&amp;platform=arm<br>Announcement: https://grafana.com/docs/grafana/latest/whatsnew/whats-new-in-v5-2/#native-builds-for-arm</td></tr>
+<tr><td>Observability</td><td><a href="https://partners.amazonaws.com/partners/0010L00001rElnvQAC">Honeycomb</a></td><td><a href="https://www.honeycomb.io/overview/">Honeycomb (SaaS, including Honeytail agent)</a></td><td>Release: https://www.honeycomb.io/pricing/<br>Announcement: Documentation of arm64 support for Honeytail agent:  https://docs.honeycomb.io/getting-data-in/integrations/honeytail/</td></tr>
+<tr><td>Observability</td><td><a href="https://partners.amazonaws.com/partners/001E000000Rl12lIAB">New Relic</a></td><td><a href="https://newrelic.com/products/application-monitoring">APM agents</a></td><td>Release: https://docs.newrelic.com/docs/new-relic-one/install-configure/install-new-relic/#apm-install<br>Announcement: https://docs.newrelic.com/docs/apm/agents/manage-apm-agents/configuration/support-arm-graviton-x86-64</td></tr>
+<tr><td>Observability</td><td><a href="https://partners.amazonaws.com/partners/001E000000Rl12lIAB">New Relic</a></td><td><a href="https://newrelic.com/products/infrastructure">Infrastructure Agent</a></td><td>Release: https://download.newrelic.com/infrastructure_agent/binaries/linux/arm64/<br>Announcement: https://docs.newrelic.com/docs/infrastructure/install-infrastructure-agent/get-started/requirements-infrastructure-agent</td></tr>
+<tr><td>Observability</td><td><a href="https://partners.amazonaws.com/partners/001E000000Rl139IAB">Splunk</a></td><td><a href="https://www.splunk.com/en_us/software/splunk-enterprise.html">Enterprise: Universal Forwarder</a></td><td>Release: https://www.splunk.com/en_us/download/universal-forwarder.html<br>Announcement: https://docs.splunk.com/Documentation/Splunk/8.1.1/ReleaseNotes/MeetSplunk<br> Related Blog: https://aws.amazon.com/blogs/apn/monitoring-your-linux-workloads-on-aws-graviton-with-splunk-cloud/</td></tr>
+<tr><td>Observability</td><td><a href="https://partners.amazonaws.com/partners/001E000000Rl0y6IAB">Sumo Logic</a></td><td><a href="https://help.sumologic.com/Beta/Sumo_Logic_Distribution_for_OpenTelemetry">Collector (OpenTelemetry)</a></td><td>Release: Beta: https://github.com/SumoLogic/sumologic-otel-collector/blob/main/docs/Installation.md#linux-on-arm64<br>Announcement: (https://support.sumologic.com/hc/en-us/articles/360034233293-Is-ARM64-architecture-supported-by-Sumo-Logic-collector-installer-)</td></tr>
+<tr><td>Security</td><td><a href="https://partners.amazonaws.com/partners/001E000001LiLQqIAN">Aqua Security</a></td><td><a href="https://www.aquasec.com/aqua-cloud-native-security-platform/">Aqua Cloud Native Security Platform</a></td><td>Release: https://www.aquasec.com/demo/<br>Announcement: https://blog.aquasec.com/aqua-support-aws-graviton</td></tr>
+<tr><td>Security</td><td><a href="https://partners.amazonaws.com/partners/001E000001LiLQqIAN">Aqua Security</a></td><td><a href="https://www.aquasec.com/products/open-source-projects/">Open Source (Trivy, kube-bench)</a></td><td>Release: https://gallery.ecr.aws/?architectures=ARM+64&amp;verified=verified&amp;searchTerm=aqua<br>Announcement: https://github.com/aquasecurity/trivy/releases/, https://github.com/aquasecurity/kube-bench/releases</td></tr>
+<tr><td>Security</td><td><a href="https://aws.amazon.com/marketplace/seller-profile?id=277af30e-567f-4076-a7c2-8bb6ec439138">Bloombase</a></td><td><a href="https://www.bloombase.com/products/storesafe">Bloombase StoreSafe</a></td><td>Release: https://supportal.bloombase.com<br>Announcement: https://www.youtube.com/watch?v=WsOoR0zTgho</td></tr>
+<tr><td>Security</td><td><a href="https://partners.amazonaws.com/partners/0010L00001iUuBxQAK">CIS</a></td><td><a href="https://www.cisecurity.org/cis-hardened-images/amazon/">CIS Hardened Images</a></td><td>Release: https://aws.amazon.com/marketplace/seller-profile?id=dfa1e6a8-0b7b-4d35-a59c-ce272caee4fc&amp;ref=dtl_B078SH1GP1<br>Announcement: https://www.cisecurity.org/blog/cis-hardened-vms-on-aws-graviton2-enhancing-ec2-security/</td></tr>
+<tr><td>Security</td><td><a href="https://partners.amazonaws.com/partners/001E000001VAPbPIAX">CrowdStrike</a></td><td><a href="https://www.crowdstrike.com/endpoint-security-products/">Falcon</a></td><td>Release: CrowdStrike FAQ listing Graviton/Linux support: https://www.crowdstrike.com/endpoint-security-products/crowdstrike-falcon-faq/<br>Announcement: https://www.crowdstrike.com/blog/join-crowdstrike-at-aws-reinvent-2019/</td></tr>
+<tr><td>Security</td><td><a href="https://partners.amazonaws.com/partners/001E000001V9UhGIAV">Lacework</a></td><td><a href="https://www.lacework.com/workload-security/">Workload Security Agent</a></td><td>Release: https://github.com/lacework/lacework-agent-releases/releases<br>Announcement: https://www.lacework.com/lacework-expands-security-visibility-and-automation-across-amazon-web-services/, https://support.lacework.com/hc/en-us/articles/360059603473-November-2020-Agent-Release, https://support.lacework.com/hc/en-us/articles/360005230014-Supported-Operating-Systems</td></tr>
+<tr><td>Security</td><td><a href="https://www.oneidentity.com/">One Identity</a></td><td><a href="https://www.oneidentity.com/products/one-identity-safeguard-authentication-services/">Safeguard Authentication Services</a></td><td>Release: https://support.oneidentity.com/technical-documents/safeguard-authentication-services/5.0.1/installation-guide/3#TOPIC-1559368<br>Announcement: "AARCH64" https://support.oneidentity.com/technical-documents/safeguard-authentication-services/5.0.1/release-notes#TOPIC-1565570</td></tr>
+<tr><td>Security</td><td><a href="https://partners.amazonaws.com/partners/001E000000Rl0xgIAB">Qualys</a></td><td><a href="https://www.qualys.com/cloud-agent/">Cloud Agent</a></td><td>Release: https://www.qualys.com/docs/qualys-cloud-agent-linux-install-guide.pdf<br>Announcement: https://notifications.qualys.com/product/2020/05/26/qualys-adds-cloud-agent-linux-support-for-aws-arm-based-ec2-instances</td></tr>
+<tr><td>Security</td><td><a href="https://partners.amazonaws.com/partners/001E000000lZ7eMIAS">Rapid7</a></td><td><a href="https://www.rapid7.com/products/insightvm/">InsightVM</a></td><td>Release: https://aws.amazon.com/blogs/apn/how-to-deploy-a-rapid7-insightvm-scan-engine-for-aws-graviton2-based-ec2-instances/<br>Announcement: https://aws.amazon.com/blogs/apn/how-to-deploy-a-rapid7-insightvm-scan-engine-for-aws-graviton2-based-ec2-instances/</td></tr>
+<tr><td>Security</td><td><a href="https://partners.amazonaws.com/partners/0010L00001tA9EiQAK">SentinelOne</a></td><td><a href="https://www.sentinelone.com/platform/">Singularity XDR</a></td><td>Release: https://www.sentinelone.com/platform/singularity-cloud/<br>Announcement: https://www.sentinelone.com/blog/edr-for-cloud-workloads-running-on-aws-graviton/</td></tr>
+<tr><td>Security</td><td><a href="https://partners.amazonaws.com/partners/0010L00001kXlYOQA0">Snyk</a></td><td><a href="https://snyk.io/product/container-vulnerability-management/">Snyk Container</a></td><td>Release: https://support.snyk.io/hc/en-us/articles/360003812538-Install-the-Snyk-CLI<br>Announcement: https://snyk.io/blog/scanning-arm-container-images-with-snyk/</td></tr>
+<tr><td>Security</td><td><a href="https://partners.amazonaws.com/partners/001E000000e1mVKIAY">Tenable</a></td><td><a href="https://www.tenable.com/products/nessus">Nessus (Scanner, Agent)</a></td><td>Release: https://www.tenable.com/downloads/nessus<br>Announcement: Graviton2 listed since Nessus 8.1.1: https://docs.tenable.com/generalrequirements/Content/NessusScannerSoftwareRequirements.htm</td></tr>
+<tr><td>Security</td><td><a href="https://partners.amazonaws.com/partners/001E000000jBMF3IAO/">Threat Stack</a></td><td><a href="https://www.threatstack.com/cloud-security-platform">Linux Agent</a></td><td>Release: https://www.threatstack.com/resources/arm-support-solution-brief<br>Announcement: https://www.threatstack.com/press-releases/arm-support-release</td></tr>
+<tr><td>Security</td><td><a href="https://partners.amazonaws.com/partners/001E000000Rl0yAIAR">Trend Micro</a></td><td><a href="https://www.trendmicro.com/en_us/business/products/hybrid-cloud/deep-security.html">Deep Security: Agent</a></td><td>Release: https://help.deepsecurity.trendmicro.com/software-long-term-support.html<br>Announcement: https://help.deepsecurity.trendmicro.com/20_0/on-premise/agent-compatibility.html, https://cloudone.trendmicro.com/docs/workload-security/supported-features-by-platform/#amazon-linux</td></tr>
+<tr><td>Security</td><td><a href="https://partners.amazonaws.com/partners/001E000001hNx6dIAC/VMware,%20Inc">VMware</a></td><td><a href="https://www.vmware.com/products/carbon-black-cloud-endpoint.html">VMware Carbon Black (Linux Sensor)</a></td><td>Release: https://docs.vmware.com/en/VMware-Carbon-Black-Cloud/services/cbc-oer-linux-sensor.pdf  <br>Announcement: https://docs.vmware.com/en/VMware-Carbon-Black-Cloud/2.14.0/rn/vmware-carbon-black-cloud-linux-sensor-2140-release-notes/index.html</td></tr>
+<tr><td>Security</td><td><a href="https://wazuh.com/">Wazuh</a></td><td><a href="https://wazuh.com/product/">Wazuh (Agent &amp; Manager)</a></td><td>Release: https://documentation.wazuh.com/4.0/installation-guide/packages-list.html<br>Announcement: https://github.com/wazuh/wazuh/blob/4.0/CHANGELOG.md</td></tr>
+<tr><td>Security</td><td><a href="https://www.microsoft.com/">Microsoft</a></td><td><a href="https://www.microsoft.com/en-us/security/business/endpoint-security/microsoft-defender-endpoint">Defender for Endpoint</a></td><td>Announcement: https://techcommunity.microsoft.com/blog/microsoftdefenderatpblog/defender-for-endpoint-extends-support-to-arm-based-linux-servers/4364066</td></tr>
+<tr><td>Security</td><td>Cribl</td><td>Cribl Stream (ARM64)</td><td><a href="https://aws.amazon.com/marketplace/pp/prodview-76rwg3pud2vze">AWS Marketplace</a></td></tr>
+<tr><td>Security</td><td>Armis</td><td>Device Security Platform</td><td><a href="https://aws.amazon.com/marketplace/pp/prodview-zhbfuevcbnjfw">AWS Marketplace</a></td></tr>
+<tr><td>Security</td><td>Armis</td><td>Centrix FEDRAMP Authorized</td><td><a href="https://www.armis.com/blog/armis-achieves-final-fedramp-authorization/">FedRAMP Announcement</a></td></tr>
+<tr><td>Security</td><td>Armis</td><td>Centrix ViPR Pro</td><td><a href="https://www.cdw.com/product/armis-centrix-for-vipr-pro-license-50000-99999-assets/8100105">CDW Product Page</a></td></tr>
+<tr><td>Security</td><td>Armis</td><td>Asset Management- 15000 to 24999 Assets- 1-8 Network Ports</td><td><a href="https://www.armis.com/">Armis</a></td></tr>
+<tr><td>Security</td><td>Armis</td><td>with Professional Services Subscription</td><td><a href="https://www.armis.com/">Armis</a></td></tr>
+<tr><td>Security</td><td>Check Point</td><td>Harmony SaaS</td><td><a href="https://www.checkpoint.com/products/harmony/">Check Point</a></td></tr>
+<tr><td>Security</td><td>Check Point</td><td>Harmony Advanced &amp; DB Warden</td><td><a href="https://www.checkpoint.com/products/harmony/">Check Point</a></td></tr>
+<tr><td>Security</td><td>Check Point</td><td>Harmony Endpoint</td><td><a href="https://www.checkpoint.com/products/harmony-endpoint/">Check Point</a></td></tr>
+<tr><td>Security</td><td>Check Point</td><td>Harmony Email &amp; Collaboration (Avanan)</td><td><a href="https://www.checkpoint.com/products/harmony-email-collaboration/">Check Point</a></td></tr>
+<tr><td>Security</td><td>Fortinet</td><td>FortiGate Next-Generation Firewall (ARM64/Graviton)</td><td><a href="https://www.fortinet.com/products/next-generation-firewall">Fortinet</a></td></tr>
+<tr><td>Security</td><td>WafCharm</td><td>WafCharm for AWS Marketplace (Subscription)</td><td><a href="https://aws.amazon.com/marketplace/pp/prodview-4w2x4h4d7xq4i">AWS Marketplace</a></td></tr>
+<tr><td>Security</td><td>ARMO</td><td>ARMO Platform</td><td><a href="https://www.armosec.io/platform/">ARMO Platform</a></td></tr>
+<tr><td>Security</td><td>ArmorCode</td><td>ASPM, DevSecOps Orchestration</td><td><a href="https://www.armorcode.com/devsecops">ArmorCode</a></td></tr>
+<tr><td>Compliance &amp; Security</td><td>stackArmor</td><td>ThreatAlert® ATO Accelerator for FedRAMP, FISMA, and CMMC</td><td><a href="https://www.stackarmor.com/">stackArmor</a></td></tr>
+<tr><td>Storage</td><td><a href="https://min.io/">MinIO</a></td><td><a href="https://min.io/">MinIO</a></td><td>Release: https://min.io/download#/linux<br>Announcement: https://github.com/minio/minio/releases/tag/RELEASE.2020-06-12T00-06-19Z</td></tr>
+</tbody></table>
+</div>
+                    </main>
+
+                    <nav class="nav-wrapper" aria-label="Page navigation">
+                        <!-- Mobile navigation buttons -->
+                            <a rel="prev" href="managed_services.html" class="mobile-nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
+                                <i class="fa fa-angle-left"></i>
+                            </a>
+
+                            <a rel="next prefetch" href="HPC/index.html" class="mobile-nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
+                                <i class="fa fa-angle-right"></i>
+                            </a>
+
+                        <div style="clear: both"></div>
+                    </nav>
+                </div>
+            </div>
+
+            <nav class="nav-wide-wrapper" aria-label="Page navigation">
+                    <a rel="prev" href="managed_services.html" class="nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
+                        <i class="fa fa-angle-left"></i>
+                    </a>
+
+                    <a rel="next prefetch" href="HPC/index.html" class="nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
+                        <i class="fa fa-angle-right"></i>
+                    </a>
+            </nav>
+
+        </div>
+
+
+
+
+        <script>
+            window.playground_copyable = true;
+        </script>
+
+
+        <script src="elasticlunr.min.js"></script>
+        <script src="mark.min.js"></script>
+        <script src="searcher.js"></script>
+
+        <script src="clipboard.min.js"></script>
+        <script src="highlight.js"></script>
+        <script src="book.js"></script>
+
+        <!-- Custom JS scripts -->
+
+
+
+    </div>
+    </body>
+</html>

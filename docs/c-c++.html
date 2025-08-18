@@ -1,0 +1,365 @@
+<!DOCTYPE HTML>
+<html lang="en" class="light sidebar-visible" dir="ltr">
+    <head>
+        <!-- Book generated using mdBook -->
+        <meta charset="UTF-8">
+        <title>C/C++ - AWS Graviton technical guide</title>
+
+
+        <!-- Custom HTML head -->
+
+        <meta name="description" content="Technical guidance for developers to use the Arm based AWS Graviton instances">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <meta name="theme-color" content="#ffffff">
+
+        <link rel="icon" href="favicon.svg">
+        <link rel="shortcut icon" href="favicon.png">
+        <link rel="stylesheet" href="css/variables.css">
+        <link rel="stylesheet" href="css/general.css">
+        <link rel="stylesheet" href="css/chrome.css">
+        <link rel="stylesheet" href="css/print.css" media="print">
+
+        <!-- Fonts -->
+        <link rel="stylesheet" href="FontAwesome/css/font-awesome.css">
+        <link rel="stylesheet" href="fonts/fonts.css">
+
+        <!-- Highlight.js Stylesheets -->
+        <link rel="stylesheet" id="highlight-css" href="highlight.css">
+        <link rel="stylesheet" id="tomorrow-night-css" href="tomorrow-night.css">
+        <link rel="stylesheet" id="ayu-highlight-css" href="ayu-highlight.css">
+
+        <!-- Custom theme stylesheets -->
+
+
+        <!-- Provide site root and default themes to javascript -->
+        <script>
+            const path_to_root = "";
+            const default_light_theme = "light";
+            const default_dark_theme = "navy";
+            window.path_to_searchindex_js = "searchindex.js";
+        </script>
+        <!-- Start loading toc.js asap -->
+        <script src="toc.js"></script>
+    </head>
+    <body>
+    <div id="mdbook-help-container">
+        <div id="mdbook-help-popup">
+            <h2 class="mdbook-help-title">Keyboard shortcuts</h2>
+            <div>
+                <p>Press <kbd>←</kbd> or <kbd>→</kbd> to navigate between chapters</p>
+                <p>Press <kbd>S</kbd> or <kbd>/</kbd> to search in the book</p>
+                <p>Press <kbd>?</kbd> to show this help</p>
+                <p>Press <kbd>Esc</kbd> to hide this help</p>
+            </div>
+        </div>
+    </div>
+    <div id="body-container">
+        <!-- Work around some values being stored in localStorage wrapped in quotes -->
+        <script>
+            try {
+                let theme = localStorage.getItem('mdbook-theme');
+                let sidebar = localStorage.getItem('mdbook-sidebar');
+
+                if (theme.startsWith('"') && theme.endsWith('"')) {
+                    localStorage.setItem('mdbook-theme', theme.slice(1, theme.length - 1));
+                }
+
+                if (sidebar.startsWith('"') && sidebar.endsWith('"')) {
+                    localStorage.setItem('mdbook-sidebar', sidebar.slice(1, sidebar.length - 1));
+                }
+            } catch (e) { }
+        </script>
+
+        <!-- Set the theme before any content is loaded, prevents flash -->
+        <script>
+            const default_theme = window.matchMedia("(prefers-color-scheme: dark)").matches ? default_dark_theme : default_light_theme;
+            let theme;
+            try { theme = localStorage.getItem('mdbook-theme'); } catch(e) { }
+            if (theme === null || theme === undefined) { theme = default_theme; }
+            const html = document.documentElement;
+            html.classList.remove('light')
+            html.classList.add(theme);
+            html.classList.add("js");
+        </script>
+
+        <input type="checkbox" id="sidebar-toggle-anchor" class="hidden">
+
+        <!-- Hide / unhide sidebar before it is displayed -->
+        <script>
+            let sidebar = null;
+            const sidebar_toggle = document.getElementById("sidebar-toggle-anchor");
+            if (document.body.clientWidth >= 1080) {
+                try { sidebar = localStorage.getItem('mdbook-sidebar'); } catch(e) { }
+                sidebar = sidebar || 'visible';
+            } else {
+                sidebar = 'hidden';
+                sidebar_toggle.checked = false;
+            }
+            if (sidebar === 'visible') {
+                sidebar_toggle.checked = true;
+            } else {
+                html.classList.remove('sidebar-visible');
+            }
+        </script>
+
+        <nav id="sidebar" class="sidebar" aria-label="Table of contents">
+            <!-- populated by js -->
+            <mdbook-sidebar-scrollbox class="sidebar-scrollbox"></mdbook-sidebar-scrollbox>
+            <noscript>
+                <iframe class="sidebar-iframe-outer" src="toc.html"></iframe>
+            </noscript>
+            <div id="sidebar-resize-handle" class="sidebar-resize-handle">
+                <div class="sidebar-resize-indicator"></div>
+            </div>
+        </nav>
+
+        <div id="page-wrapper" class="page-wrapper">
+
+            <div class="page">
+                <div id="menu-bar-hover-placeholder"></div>
+                <div id="menu-bar" class="menu-bar sticky">
+                    <div class="left-buttons">
+                        <label id="sidebar-toggle" class="icon-button" for="sidebar-toggle-anchor" title="Toggle Table of Contents" aria-label="Toggle Table of Contents" aria-controls="sidebar">
+                            <i class="fa fa-bars"></i>
+                        </label>
+                        <button id="theme-toggle" class="icon-button" type="button" title="Change theme" aria-label="Change theme" aria-haspopup="true" aria-expanded="false" aria-controls="theme-list">
+                            <i class="fa fa-paint-brush"></i>
+                        </button>
+                        <ul id="theme-list" class="theme-popup" aria-label="Themes" role="menu">
+                            <li role="none"><button role="menuitem" class="theme" id="default_theme">Auto</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="light">Light</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="rust">Rust</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="coal">Coal</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="navy">Navy</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="ayu">Ayu</button></li>
+                        </ul>
+                        <button id="search-toggle" class="icon-button" type="button" title="Search (`/`)" aria-label="Toggle Searchbar" aria-expanded="false" aria-keyshortcuts="/ s" aria-controls="searchbar">
+                            <i class="fa fa-search"></i>
+                        </button>
+                    </div>
+
+                    <h1 class="menu-title">AWS Graviton technical guide</h1>
+
+                    <div class="right-buttons">
+                        <a href="print.html" title="Print this book" aria-label="Print this book">
+                            <i id="print-button" class="fa fa-print"></i>
+                        </a>
+                        <a href="https://github.com/aws/aws-graviton-getting-started" title="Git repository" aria-label="Git repository">
+                            <i id="git-repository-button" class="fa fa-github"></i>
+                        </a>
+
+                    </div>
+                </div>
+
+                <div id="search-wrapper" class="hidden">
+                    <form id="searchbar-outer" class="searchbar-outer">
+                        <div class="search-wrapper">
+                            <input type="search" id="searchbar" name="searchbar" placeholder="Search this book ..." aria-controls="searchresults-outer" aria-describedby="searchresults-header">
+                            <div class="spinner-wrapper">
+                                <i class="fa fa-spinner fa-spin"></i>
+                            </div>
+                        </div>
+                    </form>
+                    <div id="searchresults-outer" class="searchresults-outer hidden">
+                        <div id="searchresults-header" class="searchresults-header"></div>
+                        <ul id="searchresults">
+                        </ul>
+                    </div>
+                </div>
+
+                <!-- Apply ARIA attributes after the sidebar and the sidebar toggle button are added to the DOM -->
+                <script>
+                    document.getElementById('sidebar-toggle').setAttribute('aria-expanded', sidebar === 'visible');
+                    document.getElementById('sidebar').setAttribute('aria-hidden', sidebar !== 'visible');
+                    Array.from(document.querySelectorAll('#sidebar a')).forEach(function(link) {
+                        link.setAttribute('tabIndex', sidebar === 'visible' ? 0 : -1);
+                    });
+                </script>
+
+                <div id="content" class="content">
+                    <main>
+                        <h1 id="cc-on-graviton"><a class="header" href="#cc-on-graviton">C/C++ on Graviton</a></h1>
+<h3 id="enabling-arm-architecture-specific-features"><a class="header" href="#enabling-arm-architecture-specific-features">Enabling Arm Architecture Specific Features</a></h3>
+<p>TLDR: To target all current generation Graviton instances (Graviton2,
+Graviton3, and Graviton4), use <code>-march=armv8.2-a</code>.</p>
+<p>C and C++ code can be built for Graviton with a variety of flags, depending on
+the goal. If the goal is to get the best performance for a specific generation,
+select a flag from the table column "performance". If the goal is to get a good
+compromise of feature availability and performance balanced across generations,
+select the flag from the "balanced" column. If you want to target multiple
+generations of Graviton, select the "balanced" flag for the oldest generation
+planned for deployment, since code built for a newer generation may not run on
+an older generation. On arm64 <code>-mcpu=</code> acts as both specifying the appropriate
+architecture and tuning and it's generally better to use that vs <code>-march</code> if
+you're building for a specific CPU.</p>
+<div class="table-wrapper"><table><thead><tr><th>CPU</th><th>Flag (performance)</th><th>Flag (balanced)</th><th>GCC version</th><th>LLVM version</th></tr></thead><tbody>
+<tr><td>Graviton2</td><td><code>-mcpu=neoverse-n1</code> ¹</td><td><code>-march=armv8.2-a</code></td><td>GCC-9</td><td>Clang/LLVM 10+</td></tr>
+<tr><td>Graviton3(E)</td><td><code>-mcpu=neoverse-v1</code></td><td><code>-mcpu=neoverse-512tvb</code> ²</td><td>GCC 11</td><td>Clang/LLVM 14+</td></tr>
+<tr><td>Graviton4</td><td><code>-mcpu=neoverse-v2</code></td><td><code>-mcpu=neoverse-512tvb</code> ²</td><td>GCC 13</td><td>Clang/LLVM 16+</td></tr>
+</tbody></table>
+</div>
+<p>¹ Requires GCC-9 or later (or GCC-7 for Amazon Linux 2); otherwise we suggest
+using <code>-mcpu=cortex-a72</code></p>
+<p>² If your compiler doesn't support <code>neoverse-512tvb</code>, please use the Graviton2
+tuning.</p>
+<p>For some applications, it may be necessary to support a broad range of Arm64
+targets while still making use of more advanced features such as LSE (Large
+System Extensions) or SVE (Scalable Vector Extension). For this case choose a
+more conservative build flag, such as <code>-march=armv8-a</code> and make use of runtime
+CPU support detection of features such as SVE. You can enable runtime detection
+and use of LSE atomics instructions by adding the additional compiler flag,
+<code>-moutline-atomics</code>.</p>
+<h3 id="compilers"><a class="header" href="#compilers">Compilers</a></h3>
+<p>Newer compilers provide better support and optimizations for Graviton processors.
+We have seen 15% better performance on Graviton2 when using gcc-10 instead of Amazon Linux 2 system's compiler gcc-7.
+When possible please use the latest compiler version available on your system.
+The table shows GCC and LLVM compiler versions available in Linux distributions.
+Starred version marks the default system compiler.</p>
+<div class="table-wrapper"><table><thead><tr><th>Distribution</th><th>GCC</th><th>Clang/LLVM</th></tr></thead><tbody>
+<tr><td>Amazon Linux 2023</td><td>11*</td><td>15*</td></tr>
+<tr><td>Amazon Linux 2</td><td>7*, 10</td><td>7, 11*</td></tr>
+<tr><td>Ubuntu 24.04</td><td>9, 10, 11, 12, 13*, 14</td><td>14, 15, 16, 17, 18*</td></tr>
+<tr><td>Ubuntu 22.04</td><td>9, 10, 11*, 12</td><td>11, 12, 13, 14*</td></tr>
+<tr><td>Ubuntu 20.04</td><td>7, 8, 9*, 10</td><td>6, 7, 8, 9, 10, 11, 12</td></tr>
+<tr><td>Ubuntu 18.04</td><td>4.8, 5, 6, 7*, 8</td><td>3.9, 4, 5, 6, 7, 8, 9, 10</td></tr>
+<tr><td>Debian10</td><td>7, 8*</td><td>6, 7, 8</td></tr>
+<tr><td>Red Hat EL8</td><td>8*, 9, 10</td><td>10</td></tr>
+<tr><td>SUSE Linux ES15</td><td>7*, 9, 10</td><td>7</td></tr>
+</tbody></table>
+</div>
+<h3 id="large-system-extensions-lse"><a class="header" href="#large-system-extensions-lse">Large-System Extensions (LSE)</a></h3>
+<p>All Graviton processors after Graviton1 have support for the Large-System Extensions (LSE)
+which was first introduced in vArmv8.1. LSE provides low-cost atomic operations which can
+improve system throughput for CPU-to-CPU communication, locks, and mutexes.
+The improvement can be up to an order of magnitude when using LSE instead of
+load/store exclusives.</p>
+<p>POSIX threads library needs LSE atomic instructions.  LSE is important for
+locking and thread synchronization routines.  The following systems distribute
+a libc compiled with LSE instructions:</p>
+<ul>
+<li>Amazon Linux 2</li>
+<li>Amazon Linux 2023</li>
+<li>Ubuntu 18.04 (needs <code>apt install libc6-lse</code>)</li>
+<li>Ubuntu 20.04</li>
+<li>Ubuntu 22.04</li>
+<li>Ubuntu 24.04</li>
+</ul>
+<p>The compiler needs to generate LSE instructions for applications that use atomic
+operations.  For example, the code of databases like PostgreSQL contain atomic
+constructs; c++11 code with std::atomic statements translate into atomic
+operations.  GCC's <code>-march=armv8.2-a</code> flag enables all instructions supported by
+Graviton2, including LSE.  To confirm that LSE instructions are created,
+the output of <code>objdump</code> command line utility should contain LSE instructions:</p>
+<pre><code>$ objdump -d app | grep -i 'cas\|casp\|swp\|ldadd\|stadd\|ldclr\|stclr\|ldeor\|steor\|ldset\|stset\|ldsmax\|stsmax\|ldsmin\|stsmin\|ldumax\|stumax\|ldumin\|stumin' | wc -l
+</code></pre>
+<p>To check whether the application binary contains load and store exclusives:</p>
+<pre><code>$ objdump -d app | grep -i 'ldxr\|ldaxr\|stxr\|stlxr' | wc -l
+</code></pre>
+<h3 id="porting-codes-with-sseavx-intrinsics-to-neon"><a class="header" href="#porting-codes-with-sseavx-intrinsics-to-neon">Porting codes with SSE/AVX intrinsics to NEON</a></h3>
+<p>When programs contain code with x64 intrinsics, the following procedure can help
+to quickly obtain a working program on Arm, assess the performance of the
+program running on Graviton processors, profile hot paths, and improve the
+quality of code on the hot paths.</p>
+<p>To quickly get a prototype running on Arm, one can use
+https://github.com/DLTcollab/sse2neon a translator of x64 intrinsics to NEON.
+sse2neon provides a quick starting point in porting performance critical codes
+to Arm.  It shortens the time needed to get an Arm working program that then
+can be used to extract profiles and to identify hot paths in the code.  A header
+file <code>sse2neon.h</code> contains several of the functions provided by standard x64
+include files like <code>xmmintrin.h</code>, only implemented with NEON instructions to
+produce the exact semantics of the x64 intrinsic.  Once a profile is
+established, the hot paths can be rewritten directly with NEON intrinsics to
+avoid the overhead of the generic sse2neon translation.</p>
+<h3 id="signed-vs-unsigned-char"><a class="header" href="#signed-vs-unsigned-char">Signed vs. Unsigned char</a></h3>
+<p>The C standard doesn't specify the signedness of char. On x86 char is signed by
+default while on Arm it is unsigned by default. This can be addressed by using
+standard int types that explicitly specify the signedness (e.g. <code>uint8_t</code> and <code>int8_t</code>)
+or compile with <code>-fsigned-char</code>.
+When using the <code>getchar</code> function, instead of the commonly used but incorrect:</p>
+<pre><code>char c;
+while((c = getchar()) != EOF) {
+    // Do something with the character c
+}
+// Assume we have reached the end of file here
+</code></pre>
+<p>you should use an <code>int</code> type and the standard function <code>feof</code> and <code>ferror</code> to
+check for the end of file, as follows:</p>
+<pre><code>int c;
+
+while ((c = getchar()) != EOF) {
+    // Do something with the character c
+}
+// Once we get EOF, we should check if it is actually an EOF or an error
+
+if (feof(stdin)) {
+    // End of file has been reached
+} else if (ferror(stdin)) {
+    // Handle the error (check errno, etc)
+}
+</code></pre>
+<h3 id="using-arm-instructions-to-speed-up-machine-learning"><a class="header" href="#using-arm-instructions-to-speed-up-machine-learning">Using Arm instructions to speed-up Machine Learning</a></h3>
+<p>Graviton2 and later processors been optimized for performance and power efficient machine learning by enabling <a href="https://community.arm.com/developer/tools-software/tools/b/tools-software-ides-blog/posts/exploring-the-arm-dot-product-instructions">Arm dot-product instructions</a> commonly used for Machine Learning (quantized) inference workloads, and enabling <a href="https://developer.arm.com/documentation/100067/0612/Other-Compiler-specific-Features/Half-precision-floating-point-intrinsics">Half precision floating point - _float16</a> to double the number of operations per second, reducing the memory footprint compared to single precision floating point (_float32), while still enjoying large dynamic range.</p>
+<h3 id="using-sve"><a class="header" href="#using-sve">Using SVE</a></h3>
+<p>The scalable vector extensions (SVE) require both a new enough tool-chain to
+auto-vectorize to SVE (GCC 11+, LLVM 14+) and a 4.15+ kernel that supports SVE.
+One notable exception is that Amazon Linux 2 with a 4.14 kernel doesn't support SVE;
+please upgrade to a 5.4+ AL2 kernel.  Graviton3 and Graviton4 support SVE, earlier Gravitons does not.</p>
+<h3 id="using-arm-instructions-to-speed-up-common-code-sequences"><a class="header" href="#using-arm-instructions-to-speed-up-common-code-sequences">Using Arm instructions to speed-up common code sequences</a></h3>
+<p>The Arm instruction set includes instructions that can be used to speedup common
+code sequences. The table below lists common operations and links to code sequences:</p>
+<div class="table-wrapper"><table><thead><tr><th>Operation</th><th>Description</th></tr></thead><tbody>
+<tr><td><a href="sample-code/crc.c">crc</a></td><td>Graviton processors support instructions to accelerate both CRC32 which is used by Ethernet, media and compression and CRC32C (Castagnoli) which is used by filesystems.</td></tr>
+</tbody></table>
+</div>
+                    </main>
+
+                    <nav class="nav-wrapper" aria-label="Page navigation">
+                        <!-- Mobile navigation buttons -->
+                            <a rel="prev" href="optimizing.html" class="mobile-nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
+                                <i class="fa fa-angle-left"></i>
+                            </a>
+
+                            <a rel="next prefetch" href="golang.html" class="mobile-nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
+                                <i class="fa fa-angle-right"></i>
+                            </a>
+
+                        <div style="clear: both"></div>
+                    </nav>
+                </div>
+            </div>
+
+            <nav class="nav-wide-wrapper" aria-label="Page navigation">
+                    <a rel="prev" href="optimizing.html" class="nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
+                        <i class="fa fa-angle-left"></i>
+                    </a>
+
+                    <a rel="next prefetch" href="golang.html" class="nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
+                        <i class="fa fa-angle-right"></i>
+                    </a>
+            </nav>
+
+        </div>
+
+
+
+
+        <script>
+            window.playground_copyable = true;
+        </script>
+
+
+        <script src="elasticlunr.min.js"></script>
+        <script src="mark.min.js"></script>
+        <script src="searcher.js"></script>
+
+        <script src="clipboard.min.js"></script>
+        <script src="highlight.js"></script>
+        <script src="book.js"></script>
+
+        <!-- Custom JS scripts -->
+
+
+
+    </div>
+    </body>
+</html>

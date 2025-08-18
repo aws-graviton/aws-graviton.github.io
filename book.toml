@@ -1,0 +1,19 @@
+[book]
+title = "AWS Graviton technical guide"
+description = "Technical guidance for developers to use the Arm based AWS Graviton instances"
+src = "src"
+language = "en"
+multilingual = false
+
+[build]
+create-missing = false
+build-dir = "docs"
+
+[rust]
+edition = "2018"
+
+[output.html]
+smart-puntuation = true
+default-theme = "light"
+git-repository-url = "https://github.com/aws/aws-graviton-getting-started"
+site-url = "https://aws-graviton.github.io"

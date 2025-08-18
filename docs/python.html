@@ -1,0 +1,467 @@
+<!DOCTYPE HTML>
+<html lang="en" class="light sidebar-visible" dir="ltr">
+    <head>
+        <!-- Book generated using mdBook -->
+        <meta charset="UTF-8">
+        <title>Python - AWS Graviton technical guide</title>
+
+
+        <!-- Custom HTML head -->
+
+        <meta name="description" content="Technical guidance for developers to use the Arm based AWS Graviton instances">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <meta name="theme-color" content="#ffffff">
+
+        <link rel="icon" href="favicon.svg">
+        <link rel="shortcut icon" href="favicon.png">
+        <link rel="stylesheet" href="css/variables.css">
+        <link rel="stylesheet" href="css/general.css">
+        <link rel="stylesheet" href="css/chrome.css">
+        <link rel="stylesheet" href="css/print.css" media="print">
+
+        <!-- Fonts -->
+        <link rel="stylesheet" href="FontAwesome/css/font-awesome.css">
+        <link rel="stylesheet" href="fonts/fonts.css">
+
+        <!-- Highlight.js Stylesheets -->
+        <link rel="stylesheet" id="highlight-css" href="highlight.css">
+        <link rel="stylesheet" id="tomorrow-night-css" href="tomorrow-night.css">
+        <link rel="stylesheet" id="ayu-highlight-css" href="ayu-highlight.css">
+
+        <!-- Custom theme stylesheets -->
+
+
+        <!-- Provide site root and default themes to javascript -->
+        <script>
+            const path_to_root = "";
+            const default_light_theme = "light";
+            const default_dark_theme = "navy";
+            window.path_to_searchindex_js = "searchindex.js";
+        </script>
+        <!-- Start loading toc.js asap -->
+        <script src="toc.js"></script>
+    </head>
+    <body>
+    <div id="mdbook-help-container">
+        <div id="mdbook-help-popup">
+            <h2 class="mdbook-help-title">Keyboard shortcuts</h2>
+            <div>
+                <p>Press <kbd>←</kbd> or <kbd>→</kbd> to navigate between chapters</p>
+                <p>Press <kbd>S</kbd> or <kbd>/</kbd> to search in the book</p>
+                <p>Press <kbd>?</kbd> to show this help</p>
+                <p>Press <kbd>Esc</kbd> to hide this help</p>
+            </div>
+        </div>
+    </div>
+    <div id="body-container">
+        <!-- Work around some values being stored in localStorage wrapped in quotes -->
+        <script>
+            try {
+                let theme = localStorage.getItem('mdbook-theme');
+                let sidebar = localStorage.getItem('mdbook-sidebar');
+
+                if (theme.startsWith('"') && theme.endsWith('"')) {
+                    localStorage.setItem('mdbook-theme', theme.slice(1, theme.length - 1));
+                }
+
+                if (sidebar.startsWith('"') && sidebar.endsWith('"')) {
+                    localStorage.setItem('mdbook-sidebar', sidebar.slice(1, sidebar.length - 1));
+                }
+            } catch (e) { }
+        </script>
+
+        <!-- Set the theme before any content is loaded, prevents flash -->
+        <script>
+            const default_theme = window.matchMedia("(prefers-color-scheme: dark)").matches ? default_dark_theme : default_light_theme;
+            let theme;
+            try { theme = localStorage.getItem('mdbook-theme'); } catch(e) { }
+            if (theme === null || theme === undefined) { theme = default_theme; }
+            const html = document.documentElement;
+            html.classList.remove('light')
+            html.classList.add(theme);
+            html.classList.add("js");
+        </script>
+
+        <input type="checkbox" id="sidebar-toggle-anchor" class="hidden">
+
+        <!-- Hide / unhide sidebar before it is displayed -->
+        <script>
+            let sidebar = null;
+            const sidebar_toggle = document.getElementById("sidebar-toggle-anchor");
+            if (document.body.clientWidth >= 1080) {
+                try { sidebar = localStorage.getItem('mdbook-sidebar'); } catch(e) { }
+                sidebar = sidebar || 'visible';
+            } else {
+                sidebar = 'hidden';
+                sidebar_toggle.checked = false;
+            }
+            if (sidebar === 'visible') {
+                sidebar_toggle.checked = true;
+            } else {
+                html.classList.remove('sidebar-visible');
+            }
+        </script>
+
+        <nav id="sidebar" class="sidebar" aria-label="Table of contents">
+            <!-- populated by js -->
+            <mdbook-sidebar-scrollbox class="sidebar-scrollbox"></mdbook-sidebar-scrollbox>
+            <noscript>
+                <iframe class="sidebar-iframe-outer" src="toc.html"></iframe>
+            </noscript>
+            <div id="sidebar-resize-handle" class="sidebar-resize-handle">
+                <div class="sidebar-resize-indicator"></div>
+            </div>
+        </nav>
+
+        <div id="page-wrapper" class="page-wrapper">
+
+            <div class="page">
+                <div id="menu-bar-hover-placeholder"></div>
+                <div id="menu-bar" class="menu-bar sticky">
+                    <div class="left-buttons">
+                        <label id="sidebar-toggle" class="icon-button" for="sidebar-toggle-anchor" title="Toggle Table of Contents" aria-label="Toggle Table of Contents" aria-controls="sidebar">
+                            <i class="fa fa-bars"></i>
+                        </label>
+                        <button id="theme-toggle" class="icon-button" type="button" title="Change theme" aria-label="Change theme" aria-haspopup="true" aria-expanded="false" aria-controls="theme-list">
+                            <i class="fa fa-paint-brush"></i>
+                        </button>
+                        <ul id="theme-list" class="theme-popup" aria-label="Themes" role="menu">
+                            <li role="none"><button role="menuitem" class="theme" id="default_theme">Auto</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="light">Light</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="rust">Rust</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="coal">Coal</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="navy">Navy</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="ayu">Ayu</button></li>
+                        </ul>
+                        <button id="search-toggle" class="icon-button" type="button" title="Search (`/`)" aria-label="Toggle Searchbar" aria-expanded="false" aria-keyshortcuts="/ s" aria-controls="searchbar">
+                            <i class="fa fa-search"></i>
+                        </button>
+                    </div>
+
+                    <h1 class="menu-title">AWS Graviton technical guide</h1>
+
+                    <div class="right-buttons">
+                        <a href="print.html" title="Print this book" aria-label="Print this book">
+                            <i id="print-button" class="fa fa-print"></i>
+                        </a>
+                        <a href="https://github.com/aws/aws-graviton-getting-started" title="Git repository" aria-label="Git repository">
+                            <i id="git-repository-button" class="fa fa-github"></i>
+                        </a>
+
+                    </div>
+                </div>
+
+                <div id="search-wrapper" class="hidden">
+                    <form id="searchbar-outer" class="searchbar-outer">
+                        <div class="search-wrapper">
+                            <input type="search" id="searchbar" name="searchbar" placeholder="Search this book ..." aria-controls="searchresults-outer" aria-describedby="searchresults-header">
+                            <div class="spinner-wrapper">
+                                <i class="fa fa-spinner fa-spin"></i>
+                            </div>
+                        </div>
+                    </form>
+                    <div id="searchresults-outer" class="searchresults-outer hidden">
+                        <div id="searchresults-header" class="searchresults-header"></div>
+                        <ul id="searchresults">
+                        </ul>
+                    </div>
+                </div>
+
+                <!-- Apply ARIA attributes after the sidebar and the sidebar toggle button are added to the DOM -->
+                <script>
+                    document.getElementById('sidebar-toggle').setAttribute('aria-expanded', sidebar === 'visible');
+                    document.getElementById('sidebar').setAttribute('aria-hidden', sidebar !== 'visible');
+                    Array.from(document.querySelectorAll('#sidebar a')).forEach(function(link) {
+                        link.setAttribute('tabIndex', sidebar === 'visible' ? 0 : -1);
+                    });
+                </script>
+
+                <div id="content" class="content">
+                    <main>
+                        <h1 id="python-on-graviton"><a class="header" href="#python-on-graviton">Python on Graviton</a></h1>
+<p>Python is an interpreted, high-level, general-purpose programming language, with interpreters available for many operating systems and architectures, including arm64. <em><a href="https://en.wikipedia.org/wiki/Python_(programming_language)">Read more on Wikipedia</a></em></p>
+<h2 id="1-installing-python-packages"><a class="header" href="#1-installing-python-packages">1. Installing Python packages</a></h2>
+<p>When <em>pip</em> (the standard package installer for Python) is used, it pulls the packages from <a href="https://pypi.org">Python Package Index</a> and other indexes. To ensure you
+can install binary packages from <a href="https://pypi.org">Python Package Index</a>, make sure to update your pip installation to a new enough version (&gt;19.3).</p>
+<pre><code># To ensure an up-to-date pip version
+sudo python3 -m pip install --upgrade pip
+</code></pre>
+<p>AWS is actively working to make pre-compiled packages available for Graviton. You can see a current list of the over 200 popular python packages we track nightly
+for AL2 and Ubuntu for Graviton support status at our <a href="https://geoffreyblake.github.io/arm64-python-wheel-tester/">Python wheel tester</a>.</p>
+<p>In the case <em>pip</em> could not find a pre-compiled package, it automatically downloads, compiles, and builds the package from source code.
+Normally it may take a few more minutes to install the package from source code than from pre-built.  For some large packages,
+it may take up to 20 minutes. In some cases, compilation may fail due to missing dependencies.  Before trying to build a python package from source, try
+<code>python3 -m pip install --prefer-binary &lt;package&gt;</code> to attempt to install a wheel that is not the latest version.  Sometimes automated package builders
+will push a release without all the wheels due to failures during a build that will be corrected at a later date.  If this is not an option, follow
+the following instructions to build a python package from source.</p>
+<h3 id="11-prerequisites-for-installing-python-packages-from-source"><a class="header" href="#11-prerequisites-for-installing-python-packages-from-source">1.1 Prerequisites for installing Python packages from source</a></h3>
+<p>For installing common Python packages from source code, we need to install the following development tools:</p>
+<p>On <strong>AmazonLinux2 or RedHat</strong>:</p>
+<pre><code>sudo yum install "@Development tools" python3-pip python3-devel blas-devel gcc-gfortran lapack-devel
+python3 -m pip install --user --upgrade pip
+</code></pre>
+<p>On <strong>Debian/Ubuntu</strong>:</p>
+<pre><code>sudo apt update
+sudo apt-get install build-essential python3-pip python3-dev libblas-dev gfortran liblapack-dev
+python3 -m pip install --user --upgrade pip
+</code></pre>
+<p>On all distributions, additional compile time dependencies might be needed depending on the Python modules you are trying to install.</p>
+<h3 id="12-recommended-versions"><a class="header" href="#12-recommended-versions">1.2 Recommended versions</a></h3>
+<p>When adopting Graviton, it is recommended to use recent software versions as much as possible, and Python is no exception.</p>
+<p>Python 2.7 is EOL since January the 1st 2020, it is definitely recommended to upgrade to a Python 3.x version before moving to Graviton.</p>
+<p>Python 3.7 will reach <a href="https://devguide.python.org/versions/">EOL in July, 2023</a>, so when starting to port an application to Graviton, it is recommended to target at least Python 3.8.</p>
+<h3 id="13-python-on-al2-and-rhel-8"><a class="header" href="#13-python-on-al2-and-rhel-8">1.3 Python on AL2 and RHEL 8</a></h3>
+<p>AL2 and RHEL 8 distribute older Pythons by default: 3.7 and 3.6 respectively.  Python 3.6 is EOL
+<a href="https://endoflife.date/python">since December, 2021</a> and Python 3.7 will be EOL <a href="https://endoflife.date/python">on June 2023</a>.
+Therefore, some package maintainers have already begun dropping support for
+Python 3.6 and 3.7 by omitting prebuilt wheels published to <a href="https://pypi.org">pypi.org</a>.
+For some packages, it is still possible to use the default Python by using the distribution
+from the package manager. For example <code>numpy</code> no longer publishes Python 3.6 wheels,
+but can be installed from the package manager: <code>yum install python3-numpy</code>.</p>
+<p>Another option is to use Python 3.8 instead of the default Python pacakge. You can
+install Python 3.8 and pip: <code>yum install python38-pip</code>. Then use pip to install
+the latest versions of packages: <code>pip3 install numpy</code>.  On AL2, you will need to use <code>amazon-linux-extras enable python3.8</code> to expose Python 3.8 packages.</p>
+<p>Some common Python packages that are distributed by the package manager are:</p>
+<ol>
+<li>python3-numpy</li>
+<li>python3-markupsafe</li>
+<li>python3-pillow</li>
+</ol>
+<p>To see a full list run: <code>yum search python3</code></p>
+<h3 id="python-wheel-glibc-requirements"><a class="header" href="#python-wheel-glibc-requirements">Python wheel glibc requirements</a></h3>
+<p>Some python wheel packages installed with <code>pip</code> require newer libc versions implicitly and will fail to import properly in some cases with a similar
+error message as below:</p>
+<pre><code>ImportError: /lib64/libm.so.6: version `GLIBC_2.27' not found
+</code></pre>
+<p>This can be a problem on distributions such as Amazon Linux 2 that ship with a relatively old glibc (v2.26 in case of Amazon Linux 2).
+This happens because  <code>pip</code> does a simple string match on the wheel filename to determine if a wheel will be compatible with the system.
+In these cases, it is recommended to first identify if a version of the package is available through the distro's package manager,
+install an older version of the package if able, or finally upgrade to a distro that uses a newer glibc -- such as AL2023, Ubuntu 20.04, or Ubuntu 22.04.</p>
+<h2 id="2-scientific-and-numerical-application-numpy-scipy-blas-etc"><a class="header" href="#2-scientific-and-numerical-application-numpy-scipy-blas-etc">2. Scientific and numerical application (NumPy, SciPy, BLAS, etc)</a></h2>
+<p>Python relies on native code to achieve high performance.  For scientific and
+numerical applications NumPy and SciPy provide an interface to high performance
+computing libraries such as ATLAS, BLAS, BLIS, OpenBLAS, etc.  These libraries
+contain code tuned for Graviton processors.</p>
+<p>It is recommended to use the latest software versions as much as possible. If the latest
+version migration is not feasible, please ensure that it is at least the minimum version
+recommended below because multiple fixes related to data precision and correctness on
+aarch64 went into OpenBLAS between v0.3.9 and v0.3.17 and the below SciPy and NumPy versions
+upgraded OpenBLAS from v0.3.9 to OpenBLAS v0.3.17.</p>
+<p>OpenBLAS:  &gt;= v0.3.17
+SciPy: &gt;= v1.7.2
+NumPy: &gt;= 1.21.1</p>
+<p>Both <a href="https://pypi.org/project/scipy/1.5.3/#files">SciPy&gt;=1.5.3</a> and <a href="https://pypi.org/project/numpy/1.19.0/#files">NumPy&gt;=1.19.0</a>
+vend binary wheel packages for Aarch64, but if you need better performance, then
+compiling the best performance numerical library is an option.  To do so, follow the below instructions.</p>
+<h3 id="21-install-openblas"><a class="header" href="#21-install-openblas">2.1 Install OpenBLAS</a></h3>
+<p>OpenBLAS is an optimized BLAS (Basic Linear Algebra Subprograms) library based on GotoBLAS2 1.13 BSD version. The library provides optimized "gemv" and "gemm" routines for Graviton architecture. Binary distribuiton is available for both "pthread" and "openmp" runtime, with "openblas" being the pthread version and "openblas-openmp" the openmp version. Install the appropriate version based on the execution runtime.</p>
+<h4 id="211-install-openblas-on-ubuntu-and-debian"><a class="header" href="#211-install-openblas-on-ubuntu-and-debian">2.1.1 Install OpenBLAS on Ubuntu and Debian</a></h4>
+<pre><code># pthread version
+sudo apt -y install libopenblas-dev
+
+# openmp version
+sudo apt -y install libopenblas-openmp-dev
+</code></pre>
+<h4 id="212-install-openblas-on-amazonlinux2023-al2023-and-redhat"><a class="header" href="#212-install-openblas-on-amazonlinux2023-al2023-and-redhat">2.1.2 Install OpenBLAS on AmazonLinux2023 (AL2023) and RedHat</a></h4>
+<pre><code># pthread version
+sudo yum -y install openblas
+
+# openmp version
+sudo yum -y install openblas-openmp
+</code></pre>
+<h4 id="213-install-openblas-with-conda"><a class="header" href="#213-install-openblas-with-conda">2.1.3 Install OpenBLAS with Conda</a></h4>
+<p>Please refer to the Graviton Support in Conda section to setup conda environment.</p>
+<pre><code># pthread version
+conda install -y openblas
+
+# openmp version
+conda install -y openblas=*=*openmp*
+</code></pre>
+<h3 id="22-blis-may-be-a-faster-blas"><a class="header" href="#22-blis-may-be-a-faster-blas">2.2 BLIS may be a faster BLAS</a></h3>
+<p>The default SciPy and NumPy binary installations with <code>pip3 install numpy scipy</code>
+are configured to use OpenBLAS.  The default installations of SciPy and NumPy
+are easy to setup and well tested.</p>
+<p>Some workloads will benefit from using BLIS. Benchmarking SciPy and NumPy
+workloads with BLIS might allow to identify additional performance improvement.</p>
+<h3 id="23-install-numpy-and-scipy-with-blis-on-ubuntu-and-debian"><a class="header" href="#23-install-numpy-and-scipy-with-blis-on-ubuntu-and-debian">2.3 Install NumPy and SciPy with BLIS on Ubuntu and Debian</a></h3>
+<p>On Ubuntu and Debian <code>apt install python3-numpy python3-scipy</code> will install NumPy
+and SciPy with BLAS and LAPACK libraries. To install SciPy and NumPy with BLIS
+and OpenBLAS on Ubuntu and Debian:</p>
+<pre><code>sudo apt -y install python3-scipy python3-numpy libopenblas-dev libblis-dev
+sudo update-alternatives --set libblas.so.3-aarch64-linux-gnu \
+    /usr/lib/aarch64-linux-gnu/blis-openmp/libblas.so.3
+</code></pre>
+<p>To switch between available alternatives:</p>
+<pre><code>sudo update-alternatives --config libblas.so.3-aarch64-linux-gnu
+sudo update-alternatives --config liblapack.so.3-aarch64-linux-gnu
+</code></pre>
+<h3 id="24-install-numpy-and-scipy-with-blis-on-amazonlinux2-al2-and-redhat"><a class="header" href="#24-install-numpy-and-scipy-with-blis-on-amazonlinux2-al2-and-redhat">2.4 Install NumPy and SciPy with BLIS on AmazonLinux2 (AL2) and RedHat</a></h3>
+<p>Prerequisites to build SciPy and NumPy with BLIS on arm64 AL2 and RedHat:</p>
+<pre><code># Install AL2/RedHat prerequisites
+sudo yum install "@Development tools" python3-pip python3-devel blas-devel gcc-gfortran
+
+# Install BLIS
+git clone https://github.com/flame/blis $HOME/blis
+cd $HOME/blis;  ./configure --enable-threading=openmp --enable-cblas --prefix=/usr cortexa57
+make -j4;  sudo make install
+
+# Install OpenBLAS
+git clone https://github.com/xianyi/OpenBLAS.git $HOME/OpenBLAS
+cd $HOME/OpenBLAS
+make -j4 BINARY=64 FC=gfortran USE_OPENMP=1 NUM_THREADS=64
+sudo make PREFIX=/usr install
+</code></pre>
+<p>To build and install NumPy and SciPy with BLIS and OpenBLAS:</p>
+<pre><code>git clone https://github.com/numpy/numpy/ $HOME/numpy
+cd $HOME/numpy;  pip3 install .
+
+git clone https://github.com/scipy/scipy/ $HOME/scipy
+cd $HOME/scipy;  pip3 install .
+</code></pre>
+<p>When NumPy and SciPy detect the presence of the BLIS library at build time, they
+will use BLIS in priority over the same functionality from BLAS and
+OpenBLAS. OpenBLAS or LAPACK libraries need to be installed along BLIS to
+provide LAPACK functionality.  To change the library dependencies, one can set
+environment variables <code>NPY_BLAS_ORDER</code> and <code>NPY_LAPACK_ORDER</code> before building numpy
+and scipy. The default is:
+<code>NPY_BLAS_ORDER=mkl,blis,openblas,atlas,accelerate,blas</code> and
+<code>NPY_LAPACK_ORDER=mkl,openblas,libflame,atlas,accelerate,lapack</code>.</p>
+<h3 id="25-testing-numpy-and-scipy-installation"><a class="header" href="#25-testing-numpy-and-scipy-installation">2.5 Testing NumPy and SciPy installation</a></h3>
+<p>To test that the installed NumPy and SciPy are built with BLIS and OpenBLAS, the
+following commands will print native library dependencies:</p>
+<pre><code>python3 -c "import numpy as np; np.__config__.show()"
+python3 -c "import scipy as sp; sp.__config__.show()"
+</code></pre>
+<p>In the case of Ubuntu and Debian these commands will print <code>blas</code> and <code>lapack</code>
+which are symbolic links managed by <code>update-alternatives</code>.</p>
+<h3 id="26-improving-blis-and-openblas-performance-with-multi-threading"><a class="header" href="#26-improving-blis-and-openblas-performance-with-multi-threading">2.6 Improving BLIS and OpenBLAS performance with multi-threading</a></h3>
+<p>When OpenBLAS is built with <code>USE_OPENMP=1</code> it will use OpenMP to parallelize the
+computations.  The environment variable <code>OMP_NUM_THREADS</code> can be set to specify
+the maximum number of threads.  If this variable is not set, the default is to
+use a single thread.</p>
+<p>To enable parallelism with BLIS, one needs to both configure with
+<code>--enable-threading=openmp</code> and set the environment variable <code>BLIS_NUM_THREADS</code>
+to the number of threads to use, the default is to use a single thread.</p>
+<h3 id="27-graviton-support-in-conda--anaconda"><a class="header" href="#27-graviton-support-in-conda--anaconda">2.7 Graviton support in Conda / Anaconda</a></h3>
+<p>Anaconda is a distribution of the Python and R programming languages for scientific computing, that aims to simplify package management and deployment.</p>
+<p>Anaconda has announced <a href="https://www.anaconda.com/blog/anaconda-aws-graviton2">support for AWS Graviton on May 14, 2021</a>.</p>
+<p>Instructions to install the full Anaconda package installer can be found at https://docs.anaconda.com/anaconda/install/graviton2/ .</p>
+<p>Anaconda also offers a lightweight version called <a href="https://docs.conda.io/en/latest/miniconda.html">Miniconda</a> which is a small, bootstrap version of Anaconda that includes only conda, Python, the packages they depend on, and a small number of other useful packages, including pip, zlib and a few others.</p>
+<p>Here is an example on how to use it to install <a href="https://numpy.org/">numpy</a> and <a href="https://pandas.pydata.org/">pandas</a> for Python 3.9.</p>
+<p>The first step is to install conda:</p>
+<pre><code>$ wget https://repo.anaconda.com/miniconda/Miniconda3-py39_4.10.3-Linux-aarch64.sh
+$ chmod a+x Miniconda3-py39_4.10.3-Linux-aarch64.sh
+$ ./Miniconda3-py39_4.10.3-Linux-aarch64.sh
+</code></pre>
+<p>Once installed, you can either use the <code>conda</code> command directly to install packages, or write an environment definition file and create the corresponding environment.</p>
+<p>Here's an example to install <a href="https://numpy.org/">numpy</a> and <a href="https://pandas.pydata.org/">pandas</a> (<code>graviton-example.yml</code>):</p>
+<pre><code>name: graviton-example
+dependencies:
+  - numpy
+  - pandas
+</code></pre>
+<p>The next step is to instantiate the environment from that definition:</p>
+<pre><code>$ conda env create -f graviton-example.yml
+</code></pre>
+<h2 id="3-machine-learning-python-packages"><a class="header" href="#3-machine-learning-python-packages">3. Machine Learning Python packages</a></h2>
+<h3 id="31-pytorch"><a class="header" href="#31-pytorch">3.1 PyTorch</a></h3>
+<pre><code>pip install numpy
+pip install torch torchvision
+</code></pre>
+<p>Please refer to the <a href="machinelearning/pytorch.html">Graviton PyTorch user guide</a> for optimizing PyTorch inference performance on Graviton.</p>
+<h3 id="32-tensorflow"><a class="header" href="#32-tensorflow">3.2 TensorFlow</a></h3>
+<pre><code>pip install tensorflow
+</code></pre>
+<p>Please refer to the <a href="machinelearning/tensorflow.html">Graviton TensorFlow user guide</a> for the recommended configuration and best practices.</p>
+<h3 id="33-dgl"><a class="header" href="#33-dgl">3.3 DGL</a></h3>
+<p>Make sure Pytorch is installed,  if not, follow <a href="machinelearning/pytorch.html">Pytorch installation steps</a></p>
+<p>On <strong>Ubuntu</strong>:</p>
+<p>Follow the <a href="https://github.com/dmlc/dgl/blob/master/docs/source/install/index.rst#install-from-source">install from source</a> instructions.</p>
+<h3 id="34-sentencepiece"><a class="header" href="#34-sentencepiece">3.4 Sentencepiece</a></h3>
+<p><a href="https://pypi.org/project/sentencepiece/0.1.94/#history">Sentencepiece&gt;=1.94 now has pre-compiled binary wheels available for Graviton</a>.</p>
+<h3 id="35-morfeusz"><a class="header" href="#35-morfeusz">3.5	Morfeusz</a></h3>
+<p>On <strong>Ubuntu</strong>:</p>
+<pre><code># download the source
+wget http://download.sgjp.pl/morfeusz/20200913/morfeusz-src-20200913.tar.gz
+tar -xf morfeusz-src-20200913.tar.gz
+cd Morfeusz/
+sudo apt install cmake zip build-essential autotools-dev \
+    python3-stdeb python3-pip python3-all-dev python3-pyparsing devscripts \
+    libcppunit-dev acl  default-jdk swig python3-all-dev python3-stdeb
+export JAVA_TOOL_OPTIONS=-Dfile.encoding=UTF8
+mkdir build
+cd build
+cmake ..
+sudo make install
+sudo ldconfig -v
+sudo PYTHONPATH=/usr/local/lib/python make install-builder
+</code></pre>
+<p>If you run into issue with the last command (<em>make install-builder</em>), please try:</p>
+<pre><code>sudo PYTHONPATH=`which python3` make install-builder
+</code></pre>
+<h2 id="4-other-python-packages"><a class="header" href="#4-other-python-packages">4. Other Python packages</a></h2>
+<h3 id="confluent_kafka"><a class="header" href="#confluent_kafka">confluent_kafka</a></h3>
+<p>First, install librdkafka and its development libraries by following the
+instructions on <a href="software/librdkafka.html">this page</a>. As part of this process,
+you will install <code>gcc</code>, <code>pip</code> for Python3, and Python development headers.</p>
+<p>Once complete, you can then install the <code>confluent_kafka</code> module directly from
+source:</p>
+<pre><code>python3 -m pip install --user --no-binary confluent-kafka confluent-kafka
+</code></pre>
+<h3 id="open3d"><a class="header" href="#open3d">open3d</a></h3>
+<p>Open3d required glibc version 2.27 or higher. Amazon Linux 2 includes glibc 2.26, which is not sufficient. In order to
+use open3d, please use Amazon Linux 2023 or later, Ubuntu Bionic (18.04) or later, or another supported distribution.
+See <a href="http://www.open3d.org/docs/release/getting_started.html">open3d documentation</a> for more information.</p>
+
+                    </main>
+
+                    <nav class="nav-wrapper" aria-label="Page navigation">
+                        <!-- Mobile navigation buttons -->
+                            <a rel="prev" href="php-opcache-al2.html" class="mobile-nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
+                                <i class="fa fa-angle-left"></i>
+                            </a>
+
+                            <a rel="next prefetch" href="rust.html" class="mobile-nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
+                                <i class="fa fa-angle-right"></i>
+                            </a>
+
+                        <div style="clear: both"></div>
+                    </nav>
+                </div>
+            </div>
+
+            <nav class="nav-wide-wrapper" aria-label="Page navigation">
+                    <a rel="prev" href="php-opcache-al2.html" class="nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
+                        <i class="fa fa-angle-left"></i>
+                    </a>
+
+                    <a rel="next prefetch" href="rust.html" class="nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
+                        <i class="fa fa-angle-right"></i>
+                    </a>
+            </nav>
+
+        </div>
+
+
+
+
+        <script>
+            window.playground_copyable = true;
+        </script>
+
+
+        <script src="elasticlunr.min.js"></script>
+        <script src="mark.min.js"></script>
+        <script src="searcher.js"></script>
+
+        <script src="clipboard.min.js"></script>
+        <script src="highlight.js"></script>
+        <script src="book.js"></script>
+
+        <!-- Custom JS scripts -->
+
+
+
+    </div>
+    </body>
+</html>

@@ -1,0 +1,473 @@
+<!DOCTYPE HTML>
+<html lang="en" class="light sidebar-visible" dir="ltr">
+    <head>
+        <!-- Book generated using mdBook -->
+        <meta charset="UTF-8">
+        <title>PyTorch - AWS Graviton technical guide</title>
+
+
+        <!-- Custom HTML head -->
+
+        <meta name="description" content="Technical guidance for developers to use the Arm based AWS Graviton instances">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <meta name="theme-color" content="#ffffff">
+
+        <link rel="icon" href="../favicon.svg">
+        <link rel="shortcut icon" href="../favicon.png">
+        <link rel="stylesheet" href="../css/variables.css">
+        <link rel="stylesheet" href="../css/general.css">
+        <link rel="stylesheet" href="../css/chrome.css">
+        <link rel="stylesheet" href="../css/print.css" media="print">
+
+        <!-- Fonts -->
+        <link rel="stylesheet" href="../FontAwesome/css/font-awesome.css">
+        <link rel="stylesheet" href="../fonts/fonts.css">
+
+        <!-- Highlight.js Stylesheets -->
+        <link rel="stylesheet" id="highlight-css" href="../highlight.css">
+        <link rel="stylesheet" id="tomorrow-night-css" href="../tomorrow-night.css">
+        <link rel="stylesheet" id="ayu-highlight-css" href="../ayu-highlight.css">
+
+        <!-- Custom theme stylesheets -->
+
+
+        <!-- Provide site root and default themes to javascript -->
+        <script>
+            const path_to_root = "../";
+            const default_light_theme = "light";
+            const default_dark_theme = "navy";
+            window.path_to_searchindex_js = "../searchindex.js";
+        </script>
+        <!-- Start loading toc.js asap -->
+        <script src="../toc.js"></script>
+    </head>
+    <body>
+    <div id="mdbook-help-container">
+        <div id="mdbook-help-popup">
+            <h2 class="mdbook-help-title">Keyboard shortcuts</h2>
+            <div>
+                <p>Press <kbd>←</kbd> or <kbd>→</kbd> to navigate between chapters</p>
+                <p>Press <kbd>S</kbd> or <kbd>/</kbd> to search in the book</p>
+                <p>Press <kbd>?</kbd> to show this help</p>
+                <p>Press <kbd>Esc</kbd> to hide this help</p>
+            </div>
+        </div>
+    </div>
+    <div id="body-container">
+        <!-- Work around some values being stored in localStorage wrapped in quotes -->
+        <script>
+            try {
+                let theme = localStorage.getItem('mdbook-theme');
+                let sidebar = localStorage.getItem('mdbook-sidebar');
+
+                if (theme.startsWith('"') && theme.endsWith('"')) {
+                    localStorage.setItem('mdbook-theme', theme.slice(1, theme.length - 1));
+                }
+
+                if (sidebar.startsWith('"') && sidebar.endsWith('"')) {
+                    localStorage.setItem('mdbook-sidebar', sidebar.slice(1, sidebar.length - 1));
+                }
+            } catch (e) { }
+        </script>
+
+        <!-- Set the theme before any content is loaded, prevents flash -->
+        <script>
+            const default_theme = window.matchMedia("(prefers-color-scheme: dark)").matches ? default_dark_theme : default_light_theme;
+            let theme;
+            try { theme = localStorage.getItem('mdbook-theme'); } catch(e) { }
+            if (theme === null || theme === undefined) { theme = default_theme; }
+            const html = document.documentElement;
+            html.classList.remove('light')
+            html.classList.add(theme);
+            html.classList.add("js");
+        </script>
+
+        <input type="checkbox" id="sidebar-toggle-anchor" class="hidden">
+
+        <!-- Hide / unhide sidebar before it is displayed -->
+        <script>
+            let sidebar = null;
+            const sidebar_toggle = document.getElementById("sidebar-toggle-anchor");
+            if (document.body.clientWidth >= 1080) {
+                try { sidebar = localStorage.getItem('mdbook-sidebar'); } catch(e) { }
+                sidebar = sidebar || 'visible';
+            } else {
+                sidebar = 'hidden';
+                sidebar_toggle.checked = false;
+            }
+            if (sidebar === 'visible') {
+                sidebar_toggle.checked = true;
+            } else {
+                html.classList.remove('sidebar-visible');
+            }
+        </script>
+
+        <nav id="sidebar" class="sidebar" aria-label="Table of contents">
+            <!-- populated by js -->
+            <mdbook-sidebar-scrollbox class="sidebar-scrollbox"></mdbook-sidebar-scrollbox>
+            <noscript>
+                <iframe class="sidebar-iframe-outer" src="../toc.html"></iframe>
+            </noscript>
+            <div id="sidebar-resize-handle" class="sidebar-resize-handle">
+                <div class="sidebar-resize-indicator"></div>
+            </div>
+        </nav>
+
+        <div id="page-wrapper" class="page-wrapper">
+
+            <div class="page">
+                <div id="menu-bar-hover-placeholder"></div>
+                <div id="menu-bar" class="menu-bar sticky">
+                    <div class="left-buttons">
+                        <label id="sidebar-toggle" class="icon-button" for="sidebar-toggle-anchor" title="Toggle Table of Contents" aria-label="Toggle Table of Contents" aria-controls="sidebar">
+                            <i class="fa fa-bars"></i>
+                        </label>
+                        <button id="theme-toggle" class="icon-button" type="button" title="Change theme" aria-label="Change theme" aria-haspopup="true" aria-expanded="false" aria-controls="theme-list">
+                            <i class="fa fa-paint-brush"></i>
+                        </button>
+                        <ul id="theme-list" class="theme-popup" aria-label="Themes" role="menu">
+                            <li role="none"><button role="menuitem" class="theme" id="default_theme">Auto</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="light">Light</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="rust">Rust</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="coal">Coal</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="navy">Navy</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="ayu">Ayu</button></li>
+                        </ul>
+                        <button id="search-toggle" class="icon-button" type="button" title="Search (`/`)" aria-label="Toggle Searchbar" aria-expanded="false" aria-keyshortcuts="/ s" aria-controls="searchbar">
+                            <i class="fa fa-search"></i>
+                        </button>
+                    </div>
+
+                    <h1 class="menu-title">AWS Graviton technical guide</h1>
+
+                    <div class="right-buttons">
+                        <a href="../print.html" title="Print this book" aria-label="Print this book">
+                            <i id="print-button" class="fa fa-print"></i>
+                        </a>
+                        <a href="https://github.com/aws/aws-graviton-getting-started" title="Git repository" aria-label="Git repository">
+                            <i id="git-repository-button" class="fa fa-github"></i>
+                        </a>
+
+                    </div>
+                </div>
+
+                <div id="search-wrapper" class="hidden">
+                    <form id="searchbar-outer" class="searchbar-outer">
+                        <div class="search-wrapper">
+                            <input type="search" id="searchbar" name="searchbar" placeholder="Search this book ..." aria-controls="searchresults-outer" aria-describedby="searchresults-header">
+                            <div class="spinner-wrapper">
+                                <i class="fa fa-spinner fa-spin"></i>
+                            </div>
+                        </div>
+                    </form>
+                    <div id="searchresults-outer" class="searchresults-outer hidden">
+                        <div id="searchresults-header" class="searchresults-header"></div>
+                        <ul id="searchresults">
+                        </ul>
+                    </div>
+                </div>
+
+                <!-- Apply ARIA attributes after the sidebar and the sidebar toggle button are added to the DOM -->
+                <script>
+                    document.getElementById('sidebar-toggle').setAttribute('aria-expanded', sidebar === 'visible');
+                    document.getElementById('sidebar').setAttribute('aria-hidden', sidebar !== 'visible');
+                    Array.from(document.querySelectorAll('#sidebar a')).forEach(function(link) {
+                        link.setAttribute('tabIndex', sidebar === 'visible' ? 0 : -1);
+                    });
+                </script>
+
+                <div id="content" class="content">
+                    <main>
+                        <h1 id="ml-inference-on-graviton-cpus-with-pytorch"><a class="header" href="#ml-inference-on-graviton-cpus-with-pytorch">ML inference on Graviton CPUs with PyTorch</a></h1>
+<p><strong>Introduction</strong></p>
+<p>PyTorch is an open-source machine learning framework based on the Torch library, used for applications such as computer vision and natural language processing. It can be used across training and inference of deep neural networks. This document covers how to use PyTorch based machine learning inference on Graviton CPUs, what runtime configurations are important and how to debug any performance issues. The document also covers instructions for source builds and how to enable some of the downstream features.</p>
+<h1 id="how-to-use-pytorch-on-graviton-cpus"><a class="header" href="#how-to-use-pytorch-on-graviton-cpus">How to use PyTorch on Graviton CPUs</a></h1>
+<p>There are multiple levels of software package abstractions available: AWS DLC (Deep Learning Container, comes with all the packages installed), Python wheel (easier option for integrating pytorch inference into an existing service), AWS DJL (Deep Java Library, provides JAVA interface along with native torch libraries), and the Docker hub images (comes with downstream experimental features). Examples of using each method are below.</p>
+<p><strong>AWS Graviton PyTorch DLC</strong></p>
+<p>4Q'23 AWS Graviton DLCs are based on PyTorch 2.1. These DLCs continue to deliver the best performance on Graviton for bert and roberta sentiment analysis and fill mask models, making Graviton3 the most cost effective CPU platform on the AWS cloud for these models.</p>
+<pre><code>sudo apt-get update
+sudo apt-get -y install awscli docker
+
+# Login to ECR to avoid image download throttling
+aws ecr get-login-password --region us-east-1 \
+| docker login --username AWS \
+  --password-stdin 763104351884.dkr.ecr.us-east-1.amazonaws.com
+
+# Pull the AWS DLC for pytorch
+docker pull 763104351884.dkr.ecr.us-east-1.amazonaws.com/pytorch-inference-graviton:2.1.0-cpu-py310-ubuntu20.04-ec2
+</code></pre>
+<p><strong>Using Python wheels</strong></p>
+<pre><code># Install Python
+sudo apt-get update
+sudo apt-get install -y python3 python3-pip
+
+# Upgrade pip3 to the latest version
+python3 -m pip install --upgrade pip
+
+# Install PyTorch and extensions
+python3 -m pip install torch
+python3 -m pip install torchvision torchaudio
+</code></pre>
+<p><strong>Using AWS Deep Java Library (DJL)</strong></p>
+<p>DJL is a high level JAVA API for Machine Learning and Deep Learning frameworks. It supports aarch64 linux platform with PyTorch backend. The DJL binaries package the native torch libraries from official libtorch distribution which are optimized for AWS Graviton3. The following sections explain how to install, enable runtime configuration, and benchmark pytorch inference with DJL interface on AWS Graviton3 instances. Please refer to <a href="https://github.com/deepjavalibrary/djl/blob/master/docs/development/inference_performance_optimization.md#pytorch">djl pytorch documentation</a> for more details.</p>
+<pre><code>sudo snap install openjdk
+curl -O https://publish.djl.ai/djl-serving/djl-serving_0.25.0-1_all.deb
+sudo dpkg -i djl-serving_0.25.0-1_all.deb
+</code></pre>
+<p><strong>Using Docker hub container</strong></p>
+<p>4Q'23 Docker hub images from armswdev are based on PyTorch 2.0.0, but also include additional downstream optimizations and experimental features. These are avaiable for trying out the experimental downstream features and provide early feedback.</p>
+<pre><code># Pull pytorch docker container with onednn-acl optimizations enabled
+docker pull armswdev/pytorch-arm-neoverse:r23.10-torch-2.0.0-onednn-acl
+
+# Launch the docker image
+docker run -it --rm -v /home/ubuntu/:/hostfs armswdev/pytorch-arm-neoverse:r23.10-torch-2.0.0-onednn-acl
+</code></pre>
+<h1 id="prerequisites"><a class="header" href="#prerequisites">Prerequisites</a></h1>
+<ol>
+<li>It is highly recommended to use the AMIs based on Linux Kernel 5.10 and beyond for the best PyTorch inference performance on Graviton3 instances</li>
+<li>Python 3.8 is the minimum supported python version starting PyTorch 2.0.0. For more details, please refer to PyTorch 2.0 <a href="https://github.com/pytorch/pytorch/releases/tag/v2.0.0">release note</a></li>
+</ol>
+<h1 id="runtime-configurations-for-optimal-performance"><a class="header" href="#runtime-configurations-for-optimal-performance">Runtime configurations for optimal performance</a></h1>
+<p>AWS DLCs come with all the optimizations enabled, so, there are no additional runtime configurations required. Where as for the python wheels and the docker hub images, enable the below runtime configurations to achieve the best performance.</p>
+<pre><code># Graviton3(E) (e.g. c7g, c7gn and Hpc7g instances) supports BF16 format for ML acceleration. This can be enabled in oneDNN by setting the below environment variable
+grep -q bf16 /proc/cpuinfo &amp;&amp; export DNNL_DEFAULT_FPMATH_MODE=BF16
+
+# Enable primitive caching to avoid the redundant primitive allocation
+# latency overhead. Please note this caching feature increases the
+# memory footprint. Tune this cache capacity to a lower value to
+# reduce the additional memory requirement.
+export LRU_CACHE_CAPACITY=1024
+
+# Enable Transparent huge page allocations from PyTorch C10 allocator
+export THP_MEM_ALLOC_ENABLE=1
+
+# Make sure the openmp threads are distributed across all the processes for multi process applications to avoid over subscription for the vcpus. For example if there is a single application process, then num_processes should be set to '1' so that all the vcpus are assigned to it with one-to-one mapping to omp threads
+
+num_vcpus=$(getconf _NPROCESSORS_ONLN)
+num_processes=&lt;number of processes&gt;
+export OMP_NUM_THREADS=$((1 &gt; ($num_vcpus/$num_processes) ? 1 : ($num_vcpus/$num_processes)))
+export OMP_PROC_BIND=false
+export OMP_PLACES=cores
+</code></pre>
+<h1 id="evaluate-performance-with-pytorch-benchmark"><a class="header" href="#evaluate-performance-with-pytorch-benchmark">Evaluate performance with PyTorch benchmark</a></h1>
+<ol>
+<li>Resnet50 benchmarking</li>
+</ol>
+<pre><code># Clone PyTorch benchmark repo
+git clone https://github.com/pytorch/benchmark.git
+
+# Setup Resnet50 benchmark
+cd benchmark
+python3 install.py resnet50
+
+# Install the dependent wheels
+python3 -m pip install numba
+
+# Run Resnet50 inference in torchscript mode. On successful completion of the inference runs,
+# the script prints the inference latency and accuracy results
+
+# Batch mode, the default batch size is 32
+python3 run.py resnet50 -d cpu --backend torchscript -t eval --use_cosine_similarity
+
+# Single inference mode
+python3 run.py resnet50 -d cpu --backend torchscript -t eval --use_cosine_similarity --bs 1
+
+</code></pre>
+<ol start="2">
+<li>Bert benchmarking</li>
+</ol>
+<pre><code># Clone PyTorch benchmark repo
+git clone https://github.com/pytorch/benchmark.git
+
+# Setup Bert benchmark
+cd benchmark
+python3 install.py bert
+
+# Run BERT_pytorch inference in torchscript mode. On successful completion of the inference runs,
+# the script prints the inference latency and accuracy results
+
+# Batch mode
+python3 run.py BERT_pytorch -d cpu --backend torchscript -t eval --use_cosine_similarity --bs 32
+
+# Single inference mode
+python3 run.py BERT_pytorch -d cpu --backend torchscript -t eval --use_cosine_similarity --bs 1
+</code></pre>
+<ol start="3">
+<li>Resnet benchmarking with PyTorch Java</li>
+</ol>
+<pre><code># Install djl-bench
+curl -O https://publish.djl.ai/djl-bench/0.26.0/djl-bench_0.26.0-1_all.deb
+sudo dpkg -i djl-bench_0.26.0-1_all.deb
+
+git clone https://github.com/deepjavalibrary/djl-serving.git
+cd djl-serving
+
+# Make sure the runtime env for Bfloat16 and LRU Cache are setup before running the inference tests
+# Run Resnet18 with batch size of 16. On successful completion of the inference runs, the script
+# prints the inference results, throughput and latencies
+djl-bench -e PyTorch -u https://alpha-djl-demos.s3.amazonaws.com/model/djl-blockrunner/pytorch_resnet18.zip -n traced_resnet18 -c 10 -s 16,3,600,600
+
+# Run Resnet50 ssd with batch size of 16
+djl-bench -e PyTorch -c 2 -s 16,3,300,300 -u djl://ai.djl.pytorch/ssd/0.0.1/ssd_300_resnet50
+
+</code></pre>
+<h1 id="troubleshooting-performance-issues"><a class="header" href="#troubleshooting-performance-issues">Troubleshooting performance issues</a></h1>
+<p>The below steps help debugging performance issues with pytorch inference.</p>
+<ol>
+<li>Run inference with DNNL and openmp verbose logs enabled to understand which backend is used for the tensor ops execution.</li>
+</ol>
+<pre><code>export DNNL_VERBOSE=1
+export OMP_DISPLAY_ENV=VERBOSE
+</code></pre>
+<p>If there are no OneDNN logs on the terminal, this could mean either the ops are executed with OpenBLAS or XLA backend. For OneDNN accelerated ops, there should be a flow of DNN logs with details about the shapes, prop kinds and execution times. Inspect the logs to see if there are any ops and shapes not executed with the ACL gemm kernel, instead executed by cpp reference kernel. See below example dnnl logs to understand how the ACL gemm and reference cpp kernel execution traces look like.</p>
+<pre><code># ACL gemm kernel
+dnnl_verbose,exec,cpu,convolution,gemm:acl,forward_training,src_f32::blocked:acdb:f0 wei_f32::blocked:acdb:f0 bia_f32::blocked:a:f0 dst_f32::blocked:acdb:f0,post_ops:'eltwise_relu;';,alg:convolution_direct,mb1_ic256oc64_ih56oh56kh1sh1dh0ph0_iw56ow56kw1sw1dw0pw0
+
+# OneDNN cpp reference kernel
+dnnl_verbose,exec,cpu,convolution,gemm:ref,forward_training,src_f32::blocked:abcd:f0 wei_f32::blocked:abcde:f0 bia_f32::blocked:a:f0 dst_f32::blocked:abcd:f0,post_ops:'eltwise_bounded_relu:6;';,alg:convolution_direct,mb1_g64ic64oc64_ih112oh56kh3sh2dh0ph0_iw112ow56kw3sw2dw0pw0
+</code></pre>
+<p>If the tensor ops and shapes are still not executed with ACL gemm kernels, please raise an issue on <a href="https://github.com/ARM-software/ComputeLibrary">ACL github</a> with the operator and shape details.</p>
+<ol start="2">
+<li>
+<p>Once the tensor ops are executed with ACL gemm kernels, enable fast math mode, 'export DNNL_DEFAULT_FPMATH_MODE=BF16', to pick bfloat16 hybrid gemm kernels.</p>
+</li>
+<li>
+<p>Linux thp (transparent huge pages) improve the memory allocation latencies for large tensors. This is important especially for batched inference use cases where the tensors are typically larger than 30MB. To take advantage of the thp allocations, make sure PyTorch C10 memory allocator optimizations are enabled. Most of the Linux based OS distributions come with "madvise" as the default thp allocation mode, if it comes with "never" then set it to "madvise" mode first.</p>
+</li>
+</ol>
+<pre><code># Check the default thp mode in kernel
+cat /sys/kernel/mm/transparent_hugepage/enabled
+
+# If the thp mode is [never], then set it to 'madvise'
+echo madvise &gt; /sys/kernel/mm/transparent_hugepage/enabled
+cat /sys/kernel/mm/transparent_hugepage/enabled
+always [madvise] never
+
+# Enable THP allocations from C10 memory allocator
+export THP_MEM_ALLOC_ENABLE=1
+</code></pre>
+<ol start="4">
+<li>Starting with the release of PyTorch 1.13.0, mkldnn (OneDNN) backend is enabled for 'matmul' operator. While mkldnn along with ACL provides the best performance across several tensor shapes, the runtime setup overhead may not be acceptable for smaller tensor shapes. For use cases with fewer input tokens, check the performance by disabling the mkldnn backend and switching to openBLAS gemm kernels. This has shown improvement for shapes like "12x12x64:12x64x12:12x12x12" and "12x16x16:12x16x64:12x16x64".</li>
+</ol>
+<pre><code>export TORCH_MKLDNN_MATMUL_MIN_DIM=1024
+</code></pre>
+<ol start="5">
+<li>The above triaging steps cover typical issues due to the missing runtime configurations. If you are stuck with any of these steps or if the performance is still not meeting the target, please raise an issue on <a href="https://github.com/aws/aws-graviton-getting-started">aws-graviton-getting-started</a> github.</li>
+</ol>
+<h1 id="building-pytorch-from-source"><a class="header" href="#building-pytorch-from-source">Building PyTorch from source</a></h1>
+<p>With AWS Graviton DLCs and python wheels available for every official PyTorch release, there may not be a need for customers to build PyTorch from sources. However, to make the user guide complete, this section provides instructions for building the torch wheels from sources.</p>
+<p>For more automated single step building of pytorch wheels from a release tag, please use the pyTorch builder repo <a href="https://github.com/pytorch/builder/blob/main/aarch64_linux/build_aarch64_wheel.py">scripts</a>. For building torch wheel alone with the downstream experimental features, please use the below steps.</p>
+<pre><code># This step is required if gcc-10 is not the default version on the OS distribution, e.g. Ubuntu 20.04
+# Install gcc-10 and g++-10 as it is required for Arm Compute Library build.
+sudo apt install -y gcc-10 g++-10
+sudo update-alternatives --install /usr/bin/gcc gcc /usr/bin/gcc-10 1
+sudo update-alternatives --install /usr/bin/g++ g++ /usr/bin/g++-10 1
+
+# Install the required tools
+sudo apt install -y scons cmake
+
+# Build Arm Compute Library (ACL)
+cd $HOME
+git clone https://github.com/ARM-software/ComputeLibrary.git
+cd ComputeLibrary
+git checkout v23.05.1
+scons Werror=1 -j8 debug=0 neon=1 opencl=0 os=linux openmp=1 cppthreads=0 arch=armv8a multi_isa=1 build=native
+
+# Build PyTorch from the tip of the tree
+cd $HOME
+git clone https://github.com/pytorch/pytorch.git
+cd pytorch
+git submodule sync
+git submodule update --init --recursive
+
+# Set the ACL root directory and enable MKLDNN backend
+export ACL_ROOT_DIR=$HOME/ComputeLibrary
+export USE_MKLDNN=ON USE_MKLDNN_ACL=ON
+
+python3 setup.py bdist_wheel
+
+# Install the wheel
+pip3 install &lt;dist/*.whl&gt;
+
+</code></pre>
+<h1 id="using-torch-xla-for-model-inference"><a class="header" href="#using-torch-xla-for-model-inference">Using Torch XLA for model inference</a></h1>
+<p>While the PyTorch torchscript and the runtime backend covers majority of the networks, there are few scenarios where either the default optimizer can't optimize the generic graph or the runtime kernel launch overhead is simply not acceptable. XLA addresses these gaps by providing an alternative mode of running models: it compiles the PyTorch graph into a sequence of computation kernels generated specifically for the given model.</p>
+<p><strong>How to build torach-xla wheel</strong></p>
+<p>The scripts for building the torch and torch-xla wheels are avaiable in torch-xla repo. This section provides instructions for using those scripts.</p>
+<pre><code># The PyTorch and torch-xla build scripts are available in torch-xla repo
+git clone https://github.com/pytorch/xla.git
+cd xla
+
+# To build and install PyTorch from the tip of the tree
+./scripts/build_torch_wheels.sh 3.8 nightly
+
+</code></pre>
+<p><strong>How to enable torch-xla for model inferece</strong></p>
+<p>PyTorch/XLA creates a TensorFlow local server everytime a new PyTorch/XLA program is run. The XRT (XLA Runtime) client connects to the local TensorFlow server. So, to enable XLA device, set the XRT device map and worker as beolow</p>
+<pre><code>export XRT_DEVICE_MAP="CPU:0;/job:localservice/replica:0/task:0/device:XLA_CPU:0"
+export XRT_WORKERS="localservice:0;grpc://localhost:9002"
+</code></pre>
+<p>The below snippet highlights how easy it is to switch any  model to run on XLA. The model definition, dataloader, optimizer and training loop can work on any device. The only XLA-specific code is a couple lines that acquire the XLA device and mark the step. Calling xm.mark_step() at the end of each inference iteration causes XLA to execute its current graph and update the model’s parameters</p>
+<pre><code class="language-python">import torch_xla
+import torch_xla.core.xla_model as xm
+
+# instead of the standard 'cuda' or 'cpu' device, create the xla device.
+device = xm.xla_device()
+.
+.
+.
+xm.mark_step() # at the end of each inference iteration
+</code></pre>
+
+                    </main>
+
+                    <nav class="nav-wrapper" aria-label="Page navigation">
+                        <!-- Mobile navigation buttons -->
+                            <a rel="prev" href="../HPC/setup-an-ec2-hpc-instance.html" class="mobile-nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
+                                <i class="fa fa-angle-left"></i>
+                            </a>
+
+                            <a rel="next prefetch" href="../machinelearning/tensorflow.html" class="mobile-nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
+                                <i class="fa fa-angle-right"></i>
+                            </a>
+
+                        <div style="clear: both"></div>
+                    </nav>
+                </div>
+            </div>
+
+            <nav class="nav-wide-wrapper" aria-label="Page navigation">
+                    <a rel="prev" href="../HPC/setup-an-ec2-hpc-instance.html" class="nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
+                        <i class="fa fa-angle-left"></i>
+                    </a>
+
+                    <a rel="next prefetch" href="../machinelearning/tensorflow.html" class="nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
+                        <i class="fa fa-angle-right"></i>
+                    </a>
+            </nav>
+
+        </div>
+
+
+
+
+        <script>
+            window.playground_copyable = true;
+        </script>
+
+
+        <script src="../elasticlunr.min.js"></script>
+        <script src="../mark.min.js"></script>
+        <script src="../searcher.js"></script>
+
+        <script src="../clipboard.min.js"></script>
+        <script src="../highlight.js"></script>
+        <script src="../book.js"></script>
+
+        <!-- Custom JS scripts -->
+
+
+
+    </div>
+    </body>
+</html>

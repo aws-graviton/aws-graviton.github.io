@@ -1,0 +1,260 @@
+<!DOCTYPE HTML>
+<html lang="en" class="light sidebar-visible" dir="ltr">
+    <head>
+        <!-- Book generated using mdBook -->
+        <meta charset="UTF-8">
+        <title>AWS Managed Services available on Graviton - AWS Graviton technical guide</title>
+
+
+        <!-- Custom HTML head -->
+
+        <meta name="description" content="Technical guidance for developers to use the Arm based AWS Graviton instances">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <meta name="theme-color" content="#ffffff">
+
+        <link rel="icon" href="favicon.svg">
+        <link rel="shortcut icon" href="favicon.png">
+        <link rel="stylesheet" href="css/variables.css">
+        <link rel="stylesheet" href="css/general.css">
+        <link rel="stylesheet" href="css/chrome.css">
+        <link rel="stylesheet" href="css/print.css" media="print">
+
+        <!-- Fonts -->
+        <link rel="stylesheet" href="FontAwesome/css/font-awesome.css">
+        <link rel="stylesheet" href="fonts/fonts.css">
+
+        <!-- Highlight.js Stylesheets -->
+        <link rel="stylesheet" id="highlight-css" href="highlight.css">
+        <link rel="stylesheet" id="tomorrow-night-css" href="tomorrow-night.css">
+        <link rel="stylesheet" id="ayu-highlight-css" href="ayu-highlight.css">
+
+        <!-- Custom theme stylesheets -->
+
+
+        <!-- Provide site root and default themes to javascript -->
+        <script>
+            const path_to_root = "";
+            const default_light_theme = "light";
+            const default_dark_theme = "navy";
+            window.path_to_searchindex_js = "searchindex.js";
+        </script>
+        <!-- Start loading toc.js asap -->
+        <script src="toc.js"></script>
+    </head>
+    <body>
+    <div id="mdbook-help-container">
+        <div id="mdbook-help-popup">
+            <h2 class="mdbook-help-title">Keyboard shortcuts</h2>
+            <div>
+                <p>Press <kbd>←</kbd> or <kbd>→</kbd> to navigate between chapters</p>
+                <p>Press <kbd>S</kbd> or <kbd>/</kbd> to search in the book</p>
+                <p>Press <kbd>?</kbd> to show this help</p>
+                <p>Press <kbd>Esc</kbd> to hide this help</p>
+            </div>
+        </div>
+    </div>
+    <div id="body-container">
+        <!-- Work around some values being stored in localStorage wrapped in quotes -->
+        <script>
+            try {
+                let theme = localStorage.getItem('mdbook-theme');
+                let sidebar = localStorage.getItem('mdbook-sidebar');
+
+                if (theme.startsWith('"') && theme.endsWith('"')) {
+                    localStorage.setItem('mdbook-theme', theme.slice(1, theme.length - 1));
+                }
+
+                if (sidebar.startsWith('"') && sidebar.endsWith('"')) {
+                    localStorage.setItem('mdbook-sidebar', sidebar.slice(1, sidebar.length - 1));
+                }
+            } catch (e) { }
+        </script>
+
+        <!-- Set the theme before any content is loaded, prevents flash -->
+        <script>
+            const default_theme = window.matchMedia("(prefers-color-scheme: dark)").matches ? default_dark_theme : default_light_theme;
+            let theme;
+            try { theme = localStorage.getItem('mdbook-theme'); } catch(e) { }
+            if (theme === null || theme === undefined) { theme = default_theme; }
+            const html = document.documentElement;
+            html.classList.remove('light')
+            html.classList.add(theme);
+            html.classList.add("js");
+        </script>
+
+        <input type="checkbox" id="sidebar-toggle-anchor" class="hidden">
+
+        <!-- Hide / unhide sidebar before it is displayed -->
+        <script>
+            let sidebar = null;
+            const sidebar_toggle = document.getElementById("sidebar-toggle-anchor");
+            if (document.body.clientWidth >= 1080) {
+                try { sidebar = localStorage.getItem('mdbook-sidebar'); } catch(e) { }
+                sidebar = sidebar || 'visible';
+            } else {
+                sidebar = 'hidden';
+                sidebar_toggle.checked = false;
+            }
+            if (sidebar === 'visible') {
+                sidebar_toggle.checked = true;
+            } else {
+                html.classList.remove('sidebar-visible');
+            }
+        </script>
+
+        <nav id="sidebar" class="sidebar" aria-label="Table of contents">
+            <!-- populated by js -->
+            <mdbook-sidebar-scrollbox class="sidebar-scrollbox"></mdbook-sidebar-scrollbox>
+            <noscript>
+                <iframe class="sidebar-iframe-outer" src="toc.html"></iframe>
+            </noscript>
+            <div id="sidebar-resize-handle" class="sidebar-resize-handle">
+                <div class="sidebar-resize-indicator"></div>
+            </div>
+        </nav>
+
+        <div id="page-wrapper" class="page-wrapper">
+
+            <div class="page">
+                <div id="menu-bar-hover-placeholder"></div>
+                <div id="menu-bar" class="menu-bar sticky">
+                    <div class="left-buttons">
+                        <label id="sidebar-toggle" class="icon-button" for="sidebar-toggle-anchor" title="Toggle Table of Contents" aria-label="Toggle Table of Contents" aria-controls="sidebar">
+                            <i class="fa fa-bars"></i>
+                        </label>
+                        <button id="theme-toggle" class="icon-button" type="button" title="Change theme" aria-label="Change theme" aria-haspopup="true" aria-expanded="false" aria-controls="theme-list">
+                            <i class="fa fa-paint-brush"></i>
+                        </button>
+                        <ul id="theme-list" class="theme-popup" aria-label="Themes" role="menu">
+                            <li role="none"><button role="menuitem" class="theme" id="default_theme">Auto</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="light">Light</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="rust">Rust</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="coal">Coal</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="navy">Navy</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="ayu">Ayu</button></li>
+                        </ul>
+                        <button id="search-toggle" class="icon-button" type="button" title="Search (`/`)" aria-label="Toggle Searchbar" aria-expanded="false" aria-keyshortcuts="/ s" aria-controls="searchbar">
+                            <i class="fa fa-search"></i>
+                        </button>
+                    </div>
+
+                    <h1 class="menu-title">AWS Graviton technical guide</h1>
+
+                    <div class="right-buttons">
+                        <a href="print.html" title="Print this book" aria-label="Print this book">
+                            <i id="print-button" class="fa fa-print"></i>
+                        </a>
+                        <a href="https://github.com/aws/aws-graviton-getting-started" title="Git repository" aria-label="Git repository">
+                            <i id="git-repository-button" class="fa fa-github"></i>
+                        </a>
+
+                    </div>
+                </div>
+
+                <div id="search-wrapper" class="hidden">
+                    <form id="searchbar-outer" class="searchbar-outer">
+                        <div class="search-wrapper">
+                            <input type="search" id="searchbar" name="searchbar" placeholder="Search this book ..." aria-controls="searchresults-outer" aria-describedby="searchresults-header">
+                            <div class="spinner-wrapper">
+                                <i class="fa fa-spinner fa-spin"></i>
+                            </div>
+                        </div>
+                    </form>
+                    <div id="searchresults-outer" class="searchresults-outer hidden">
+                        <div id="searchresults-header" class="searchresults-header"></div>
+                        <ul id="searchresults">
+                        </ul>
+                    </div>
+                </div>
+
+                <!-- Apply ARIA attributes after the sidebar and the sidebar toggle button are added to the DOM -->
+                <script>
+                    document.getElementById('sidebar-toggle').setAttribute('aria-expanded', sidebar === 'visible');
+                    document.getElementById('sidebar').setAttribute('aria-hidden', sidebar !== 'visible');
+                    Array.from(document.querySelectorAll('#sidebar a')).forEach(function(link) {
+                        link.setAttribute('tabIndex', sidebar === 'visible' ? 0 : -1);
+                    });
+                </script>
+
+                <div id="content" class="content">
+                    <main>
+                        <p>In addition to the AWS Graviton-based Amazon EC2 instances, Graviton is also available via a growing list of AWS managed services as follows:</p>
+<p>Note: You can always find the latest Graviton announcements via these <a href="https://aws.amazon.com/new/?whats-new-content-all.sort-by=item.additionalFields.postDateTime&amp;whats-new-content-all.sort-order=desc&amp;whats-new-content-all.q=Graviton&amp;whats-new-content-all.q_operator=AND#What.27s_New_Feed">What's New posts</a>.</p>
+<div class="table-wrapper"><table><thead><tr><th style="text-align: center">Service</th><th style="text-align: center">Status</th><th>Resources</th></tr></thead><tbody>
+<tr><td style="text-align: center"><a href="https://aws.amazon.com/app-mesh/">AWS App Mesh</a></td><td style="text-align: center">GA</td><td>What's New: <a href="https://aws.amazon.com/about-aws/whats-new/2021/11/aws-app-mesh-arm64-envoy-images/">AWS App Mesh now supports ARM64-based Envoy Images</a></td></tr>
+<tr><td style="text-align: center"><a href="https://aws.amazon.com/rds/aurora/">Amazon Aurora</a></td><td style="text-align: center">GA</td><td>What's New: <a href="https://aws.amazon.com/about-aws/whats-new/2023/05/amazon-aurora-mysql-postgresql-graviton3-based-r7g-instance-family/">Amazon Aurora MySQL and PostgreSQL support for Graviton3 based R7g instance family</a>, <a href="https://aws.amazon.com/about-aws/whats-new/2021/03/achieve-up-to-35-percent-better-price-performance-with-amazon-aurora-using-new-graviton2-instances/">Achieve up to 35% better price/performance with Amazon Aurora using new Graviton2 instances</a><br>Related blog: <a href="https://aws.amazon.com/blogs/database/key-considerations-in-moving-to-graviton2-for-amazon-rds-and-amazon-aurora-databases/">Key considerations in moving to Graviton2 for Amazon RDS and Amazon Aurora databases</a><br>For supported instance types and database engine versions see <a href="https://docs.aws.amazon.com/AmazonRDS/latest/AuroraUserGuide/Concepts.DBInstanceClass.html">Aurora DB Instances</a></td></tr>
+<tr><td style="text-align: center"><a href="https://aws.amazon.com/ec2/autoscaling/">Amazon EC2 Auto Scaling</a></td><td style="text-align: center">GA</td><td>What's New: <a href="https://aws.amazon.com/about-aws/whats-new/2020/11/amazon-ec2-auto-scaling-announces-support-for-multiple-launch-templates-for-auto-scaling-groups/">Amazon EC2 Auto Scaling announces support for multiple launch templates for Auto Scaling groups</a><br>Associated blog: <a href="https://aws.amazon.com/blogs/compute/supporting-aws-graviton2-and-x86-instance-types-in-the-same-auto-scaling-group/">Supporting AWS Graviton2 and x86 instance types in the same Auto Scaling group</a></td></tr>
+<tr><td style="text-align: center"><a href="https://aws.amazon.com/batch/">AWS Batch</a></td><td style="text-align: center">GA</td><td>Blog: <a href="https://aws.amazon.com/blogs/devops/target-cross-platform-go-builds-with-aws-codebuild-batch-builds/">Target cross-platform Go builds with AWS CodeBuild Batch builds</a></td></tr>
+<tr><td style="text-align: center"><a href="https://aws.amazon.com/codebuild/">AWS CodeBuild</a></td><td style="text-align: center">GA</td><td>What's New: <a href="https://aws.amazon.com/about-aws/whats-new/2021/02/aws-codebuild-supports-arm-based-workloads-using-aws-graviton2/">AWS CodeBuild supports Arm-based workloads using AWS Graviton2</a></td></tr>
+<tr><td style="text-align: center"><a href="https://codecatalyst.aws/">Amazon CodeCatalyst</a></td><td style="text-align: center">GA</td><td>What's New: <a href="https://aws.amazon.com/about-aws/whats-new/2023/04/general-availability-amazon-codecatalyst/">Announcing the general availability of Amazon CodeCatalyst</a></td></tr>
+<tr><td style="text-align: center"><a href="https://aws.amazon.com/documentdb/">Amazon DocumentDB</a></td><td style="text-align: center">GA</td><td>What's New: <a href="https://aws.amazon.com/about-aws/whats-new/2021/11/better-performance-amazon-documentdb-mongodb-graviton2-instances/">Achieve up to 30% better performance with Amazon DocumentDB (with MongoDB compatibility) using new Graviton2 instances</a></td></tr>
+<tr><td style="text-align: center"><a href="https://aws.amazon.com/ecr/">Amazon ECR</a></td><td style="text-align: center">GA</td><td>What's New: <a href="https://aws.amazon.com/about-aws/whats-new/2020/05/ecr-now-supports-manifest-lists-for-multi-architecture-images/">ECR now supports Manifest Lists for multi-architecture images</a><br>Associated blog: <a href="https://aws.amazon.com/blogs/containers/introducing-multi-architecture-container-images-for-amazon-ecr/">Introducing multi-architecture container images for Amazon ECR</a></td></tr>
+<tr><td style="text-align: center"><a href="https://aws.amazon.com/ecs/">Amazon ECS</a></td><td style="text-align: center">GA</td><td><a href="https://docs.aws.amazon.com/AmazonECS/latest/developerguide/ecs-optimized_AMI.html">Amazon ECS-optimized AMIs</a></td></tr>
+<tr><td style="text-align: center"><a href="https://aws.amazon.com/eks/">Amazon EKS</a></td><td style="text-align: center">GA</td><td>What's New: <a href="https://aws.amazon.com/about-aws/whats-new/2020/08/amazon-eks-support-for-arm-based-instances-powered-by-aws-graviton-now-generally-available/">Amazon EKS support for Arm-based instances powered by AWS Graviton is now generally available</a><br>Launch Blog: <a href="https://aws.amazon.com/blogs/containers/eks-on-graviton-generally-available/">Amazon EKS on AWS Graviton2 generally available: considerations on multi-architecture apps</a></td></tr>
+<tr><td style="text-align: center"><a href="https://aws.amazon.com/elasticbeanstalk/">AWS Elastic Beanstalk</a></td><td style="text-align: center">GA</td><td>What's New: <a href="https://aws.amazon.com/about-aws/whats-new/2021/11/elastic-beanstalk-aws-graviton-ec2/">Elastic Beanstalk supports AWS Graviton-based Amazon EC2 instance types</a></td></tr>
+<tr><td style="text-align: center"><a href="https://aws.amazon.com/elasticache/">Amazon ElastiCache</a></td><td style="text-align: center">GA</td><td>What's New: <a href="https://aws.amazon.com/about-aws/whats-new/2023/08/amazon-elasticache-m7g-r7g-graviton-3-nodes/">Amazon ElastiCache now supports M7g and R7g Graviton3-based nodes</a>, <a href="https://aws.amazon.com/about-aws/whats-new/2020/10/amazon-elasticache-now-supports-m6g-and-r6g-graviton2-based-instances/">Amazon ElastiCache now supports M6g and R6g Graviton2-based instances</a><br> What's New: <a href="https://aws.amazon.com/about-aws/whats-new/2021/11/amazon-elasticache-supports-t4g-graviton2-based-instances/">Amazon ElastiCache now supports T4g Graviton2-based instances</a></td></tr>
+<tr><td style="text-align: center"><a href="https://aws.amazon.com/emr/">Amazon EMR</a></td><td style="text-align: center">GA</td><td>What's New: <a href="https://aws.amazon.com/about-aws/whats-new/2023/03/amazon-emr-amazon-ec2-c7g-graviton3-instances/">Amazon EMR now supports Amazon EC2 C7g (Graviton3) instances</a>, <a href="https://aws.amazon.com/about-aws/whats-new/2020/12/amazon-emr-now-provides-up-to-30-lower-cost-and-up-to-15-improved-performance/">Amazon EMR now provides up to 30% lower cost and up to 15% improved performance for Spark workloads on Graviton2-based instances</a><br>Launch Blog: <a href="https://aws.amazon.com/blogs/big-data/amazon-emr-now-provides-up-to-30-lower-cost-and-up-to-15-improved-performance-for-spark-workloads-on-graviton2-based-instances/">Amazon EMR now provides up to 30% lower cost and up to 15% improved performance for Spark workloads on Graviton2-based instances</a></td></tr>
+<tr><td style="text-align: center"><a href="https://aws.amazon.com/emr/serverless/">Amazon EMR Serverless</a></td><td style="text-align: center">GA</td><td>What's New: <a href="https://aws.amazon.com/about-aws/whats-new/2022/11/aws-graviton2-emr-serverless-35-percent-price-performance-spark-hive-workloads/">Announcing AWS Graviton2 support for Amazon EMR Serverless - Get up to 35% better price-performance for your serverless Spark and Hive workload</a></td></tr>
+<tr><td style="text-align: center"><a href="https://aws.amazon.com/fargate/">AWS Fargate</a></td><td style="text-align: center">GA</td><td>Launch Blog: <a href="https://aws.amazon.com/blogs/aws/announcing-aws-graviton2-support-for-aws-fargate-get-up-to-40-better-price-performance-for-your-serverless-containers/">Announcing AWS Graviton2 Support for AWS Fargate – Get up to 40% Better Price-Performance for Your Serverless Containers</a></td></tr>
+<tr><td style="text-align: center"><a href="https://aws.amazon.com/gamelift/">Amazon Gamelift</a></td><td style="text-align: center">GA</td><td>Launch Blog: <a href="https://aws.amazon.com/blogs/gametech/now-available-new-asia-pacific-osaka-region-and-graviton2-support-for-amazon-gamelift/">Now available: New Asia Pacific (Osaka) region and Graviton2 support for Amazon GameLift</a><br>Addition of Graviton3: <a href="https://aws.amazon.com/about-aws/whats-new/2023/08/amazon-gamelift-instances-aws-graviton-3-processors/">Announcing Amazon GameLift support for instances powered by AWS Graviton3 processors</a></td></tr>
+<tr><td style="text-align: center"><a href="https://aws.amazon.com/lambda/">AWS Lambda</a></td><td style="text-align: center">GA</td><td>What's New: <a href="https://aws.amazon.com/about-aws/whats-new/2021/09/better-price-performance-aws-lambda-functions-aws-graviton2-processor/">Achieve up to 34% better price/performance with AWS Lambda Functions powered by AWS Graviton2 processor</a><br>Launch Blog: <a href="https://aws.amazon.com/blogs/aws/aws-lambda-functions-powered-by-aws-graviton2-processor-run-your-functions-on-arm-and-get-up-to-34-better-price-performance/">AWS Lambda Functions Powered by AWS Graviton2 Processor – Run Your Functions on Arm and Get Up to 34% Better Price Performance</a></td></tr>
+<tr><td style="text-align: center"><a href="https://aws.amazon.com/memorydb/">Amazon MemoryDB</a></td><td style="text-align: center">GA</td><td>What's New: <a href="https://aws.amazon.com/about-aws/whats-new/2021/08/amazon-memorydb-redis/">Announcing Amazon MemoryDB for Redis</a><br>Launch Blog: <a href="https://aws.amazon.com/blogs/aws/introducing-amazon-memorydb-for-redis-a-redis-compatible-durable-in-memory-database-service/">Introducing Amazon MemoryDB for Redis – A Redis-Compatible, Durable, In-Memory Database Service</a></td></tr>
+<tr><td style="text-align: center"><a href="https://aws.amazon.com/msk/">Amazon Managed Streaming for Apache Kafka (MSK)</a></td><td style="text-align: center">GA</td><td>What's New: <a href="https://aws.amazon.com/about-aws/whats-new/2023/11/amazon-msk-graviton3-m7g-instances-provisioned-clusters/">Amazon MSK now supports Graviton3-based M7g instances for new provisioned clusters</a><br>In-place upgrades: <a href="https://aws.amazon.com/about-aws/whats-new/2024/06/amazon-msk-upgrades-m5-t3-instance-graviton3-m7g/">Amazon MSK supports in-place upgrades from M5, T3 instance types to Graviton3 based M7G</a></td></tr>
+<tr><td style="text-align: center"><a href="https://aws.amazon.com/neptune/">Amazon Neptune</a></td><td style="text-align: center">GA</td><td>What's New: <a href="https://aws.amazon.com/about-aws/whats-new/2021/11/aws-graviton2-based-instances-amazon-neptune/">Announcing AWS Graviton2-based instances for Amazon Neptune</a></td></tr>
+<tr><td style="text-align: center"><a href="https://aws.amazon.com/opensearch-service/">Amazon OpenSearch Service</a></td><td style="text-align: center">GA</td><td>What's New: <a href="https://aws.amazon.com/about-aws/whats-new/2021/05/amazon-elasticsearch-service-offers-aws-graviton2-m6g-c6g-r6g-r6gd-instances/">Amazon Elasticsearch Service now offers AWS Graviton2 (M6g, C6g, R6g, and R6gd) instances</a><br>Related blog: <a href="https://aws.amazon.com/blogs/big-data/increase-amazon-elasticsearch-service-performance-by-upgrading-to-graviton2/">Increase Amazon Elasticsearch Service performance by upgrading to Graviton2</a></td></tr>
+<tr><td style="text-align: center"><a href="https://aws.amazon.com/rds/">Amazon RDS</a></td><td style="text-align: center">GA</td><td>What's New: <a href="https://aws.amazon.com/about-aws/whats-new/2023/04/amazon-rds-m7g-r7g-database-instances/">Amazon RDS now supports M7g and R7g database instances</a>, <a href="https://aws.amazon.com/about-aws/whats-new/2020/10/achieve-up-to-52-percent-better-price-performance-with-amazon-rds-using-new-graviton2-instances/">Achieve up to 52% better price/performance with Amazon RDS using new Graviton2 instances</a><br>Launch Blog: <a href="https://aws.amazon.com/blogs/aws/new-amazon-rds-on-graviton2-processors/">New – Amazon RDS on Graviton2 Processors</a><br>Related blog: <a href="https://aws.amazon.com/blogs/database/key-considerations-in-moving-to-graviton2-for-amazon-rds-and-amazon-aurora-databases/">Key considerations in moving to Graviton2 for Amazon RDS and Amazon Aurora databases</a><br>For supported instance types and database engine versions see <a href="https://docs.aws.amazon.com/AmazonRDS/latest/UserGuide/Concepts.DBInstanceClass.html">RDS DB Instances</a></td></tr>
+<tr><td style="text-align: center"><a href="https://aws.amazon.com/pm/sagemaker/">Amazon SageMaker</a></td><td style="text-align: center">GA</td><td>What's New: <a href="https://aws.amazon.com/about-aws/whats-new/2022/10/amazon-sagemaker-adds-new-graviton-based-instances-model-deployment/">Amazon SageMaker adds eight new Graviton-based instances for model deployment</a> <br> Related blog: <a href="https://aws.amazon.com/blogs/machine-learning/run-machine-learning-inference-workloads-on-aws-graviton-based-instances-with-amazon-sagemaker/">Run machine learning inference workloads on AWS Graviton-based instances with Amazon SageMaker</a>, <a href="https://aws.amazon.com/blogs/machine-learning/reduce-amazon-sagemaker-inference-cost-with-aws-graviton/">Reduce Amazon SageMaker inference cost with AWS Graviton</a></td></tr>
+</tbody></table>
+</div>
+                    </main>
+
+                    <nav class="nav-wrapper" aria-label="Page navigation">
+                        <!-- Mobile navigation buttons -->
+                            <a rel="prev" href="amis_cf_sm.html" class="mobile-nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
+                                <i class="fa fa-angle-left"></i>
+                            </a>
+
+                            <a rel="next prefetch" href="isv.html" class="mobile-nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
+                                <i class="fa fa-angle-right"></i>
+                            </a>
+
+                        <div style="clear: both"></div>
+                    </nav>
+                </div>
+            </div>
+
+            <nav class="nav-wide-wrapper" aria-label="Page navigation">
+                    <a rel="prev" href="amis_cf_sm.html" class="nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
+                        <i class="fa fa-angle-left"></i>
+                    </a>
+
+                    <a rel="next prefetch" href="isv.html" class="nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
+                        <i class="fa fa-angle-right"></i>
+                    </a>
+            </nav>
+
+        </div>
+
+
+
+
+        <script>
+            window.playground_copyable = true;
+        </script>
+
+
+        <script src="elasticlunr.min.js"></script>
+        <script src="mark.min.js"></script>
+        <script src="searcher.js"></script>
+
+        <script src="clipboard.min.js"></script>
+        <script src="highlight.js"></script>
+        <script src="book.js"></script>
+
+        <!-- Custom JS scripts -->
+
+
+
+    </div>
+    </body>
+</html>

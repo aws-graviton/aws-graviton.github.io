@@ -1,0 +1,502 @@
+<!DOCTYPE HTML>
+<html lang="en" class="light sidebar-visible" dir="ltr">
+    <head>
+        <!-- Book generated using mdBook -->
+        <meta charset="UTF-8">
+        <title>TensorFlow - AWS Graviton technical guide</title>
+
+
+        <!-- Custom HTML head -->
+
+        <meta name="description" content="Technical guidance for developers to use the Arm based AWS Graviton instances">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <meta name="theme-color" content="#ffffff">
+
+        <link rel="icon" href="../favicon.svg">
+        <link rel="shortcut icon" href="../favicon.png">
+        <link rel="stylesheet" href="../css/variables.css">
+        <link rel="stylesheet" href="../css/general.css">
+        <link rel="stylesheet" href="../css/chrome.css">
+        <link rel="stylesheet" href="../css/print.css" media="print">
+
+        <!-- Fonts -->
+        <link rel="stylesheet" href="../FontAwesome/css/font-awesome.css">
+        <link rel="stylesheet" href="../fonts/fonts.css">
+
+        <!-- Highlight.js Stylesheets -->
+        <link rel="stylesheet" id="highlight-css" href="../highlight.css">
+        <link rel="stylesheet" id="tomorrow-night-css" href="../tomorrow-night.css">
+        <link rel="stylesheet" id="ayu-highlight-css" href="../ayu-highlight.css">
+
+        <!-- Custom theme stylesheets -->
+
+
+        <!-- Provide site root and default themes to javascript -->
+        <script>
+            const path_to_root = "../";
+            const default_light_theme = "light";
+            const default_dark_theme = "navy";
+            window.path_to_searchindex_js = "../searchindex.js";
+        </script>
+        <!-- Start loading toc.js asap -->
+        <script src="../toc.js"></script>
+    </head>
+    <body>
+    <div id="mdbook-help-container">
+        <div id="mdbook-help-popup">
+            <h2 class="mdbook-help-title">Keyboard shortcuts</h2>
+            <div>
+                <p>Press <kbd>←</kbd> or <kbd>→</kbd> to navigate between chapters</p>
+                <p>Press <kbd>S</kbd> or <kbd>/</kbd> to search in the book</p>
+                <p>Press <kbd>?</kbd> to show this help</p>
+                <p>Press <kbd>Esc</kbd> to hide this help</p>
+            </div>
+        </div>
+    </div>
+    <div id="body-container">
+        <!-- Work around some values being stored in localStorage wrapped in quotes -->
+        <script>
+            try {
+                let theme = localStorage.getItem('mdbook-theme');
+                let sidebar = localStorage.getItem('mdbook-sidebar');
+
+                if (theme.startsWith('"') && theme.endsWith('"')) {
+                    localStorage.setItem('mdbook-theme', theme.slice(1, theme.length - 1));
+                }
+
+                if (sidebar.startsWith('"') && sidebar.endsWith('"')) {
+                    localStorage.setItem('mdbook-sidebar', sidebar.slice(1, sidebar.length - 1));
+                }
+            } catch (e) { }
+        </script>
+
+        <!-- Set the theme before any content is loaded, prevents flash -->
+        <script>
+            const default_theme = window.matchMedia("(prefers-color-scheme: dark)").matches ? default_dark_theme : default_light_theme;
+            let theme;
+            try { theme = localStorage.getItem('mdbook-theme'); } catch(e) { }
+            if (theme === null || theme === undefined) { theme = default_theme; }
+            const html = document.documentElement;
+            html.classList.remove('light')
+            html.classList.add(theme);
+            html.classList.add("js");
+        </script>
+
+        <input type="checkbox" id="sidebar-toggle-anchor" class="hidden">
+
+        <!-- Hide / unhide sidebar before it is displayed -->
+        <script>
+            let sidebar = null;
+            const sidebar_toggle = document.getElementById("sidebar-toggle-anchor");
+            if (document.body.clientWidth >= 1080) {
+                try { sidebar = localStorage.getItem('mdbook-sidebar'); } catch(e) { }
+                sidebar = sidebar || 'visible';
+            } else {
+                sidebar = 'hidden';
+                sidebar_toggle.checked = false;
+            }
+            if (sidebar === 'visible') {
+                sidebar_toggle.checked = true;
+            } else {
+                html.classList.remove('sidebar-visible');
+            }
+        </script>
+
+        <nav id="sidebar" class="sidebar" aria-label="Table of contents">
+            <!-- populated by js -->
+            <mdbook-sidebar-scrollbox class="sidebar-scrollbox"></mdbook-sidebar-scrollbox>
+            <noscript>
+                <iframe class="sidebar-iframe-outer" src="../toc.html"></iframe>
+            </noscript>
+            <div id="sidebar-resize-handle" class="sidebar-resize-handle">
+                <div class="sidebar-resize-indicator"></div>
+            </div>
+        </nav>
+
+        <div id="page-wrapper" class="page-wrapper">
+
+            <div class="page">
+                <div id="menu-bar-hover-placeholder"></div>
+                <div id="menu-bar" class="menu-bar sticky">
+                    <div class="left-buttons">
+                        <label id="sidebar-toggle" class="icon-button" for="sidebar-toggle-anchor" title="Toggle Table of Contents" aria-label="Toggle Table of Contents" aria-controls="sidebar">
+                            <i class="fa fa-bars"></i>
+                        </label>
+                        <button id="theme-toggle" class="icon-button" type="button" title="Change theme" aria-label="Change theme" aria-haspopup="true" aria-expanded="false" aria-controls="theme-list">
+                            <i class="fa fa-paint-brush"></i>
+                        </button>
+                        <ul id="theme-list" class="theme-popup" aria-label="Themes" role="menu">
+                            <li role="none"><button role="menuitem" class="theme" id="default_theme">Auto</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="light">Light</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="rust">Rust</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="coal">Coal</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="navy">Navy</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="ayu">Ayu</button></li>
+                        </ul>
+                        <button id="search-toggle" class="icon-button" type="button" title="Search (`/`)" aria-label="Toggle Searchbar" aria-expanded="false" aria-keyshortcuts="/ s" aria-controls="searchbar">
+                            <i class="fa fa-search"></i>
+                        </button>
+                    </div>
+
+                    <h1 class="menu-title">AWS Graviton technical guide</h1>
+
+                    <div class="right-buttons">
+                        <a href="../print.html" title="Print this book" aria-label="Print this book">
+                            <i id="print-button" class="fa fa-print"></i>
+                        </a>
+                        <a href="https://github.com/aws/aws-graviton-getting-started" title="Git repository" aria-label="Git repository">
+                            <i id="git-repository-button" class="fa fa-github"></i>
+                        </a>
+
+                    </div>
+                </div>
+
+                <div id="search-wrapper" class="hidden">
+                    <form id="searchbar-outer" class="searchbar-outer">
+                        <div class="search-wrapper">
+                            <input type="search" id="searchbar" name="searchbar" placeholder="Search this book ..." aria-controls="searchresults-outer" aria-describedby="searchresults-header">
+                            <div class="spinner-wrapper">
+                                <i class="fa fa-spinner fa-spin"></i>
+                            </div>
+                        </div>
+                    </form>
+                    <div id="searchresults-outer" class="searchresults-outer hidden">
+                        <div id="searchresults-header" class="searchresults-header"></div>
+                        <ul id="searchresults">
+                        </ul>
+                    </div>
+                </div>
+
+                <!-- Apply ARIA attributes after the sidebar and the sidebar toggle button are added to the DOM -->
+                <script>
+                    document.getElementById('sidebar-toggle').setAttribute('aria-expanded', sidebar === 'visible');
+                    document.getElementById('sidebar').setAttribute('aria-hidden', sidebar !== 'visible');
+                    Array.from(document.querySelectorAll('#sidebar a')).forEach(function(link) {
+                        link.setAttribute('tabIndex', sidebar === 'visible' ? 0 : -1);
+                    });
+                </script>
+
+                <div id="content" class="content">
+                    <main>
+                        <h1 id="ml-inference-on-graviton-cpus-with-tensorflow"><a class="header" href="#ml-inference-on-graviton-cpus-with-tensorflow">ML inference on Graviton CPUs with TensorFlow</a></h1>
+<p><strong>Introduction</strong></p>
+<p>TensorFlow is an open-source software library for machine learning and artificial intelligence. It can be used across training and inference of deep neural networks. This document covers how to use TensorFlow based machine learning inference on Graviton CPUs, what runtime configurations are important and how to debug any performance issues.</p>
+<h1 id="how-to-use-tensorflow-on-graviton-cpus"><a class="header" href="#how-to-use-tensorflow-on-graviton-cpus">How to use TensorFlow on Graviton CPUs</a></h1>
+<p>There are multiple levels of software package abstractions available:</p>
+<ul>
+<li>AWS DLC (Deep Learning Container, gives the best performance, comes with additional optimizations on top of the official wheels, and all the packages installed)</li>
+<li>Python wheel (easiest option to get the release features) and</li>
+<li>Docker hub images (comes with downstream experimental features). Examples of using each method are below.</li>
+</ul>
+<p><strong>AWS Graviton TensorFlow DLC</strong></p>
+<p>As of May 2024, AWS Graviton DLCs are based on TensorFlow 2.14.1. The DLCs enable the Graviton optimizations by default.</p>
+<pre><code># Login and pull the AWS DLC for tensorflow
+aws ecr get-login-password --region us-west-2 | docker login --username AWS --password-stdin 763104351884.dkr.ecr.us-west-2.amazonaws.com
+
+docker pull 763104351884.dkr.ecr.us-west-2.amazonaws.com/tensorflow-inference-graviton:2.14.1-cpu-py310-ubuntu20.04-ec2
+
+# Sample command to launch the tensorflow serving api with resnet50 model
+docker run -p 8501:8501 --name tfserving_resnet --mount type=bind,source=/tmp/resnet,target=/models/resnet -e MODEL_NAME=resnet -t 763104351884.dkr.ecr.us-west-2.amazonaws.com/tensorflow-inference-graviton:2.14.1-cpu-py310-ubuntu20.04-ec2
+</code></pre>
+<p><strong>Using Python wheel</strong></p>
+<pre><code>pip install tensorflow
+</code></pre>
+<p><strong>Using Docker hub container</strong></p>
+<p>As of May 2024, Docker hub images from armswdev are based on TensorFlow 2.15.1, but also include additional downstream optimizations and experimental features. These are avaiable for trying out the experimental downstream features and provide early feedback.</p>
+<pre><code># pull the tensorflow docker container with onednn-acl optimizations enabled
+docker pull armswdev/tensorflow-arm-neoverse
+
+# launch the docker image
+docker run -it --rm -v /home/ubuntu/:/hostfs armswdev/tensorflow-arm-neoverse
+</code></pre>
+<h1 id="prerequisites"><a class="header" href="#prerequisites">Prerequisites</a></h1>
+<p>It is highly recommended to use the AMIs based on Linux Kernel 5.10 and beyond for the best TensorFlow inference performance on Graviton3 instances.</p>
+<h1 id="runtime-configurations-for-optimal-performance"><a class="header" href="#runtime-configurations-for-optimal-performance">Runtime configurations for optimal performance</a></h1>
+<p>AWS DLCs come with all the optimizations enabled, so, there are no additional runtime configurations required. Where as for the python wheels and the docker hub images, enable the below runtime configurations to achieve the best performance.</p>
+<pre><code># For TensorFlow versions older than 2.14.0, the default runtime backend is Eigen, but typically onednn+acl provides better performance. To enable the onednn+acl backend, set the following TF environment variable
+export TF_ENABLE_ONEDNN_OPTS=1
+
+# Graviton3(E) (e.g. c7g, c7gn, and hpc7g instances) supports BF16 format for ML acceleration. This can be enabled in oneDNN by setting the below environment variable
+grep -q bf16 /proc/cpuinfo &amp;&amp; export DNNL_DEFAULT_FPMATH_MODE=BF16
+
+# Make sure the openmp threads are distributed across all the processes for multi process applications to avoid over subscription for the vcpus. For example if there is a single application process, then num_processes should be set to '1' so that all the vcpus are assigned to it with one-to-one mapping to omp threads
+
+num_vcpus=$(getconf _NPROCESSORS_ONLN)
+num_processes=&lt;number of processes&gt;
+export OMP_NUM_THREADS=$((1 &gt; ($num_vcpus/$num_processes) ? 1 : ($num_vcpus/$num_processes)))
+export OMP_PROC_BIND=false
+export OMP_PLACES=cores
+</code></pre>
+<pre><code class="language-python"># TensorFlow inter and intra_op_parallelism_thread settings are critical for the optimal workload parallelization in a multi-threaded system.
+# set the inter and intra op thread count during the session creation, an example snippet is given below.
+session = Session(
+                 config=ConfigProto(
+                      intra_op_parallelism_threads=&lt;num. of vcpus&gt;,
+                      inter_op_parallelism_threads=1,
+                )
+)
+</code></pre>
+<p>TensorFlow recommends the graph optimization pass for inference to remove training specific nodes, fold batchnorms and fuse operators. This is a generic optimizaion across CPU, GPU or TPU inference, and the optimization script is part of the TensorFlow python <a href="https://github.com/tensorflow/tensorflow/blob/master/tensorflow/python/tools/optimize_for_inference_lib.py">tools</a>. For a detailed description, please refer to the TensorFlow <a href="https://www.tensorflow.org/guide/graph_optimization">Grappler</a> documentation. Below is a snippet of what libraries to import and how to invoke the Grappler passes for inference.</p>
+<pre><code class="language-python">from tensorflow.python.tools.optimize_for_inference_lib import optimize_for_inference
+
+graph_def = tf.compat.v1.GraphDef()
+with tf.compat.v1.gfile.FastGFile(model_path, "rb") as f:
+     graph_def.ParseFromString(f.read())
+
+optimized_graph_def = optimize_for_inference(graph_def, [item.split(':')[0] for item in inputs],
+                    [item.split(':')[0] for item in outputs], dtypes.float32.as_datatype_enum, False)
+g = tf.compat.v1.import_graph_def(optimized_graph_def, name='')
+</code></pre>
+<h1 id="evaluate-performance-with-the-standard-mlperf-inference-benchmarks"><a class="header" href="#evaluate-performance-with-the-standard-mlperf-inference-benchmarks">Evaluate performance with the standard MLPerf inference benchmarks</a></h1>
+<ol>
+<li>Setup MLPerf inference benchmarks and the required tools.</li>
+</ol>
+<pre><code>sudo apt install -y build-essential cmake libgl1-mesa-glx libglib2.0-0 libsm6 libxrender1 libxext6 python3-pip
+
+git clone https://github.com/mlcommons/inference.git --recursive
+cd inference
+git checkout v2.0
+cd loadgen
+CFLAGS="-std=c++14" python3 setup.py bdist_wheel
+pip install &lt;dist/*.whl&gt;
+</code></pre>
+<ol start="2">
+<li>Benchmark image classification with Resnet50</li>
+</ol>
+<pre><code>sudo apt install python3-ck
+ck pull repo:ck-env
+
+# Download ImageNet's validation set
+# These will be installed to ${HOME}/CK_TOOLS/
+echo 0 | ck install package --tags=image-classification,dataset,imagenet,aux
+echo 1 | ck install package --tags=image-classification,dataset,imagenet,val
+
+# Copy the labels into the image location
+cp ${HOME}/CK-TOOLS/dataset-imagenet-ilsvrc2012-aux-from.berkeley/val.txt ${HOME}/CK-TOOLS/dataset-imagenet-ilsvrc2012-val-min/val_map.txt
+
+cd inference/vision/classification_and_detection
+wget https://zenodo.org/record/2535873/files/resnet50_v1.pb
+
+# Install the additional packages required for resnet50 inference
+pip install opencv-python pycocotools psutil tqdm
+
+# Set the data and model path
+export DATA_DIR=${HOME}/CK-TOOLS/dataset-imagenet-ilsvrc2012-val-min
+export MODEL_DIR=${HOME}/inference/vision/classification_and_detection
+
+# Setup the tensorflow thread pool parameters via MLPerf env variables
+export MLPERF_NUM_INTER_THREADS=1
+
+num_vcpus=$(getconf _NPROCESSORS_ONLN)
+num_processes=&lt;number of processes&gt;
+export MLPERF_NUM_INTRA_THREADS=$((1 &gt; ($num_vcpus/$num_processes) ? 1 : ($num_vcpus/$num_processes)))
+
+./run_local.sh tf resnet50 cpu --scenario=SingleStream
+./run_local.sh tf resnet50 cpu --scenario=Offline
+</code></pre>
+<ol start="3">
+<li>Benchmark natual language processing with Bert</li>
+</ol>
+<pre><code>pip install transformers boto3
+cd inference/language/bert
+make setup
+python3 run.py --backend=tf --scenario=SingleStream
+python3 run.py --backend=tf --scenario=Offline
+</code></pre>
+<h1 id="troubleshooting-performance-issues"><a class="header" href="#troubleshooting-performance-issues">Troubleshooting performance issues</a></h1>
+<p>The below steps help debugging performance issues with any inference application.</p>
+<ol>
+<li>Run inference with DNNL and openmp verbose logs enabled to understand which backend is used for the tensor ops execution.</li>
+</ol>
+<pre><code>export DNNL_VERBOSE=1
+export OMP_DISPLAY_ENV=VERBOSE
+</code></pre>
+<p>If there are no OneDNN logs on the terminal, this could mean the ops are executed with Eigen. To switch from Eigen to OneDNN+ACL backend, set 'TF_ENABLE_ONEDNN_OPTS=1' and rerun the model inference. There should be a flow of DNN logs with details about the shapes, prop kinds and execution times. Inspect the logs to see if there are any ops and shapes not executed with the ACL gemm kernel, instead executed by cpp reference kernel. See below example dnnl logs to understand how the ACL gemm and reference cpp kernel execution traces look like.</p>
+<pre><code># ACL gemm kernel
+dnnl_verbose,exec,cpu,convolution,gemm:acl,forward_training,src_f32::blocked:acdb:f0 wei_f32::blocked:acdb:f0 bia_f32::blocked:a:f0 dst_f32::blocked:acdb:f0,post_ops:'eltwise_relu;';,alg:convolution_direct,mb1_ic256oc64_ih56oh56kh1sh1dh0ph0_iw56ow56kw1sw1dw0pw0
+
+# OneDNN cpp reference kernel
+dnnl_verbose,exec,cpu,convolution,gemm:ref,forward_training,src_f32::blocked:abcd:f0 wei_f32::blocked:abcde:f0 bia_f32::blocked:a:f0 dst_f32::blocked:abcd:f0,post_ops:'eltwise_bounded_relu:6;';,alg:convolution_direct,mb1_g64ic64oc64_ih112oh56kh3sh2dh0ph0_iw112ow56kw3sw2dw0pw0
+</code></pre>
+<p>If there are any shapes not going to ACL gemm kernels, the first step is to make sure the graph has been optimized for inference via Grappler passes.</p>
+<pre><code class="language-python">from tensorflow.python.tools.optimize_for_inference_lib import optimize_for_inference
+
+graph_def = tf.compat.v1.GraphDef()
+with tf.compat.v1.gfile.FastGFile(model_path, "rb") as f:
+     graph_def.ParseFromString(f.read())
+
+optimized_graph_def = optimize_for_inference(graph_def, [item.split(':')[0] for item in inputs],
+                    [item.split(':')[0] for item in outputs], dtypes.float32.as_datatype_enum, False)
+g = tf.compat.v1.import_graph_def(optimized_graph_def, name='')
+</code></pre>
+<p>If the tensor ops and shapes are still not executed with ACL gemm kernels, please raise an ssue on <a href="https://github.com/ARM-software/ComputeLibrary">ACL github</a> with the operator and shape details.</p>
+<ol start="2">
+<li>
+<p>Once the tensor ops are executed with ACL gemm kernels, enable fast math mode, 'export DNNL_DEFAULT_FPMATH_MODE=BF16', to pick bfloat16 hybrid gemm kernels.</p>
+</li>
+<li>
+<p>Verify the TensorFlow inter and intra thread pool settings are optimal as recommended in the runtime configurations section. Then, inspect the OMP environment to make sure the vcpu resources are not over subscribed for multi process applications. A typical openmp environment for a 64 vcpu, single process application looks like the one below.</p>
+</li>
+</ol>
+<pre><code>OPENMP DISPLAY ENVIRONMENT BEGIN
+  _OPENMP = '201511'
+  OMP_DYNAMIC = 'FALSE'
+  OMP_NESTED = 'FALSE'
+  OMP_NUM_THREADS = '64'
+  OMP_SCHEDULE = 'DYNAMIC'
+  OMP_PROC_BIND = 'FALSE'
+  OMP_PLACES = ''
+  OMP_STACKSIZE = '0'
+  OMP_WAIT_POLICY = 'PASSIVE'
+  OMP_THREAD_LIMIT = '4294967295'
+  OMP_MAX_ACTIVE_LEVELS = '1'
+  OMP_CANCELLATION = 'FALSE'
+  OMP_DEFAULT_DEVICE = '0'
+  OMP_MAX_TASK_PRIORITY = '0'
+  OMP_DISPLAY_AFFINITY = 'FALSE'
+  OMP_AFFINITY_FORMAT = 'level %L thread %i affinity %A'
+  OMP_ALLOCATOR = 'omp_default_mem_alloc'
+  OMP_TARGET_OFFLOAD = 'DEFAULT'
+  GOMP_CPU_AFFINITY = ''
+  GOMP_STACKSIZE = '0'
+  GOMP_SPINCOUNT = '300000'
+OPENMP DISPLAY ENVIRONMENT END
+</code></pre>
+<ol start="4">
+<li>The above triaging steps cover typical issues due to the missing compiler or runtime configurations. If you are stuck with any of these steps or if the performance is still not meeting the target, please raise an issue on <a href="https://github.com/aws/aws-graviton-getting-started">aws-graviton-getting-started</a> github.</li>
+</ol>
+<h1 id="building-tensorflow-from-sources"><a class="header" href="#building-tensorflow-from-sources">Building TensorFlow from sources</a></h1>
+<p>We recommend using the official distributions of TensorFlow for Graviton, but there are cases developers may want to compile TensorFlow from source. One such case would be to experiment with new features or develop custom features. This section outlines the recommended way to compile TensorFlow from source. Please note that "--config=mkl_aarch64_threadpool" is the recommended bazel config for aarch64 builds. The following instructions cover both gcc and clang builds.</p>
+<p><strong>Install the compiler tool chain</strong></p>
+<p>For Clang builds, install the llvm version recommended in the TensorFlow release. For example, llvm-17.0.2 is recommended for TF v2.16</p>
+<pre><code>wget https://github.com/llvm/llvm-project/releases/download/llvmorg-17.0.2/clang+llvm-17.0.2-aarch64-linux-gnu.tar.xz -O- | sudo tar xv -J --strip-component=1 -C /usr
+</code></pre>
+<p>For GCC builds, gcc10 or above version is required for building mkl_aarch64_threadpool configuration with Arm Compute Library. The following step is required if gcc-10+ is not the default version on the OS distribution, e.g. Ubuntu 20.04</p>
+<pre><code>sudo apt install -y gcc-10 g++-10
+sudo update-alternatives --install /usr/bin/gcc gcc /usr/bin/gcc-10 1
+sudo update-alternatives --install /usr/bin/g++ g++ /usr/bin/g++-10 1
+
+</code></pre>
+<p><strong>Install the required packages</strong></p>
+<pre><code>pip3 install numpy packaging
+sudo apt install patchelf
+
+# Install bazel for aarch64
+# Bazel version required depends on the TensorFlow version, please install the correct one
+# https://github.com/tensorflow/tensorflow/blob/master/.bazelversion captures the bazel version details
+# For example, tensorflow 2.16.1 build requires bazel 6.5.0
+BAZEL=6.5.0  # modify version as needed
+sudo wget https://github.com/bazelbuild/bazel/releases/download/$BAZEL/bazel-$BAZEL-linux-arm64 -O /usr/local/bin/bazel
+sudo chmod +x /usr/local/bin/bazel
+</code></pre>
+<p><strong>Configure and build</strong></p>
+<pre><code># Clone the tensorflow repository
+git clone https://github.com/tensorflow/tensorflow.git
+cd tensorflow
+# Optionally checkout the stable version if needed
+TF_VERSION=v2.16.1 # modify version as needed
+git checkout $TF_VERSION
+
+# Set the build configuration
+export PYTHON_BIN_PATH=(which python)
+export USE_DEFAULT_PYTHON_LIB_PATH=1
+export TF_ENABLE_XLA=1
+export TF_DOWNLOAD_CLANG=0
+export TF_SET_ANDROID_WORKSPACE=0
+export TF_NEED_MPI=0
+export TF_NEED_ROCM=0
+export TF_NEED_GCP=0
+export TF_NEED_S3=0
+export TF_NEED_OPENCL_SYCL=0
+export TF_NEED_CUDA=0
+export TF_NEED_HDFS=0
+export TF_NEED_OPENCL=0
+export TF_NEED_JEMALLOC=1
+export TF_NEED_VERBS=0
+export TF_NEED_AWS=0
+export TF_NEED_GDR=0
+export TF_NEED_OPENCL_SYCL=0
+export TF_NEED_COMPUTECPP=0
+export TF_NEED_KAFKA=0
+export TF_NEED_TENSORRT=0
+
+# Configure the build setup.
+# Leave the default option for everything except the compiler option. Enter "Y/n" depending on whether Clang or gcc build is required.
+# Do you want to use Clang to build TensorFlow? [Y/n]:
+./configure
+
+# Issue bazel build command with 'mkl_aarch64' config to enable onednn+acl backend
+bazel build --verbose_failures -s --config=mkl_aarch64_threadpool  //tensorflow/tools/pip_package:build_pip_package //tensorflow:libtensorflow_cc.so //tensorflow:install_headers
+
+# Create and install the wheel
+./bazel-bin/tensorflow/tools/pip_package/build_pip_package ./wheel-$TF_VERSION-aarch64
+
+# The output wheel is generated in /home/ubuntu/tensorflow/wheel-$TF_VERSION-aarch64
+pip install &lt;wheel-$TF_VERSION-aarch64/*.whl&gt;
+</code></pre>
+<h1 id="building-tensorflow-java-binaries-jar"><a class="header" href="#building-tensorflow-java-binaries-jar">Building TensorFlow Java binaries (JAR)</a></h1>
+<p>This section outlines the recommended way to compile TensorFlow Java binaries. The build uses release python wheels for native libraries so, the tensorflow bazel build is not required for this step.</p>
+<p>Note: TensorFlow jar distribution for aarch64 linux platform is blocked on CI support for <a href="https://github.com/tensorflow/java">tensorflow/java</a> repo.</p>
+<pre><code>sudo apt-get install pkg-config ccache clang ant python3-pip swig git file wget unzip tar bzip2 gzip patch autoconf-archive autogen automake make cmake libtool bison flex perl nasm curl gfortran libasound2-dev freeglut3-dev libgtk2.0-dev libusb-dev zlib1g libffi-dev libbz2-dev zlib1g-dev
+
+sudo apt install maven default-jdk
+
+# Build and install tensorflow java bindings
+git clone https://github.com/tensorflow/java.git
+cd java
+mvn install -X -T 16
+
+</code></pre>
+
+                    </main>
+
+                    <nav class="nav-wrapper" aria-label="Page navigation">
+                        <!-- Mobile navigation buttons -->
+                            <a rel="prev" href="../machinelearning/pytorch.html" class="mobile-nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
+                                <i class="fa fa-angle-left"></i>
+                            </a>
+
+                            <a rel="next prefetch" href="../machinelearning/llama.cpp.html" class="mobile-nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
+                                <i class="fa fa-angle-right"></i>
+                            </a>
+
+                        <div style="clear: both"></div>
+                    </nav>
+                </div>
+            </div>
+
+            <nav class="nav-wide-wrapper" aria-label="Page navigation">
+                    <a rel="prev" href="../machinelearning/pytorch.html" class="nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
+                        <i class="fa fa-angle-left"></i>
+                    </a>
+
+                    <a rel="next prefetch" href="../machinelearning/llama.cpp.html" class="nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
+                        <i class="fa fa-angle-right"></i>
+                    </a>
+            </nav>
+
+        </div>
+
+
+
+
+        <script>
+            window.playground_copyable = true;
+        </script>
+
+
+        <script src="../elasticlunr.min.js"></script>
+        <script src="../mark.min.js"></script>
+        <script src="../searcher.js"></script>
+
+        <script src="../clipboard.min.js"></script>
+        <script src="../highlight.js"></script>
+        <script src="../book.js"></script>
+
+        <!-- Custom JS scripts -->
+
+
+
+    </div>
+    </body>
+</html>

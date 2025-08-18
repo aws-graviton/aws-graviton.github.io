@@ -1,0 +1,370 @@
+<!DOCTYPE HTML>
+<html lang="en" class="light sidebar-visible" dir="ltr">
+    <head>
+        <!-- Book generated using mdBook -->
+        <meta charset="UTF-8">
+        <title>Taking advantage of Arm Advanced SIMD instructions - AWS Graviton technical guide</title>
+
+
+        <!-- Custom HTML head -->
+
+        <meta name="description" content="Technical guidance for developers to use the Arm based AWS Graviton instances">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <meta name="theme-color" content="#ffffff">
+
+        <link rel="icon" href="favicon.svg">
+        <link rel="shortcut icon" href="favicon.png">
+        <link rel="stylesheet" href="css/variables.css">
+        <link rel="stylesheet" href="css/general.css">
+        <link rel="stylesheet" href="css/chrome.css">
+        <link rel="stylesheet" href="css/print.css" media="print">
+
+        <!-- Fonts -->
+        <link rel="stylesheet" href="FontAwesome/css/font-awesome.css">
+        <link rel="stylesheet" href="fonts/fonts.css">
+
+        <!-- Highlight.js Stylesheets -->
+        <link rel="stylesheet" id="highlight-css" href="highlight.css">
+        <link rel="stylesheet" id="tomorrow-night-css" href="tomorrow-night.css">
+        <link rel="stylesheet" id="ayu-highlight-css" href="ayu-highlight.css">
+
+        <!-- Custom theme stylesheets -->
+
+
+        <!-- Provide site root and default themes to javascript -->
+        <script>
+            const path_to_root = "";
+            const default_light_theme = "light";
+            const default_dark_theme = "navy";
+            window.path_to_searchindex_js = "searchindex.js";
+        </script>
+        <!-- Start loading toc.js asap -->
+        <script src="toc.js"></script>
+    </head>
+    <body>
+    <div id="mdbook-help-container">
+        <div id="mdbook-help-popup">
+            <h2 class="mdbook-help-title">Keyboard shortcuts</h2>
+            <div>
+                <p>Press <kbd>←</kbd> or <kbd>→</kbd> to navigate between chapters</p>
+                <p>Press <kbd>S</kbd> or <kbd>/</kbd> to search in the book</p>
+                <p>Press <kbd>?</kbd> to show this help</p>
+                <p>Press <kbd>Esc</kbd> to hide this help</p>
+            </div>
+        </div>
+    </div>
+    <div id="body-container">
+        <!-- Work around some values being stored in localStorage wrapped in quotes -->
+        <script>
+            try {
+                let theme = localStorage.getItem('mdbook-theme');
+                let sidebar = localStorage.getItem('mdbook-sidebar');
+
+                if (theme.startsWith('"') && theme.endsWith('"')) {
+                    localStorage.setItem('mdbook-theme', theme.slice(1, theme.length - 1));
+                }
+
+                if (sidebar.startsWith('"') && sidebar.endsWith('"')) {
+                    localStorage.setItem('mdbook-sidebar', sidebar.slice(1, sidebar.length - 1));
+                }
+            } catch (e) { }
+        </script>
+
+        <!-- Set the theme before any content is loaded, prevents flash -->
+        <script>
+            const default_theme = window.matchMedia("(prefers-color-scheme: dark)").matches ? default_dark_theme : default_light_theme;
+            let theme;
+            try { theme = localStorage.getItem('mdbook-theme'); } catch(e) { }
+            if (theme === null || theme === undefined) { theme = default_theme; }
+            const html = document.documentElement;
+            html.classList.remove('light')
+            html.classList.add(theme);
+            html.classList.add("js");
+        </script>
+
+        <input type="checkbox" id="sidebar-toggle-anchor" class="hidden">
+
+        <!-- Hide / unhide sidebar before it is displayed -->
+        <script>
+            let sidebar = null;
+            const sidebar_toggle = document.getElementById("sidebar-toggle-anchor");
+            if (document.body.clientWidth >= 1080) {
+                try { sidebar = localStorage.getItem('mdbook-sidebar'); } catch(e) { }
+                sidebar = sidebar || 'visible';
+            } else {
+                sidebar = 'hidden';
+                sidebar_toggle.checked = false;
+            }
+            if (sidebar === 'visible') {
+                sidebar_toggle.checked = true;
+            } else {
+                html.classList.remove('sidebar-visible');
+            }
+        </script>
+
+        <nav id="sidebar" class="sidebar" aria-label="Table of contents">
+            <!-- populated by js -->
+            <mdbook-sidebar-scrollbox class="sidebar-scrollbox"></mdbook-sidebar-scrollbox>
+            <noscript>
+                <iframe class="sidebar-iframe-outer" src="toc.html"></iframe>
+            </noscript>
+            <div id="sidebar-resize-handle" class="sidebar-resize-handle">
+                <div class="sidebar-resize-indicator"></div>
+            </div>
+        </nav>
+
+        <div id="page-wrapper" class="page-wrapper">
+
+            <div class="page">
+                <div id="menu-bar-hover-placeholder"></div>
+                <div id="menu-bar" class="menu-bar sticky">
+                    <div class="left-buttons">
+                        <label id="sidebar-toggle" class="icon-button" for="sidebar-toggle-anchor" title="Toggle Table of Contents" aria-label="Toggle Table of Contents" aria-controls="sidebar">
+                            <i class="fa fa-bars"></i>
+                        </label>
+                        <button id="theme-toggle" class="icon-button" type="button" title="Change theme" aria-label="Change theme" aria-haspopup="true" aria-expanded="false" aria-controls="theme-list">
+                            <i class="fa fa-paint-brush"></i>
+                        </button>
+                        <ul id="theme-list" class="theme-popup" aria-label="Themes" role="menu">
+                            <li role="none"><button role="menuitem" class="theme" id="default_theme">Auto</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="light">Light</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="rust">Rust</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="coal">Coal</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="navy">Navy</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="ayu">Ayu</button></li>
+                        </ul>
+                        <button id="search-toggle" class="icon-button" type="button" title="Search (`/`)" aria-label="Toggle Searchbar" aria-expanded="false" aria-keyshortcuts="/ s" aria-controls="searchbar">
+                            <i class="fa fa-search"></i>
+                        </button>
+                    </div>
+
+                    <h1 class="menu-title">AWS Graviton technical guide</h1>
+
+                    <div class="right-buttons">
+                        <a href="print.html" title="Print this book" aria-label="Print this book">
+                            <i id="print-button" class="fa fa-print"></i>
+                        </a>
+                        <a href="https://github.com/aws/aws-graviton-getting-started" title="Git repository" aria-label="Git repository">
+                            <i id="git-repository-button" class="fa fa-github"></i>
+                        </a>
+
+                    </div>
+                </div>
+
+                <div id="search-wrapper" class="hidden">
+                    <form id="searchbar-outer" class="searchbar-outer">
+                        <div class="search-wrapper">
+                            <input type="search" id="searchbar" name="searchbar" placeholder="Search this book ..." aria-controls="searchresults-outer" aria-describedby="searchresults-header">
+                            <div class="spinner-wrapper">
+                                <i class="fa fa-spinner fa-spin"></i>
+                            </div>
+                        </div>
+                    </form>
+                    <div id="searchresults-outer" class="searchresults-outer hidden">
+                        <div id="searchresults-header" class="searchresults-header"></div>
+                        <ul id="searchresults">
+                        </ul>
+                    </div>
+                </div>
+
+                <!-- Apply ARIA attributes after the sidebar and the sidebar toggle button are added to the DOM -->
+                <script>
+                    document.getElementById('sidebar-toggle').setAttribute('aria-expanded', sidebar === 'visible');
+                    document.getElementById('sidebar').setAttribute('aria-hidden', sidebar !== 'visible');
+                    Array.from(document.querySelectorAll('#sidebar a')).forEach(function(link) {
+                        link.setAttribute('tabIndex', sidebar === 'visible' ? 0 : -1);
+                    });
+                </script>
+
+                <div id="content" class="content">
+                    <main>
+                        <h1 id="taking-advantage-of-arm-advanced-simd-instructions"><a class="header" href="#taking-advantage-of-arm-advanced-simd-instructions">Taking advantage of Arm Advanced SIMD instructions</a></h1>
+<h2 id="background"><a class="header" href="#background">Background</a></h2>
+<p>Arm-v8 architecture include Advanced-SIMD instructions (NEON) helping boost performance for many applications that can take advantage of the wide registers.</p>
+<p>A lot of the applications and libraries already taking advantage of Arm's Advanced-SIMD, yet this guide is written for developers writing new code or libraries. We'll guide on various ways to take advantage of these instructions, whether through compiler auto-vectorization or writing intrinsics.</p>
+<p>Later we'll explain how to build portable code, that would detect at runtime which instructions are available at the specific cores, so developers can build one binary that supports cores with different capabilities. For example, to support one binary that would run on Graviton1, Graviton2, and arbitrary set of Android devices with Arm v8.x support.</p>
+<h2 id="compiler-driven-auto-vectorization"><a class="header" href="#compiler-driven-auto-vectorization">Compiler-driven auto-vectorization</a></h2>
+<p>Compilers keep improving to take advantage of the SIMD instructions without developers explicit guidance or specific coding style.</p>
+<p>In general, GCC 9 has good support for auto-vectorization, while GCC 10 has shown impressive improvement over GCC 9 in most cases.</p>
+<p>Compiling with <em>-fopt-info-vec-missed</em> is good practice to check which loops were not vectorized.</p>
+<h3 id="how-minor-code-changes-improve-auto-vectorization"><a class="header" href="#how-minor-code-changes-improve-auto-vectorization">How minor code changes improve auto-vectorization</a></h3>
+<p>The following example was run on Graviton2, with Ubuntu 20.04 and gcc 9.3.   Different combinations of server and compiler version may show different results</p>
+<p>Starting code looked like:</p>
+<pre><code>  1 // test.c 
+...
+  5 float   a[1024*1024];
+  6 float   b[1024*1024];
+  7 float   c[1024*1024];
+.....
+ 37 for (j=0; j&lt;128;j++) { // outer loop, not expected to be vectorized
+ 38   for (i=0; i&lt;n ; i+=1){ // inner loop, ideal for vectorization
+ 39         c[i]=a[i]*b[i]+j;
+ 40   }
+ 41 }
+</code></pre>
+<p>and compiling:</p>
+<pre><code>$ gcc test.c -fopt-info-vec-missed -O3
+test.c:37:1: missed: couldn't vectorize loop
+test.c:39:8: missed: not vectorized: complicated access pattern.
+test.c:38:1: missed: couldn't vectorize loop
+test.c:39:6: missed: not vectorized: complicated access pattern.
+</code></pre>
+<p>Line 37 is the outer loop and that's not expected to be vectorized
+but the inner loop is prime candidate for vectorization, yet it was not done in this case</p>
+<p>A small change to the code, to guarantee that the inner loop would always be aligned to 128-bit SIMD will be enough for gcc 9 to auto-vectorize it</p>
+<pre><code>  1 // test.c 
+...
+  5 float   a[1024*1024];
+  6 float   b[1024*1024];
+  7 float   c[1024*1024];
+...
+ 19 #if(__aarch64__)
+ 20 #define ARM_NEON_WIDTH  128
+ 21 #define VF32    ARM_NEON_WIDTH/32
+ 22 #else
+ 23 #define VF32    1
+ 33 #endif
+...
+ 37 for (j=0; j&lt;128;j++) { // outer loop, not expected to be vectorized
+ 38   for (i=0; i&lt;( n - n%VF32 ); i+=1){ // forcing inner loop to multiples of 4 iterations
+ 39         c[i]=a[i]*b[i]+j;
+ 40   }
+ 41   // epilog loop
+ 42   if (n%VF32)
+ 43         for ( ; i &lt; n; i++) 
+ 44                 c[i] = a[i] * b[i]+j;
+ 45 }
+</code></pre>
+<p>The code above is forcing the inner loop to iterate multiples of 4 (128-bit SIMD / 32-bit per float). Results:</p>
+<pre><code>$ gcc test.c -fopt-info-vec-missed -O3
+test.c:37:1: missed: couldn't vectorize loop
+test.c:37:1: missed: not vectorized: loop nest containing two or more consecutive inner loops cannot be vectorized
+</code></pre>
+<p>And the outer loop is still not vectorized as expected, but the inner loop is vectorized (and 3-4X faster).</p>
+<p>Again, as compiler capabilities improve over time, the need for such techniques may no longer be needed. However, as long as target applications being built with gcc9 or older, this continues to be a good practice to follow.</p>
+<h2 id="using-intrinsics"><a class="header" href="#using-intrinsics">Using intrinsics</a></h2>
+<p>One way to build portable code is to use the intrinsic instructions defined by Arm and implemented by GCC and Clang.</p>
+<p>The instructions are defined in <em>arm_neon.h</em>.</p>
+<p>A portable code that would detect (at compile-time) an Arm CPU and compiler would look like:</p>
+<pre><code>#if (defined(__clang__) || (defined(__GCC__)) &amp;&amp; (defined(__ARM_NEON) || defined(__aarch64__))
+/* compatible compiler, targeting arm neon */
+#include &lt;arm_neon.h&gt;
+#include &lt;arm_acle.h&gt;
+#endif
+</code></pre>
+<h2 id="runtime-detection-of-supported-simd-instructions"><a class="header" href="#runtime-detection-of-supported-simd-instructions">Runtime detection of supported SIMD instructions</a></h2>
+<p>While Arm architecture version mandates specific instructions support, certain instructions are optional for a specific version of the architecture.</p>
+<p>For example, a cpu core compliant with Arm-v8.4 architecture must support dot-product, but dot-products are optional in Arm-v8.2 and Arm-v8.3.
+Graviton2 is Arm-v8.2 compliant, but supports both CRC and dot-product instructions.</p>
+<p>A developer wanting to build an application or library that can detect the supported instructions in runtime, can follow this example:</p>
+<pre><code>#include&lt;sys/auxv.h&gt;
+......
+  uint64_t hwcaps = getauxval(AT_HWCAP);
+  has_crc_feature = hwcaps &amp; HWCAP_CRC32 ? true : false;
+  has_lse_feature = hwcaps &amp; HWCAP_ATOMICS ? true : false;
+  has_fp16_feature = hwcaps &amp; HWCAP_FPHP ? true : false;
+  has_dotprod_feature = hwcaps &amp; HWCAP_ASIMDDP ? true : false;
+  has_sve_feature = hwcaps &amp; HWCAP_SVE ? true : false;
+</code></pre>
+<p>The full list of arm64 hardware capabilities is defined in <a href="https://github.com/bminor/glibc/blob/master/sysdeps/unix/sysv/linux/aarch64/bits/hwcap.h">glibc header file</a> and in the <a href="https://github.com/torvalds/linux/blob/master/arch/arm64/include/asm/hwcap.h">Linux kernel</a>.</p>
+<h2 id="porting-codes-with-sseavx-intrinsics-to-neon"><a class="header" href="#porting-codes-with-sseavx-intrinsics-to-neon">Porting codes with SSE/AVX intrinsics to NEON</a></h2>
+<h3 id="detecting-arm64-systems"><a class="header" href="#detecting-arm64-systems">Detecting arm64 systems</a></h3>
+<p>Projects may fail to build on arm64 with <code>error: unrecognized command-line option '-msse2'</code>, or <code>-mavx</code>, <code>-mssse3</code>, etc.  These compiler flags enable x86
+vector instructions.  The presence of this error means that the build system may
+be missing the detection of the target system, and continues to use the x86
+target features compiler flags when compiling for arm64.</p>
+<p>To detect an arm64 system, the build system can use:</p>
+<pre><code># (test $(uname -m) = "aarch64" &amp;&amp; echo "arm64 system") || echo "other system"
+</code></pre>
+<p>Another way to detect an arm64 system is to compile, run, and check the return
+value of a C program:</p>
+<pre><code># cat &lt;&lt; EOF &gt; check-arm64.c
+int main () {
+#ifdef __aarch64__
+  return 0;
+#else
+  return 1;
+#endif
+}
+EOF
+
+# gcc check-arm64.c -o check-arm64
+# (./check-arm64 &amp;&amp; echo "arm64 system") || echo "other system"
+</code></pre>
+<h3 id="translating-x86-intrinsics-to-neon"><a class="header" href="#translating-x86-intrinsics-to-neon">Translating x86 intrinsics to NEON</a></h3>
+<p>When programs contain code with x64 intrinsics, the following procedure can help
+to quickly obtain a working program on Arm, assess the performance of the
+program running on Graviton processors, profile hot paths, and improve the
+quality of code on the hot paths.</p>
+<p>To quickly get a prototype running on Arm, one can use
+<a href="https://github.com/simd-everywhere/simde">SIMDe (SIMD everywhere)</a>
+a translator of x64 intrinsics to NEON.</p>
+<p>For example, to port code using AVX2 intrinsics to Graviton,
+a developer could add the following code:</p>
+<pre><code>#define SIMDE_ENABLE_NATIVE_ALIASES
+#include "simde/x86/avx2.h"
+</code></pre>
+<p>SIMDe provides a quick starting point to port performance critical codes
+to Arm.  It shortens the time needed to get an Arm working program that then
+can be used to extract profiles and to identify hot paths in the code.
+Once a profile is established, the hot paths can be rewritten directly with
+NEON intrinsics to avoid the overhead of the generic translation.</p>
+<h2 id="additional-resources"><a class="header" href="#additional-resources">Additional resources</a></h2>
+<ul>
+<li><a href="https://developer.arm.com/architectures/instruction-sets/intrinsics/">Neon Intrinsics</a></li>
+<li><a href="https://developer.arm.com/documentation/102159/latest/">Coding for Neon</a></li>
+<li><a href="https://developer.arm.com/architectures/instruction-sets/simd-isas/neon/neon-programmers-guide-for-armv8-a">Neon Programmer's Guide for Armv8-A</a></li>
+</ul>
+
+                    </main>
+
+                    <nav class="nav-wrapper" aria-label="Page navigation">
+                        <!-- Mobile navigation buttons -->
+                            <a rel="prev" href="dpdk_spdk.html" class="mobile-nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
+                                <i class="fa fa-angle-left"></i>
+                            </a>
+
+                            <a rel="next prefetch" href="arm64-assembly-optimization.html" class="mobile-nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
+                                <i class="fa fa-angle-right"></i>
+                            </a>
+
+                        <div style="clear: both"></div>
+                    </nav>
+                </div>
+            </div>
+
+            <nav class="nav-wide-wrapper" aria-label="Page navigation">
+                    <a rel="prev" href="dpdk_spdk.html" class="nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
+                        <i class="fa fa-angle-left"></i>
+                    </a>
+
+                    <a rel="next prefetch" href="arm64-assembly-optimization.html" class="nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
+                        <i class="fa fa-angle-right"></i>
+                    </a>
+            </nav>
+
+        </div>
+
+
+
+
+        <script>
+            window.playground_copyable = true;
+        </script>
+
+
+        <script src="elasticlunr.min.js"></script>
+        <script src="mark.min.js"></script>
+        <script src="searcher.js"></script>
+
+        <script src="clipboard.min.js"></script>
+        <script src="highlight.js"></script>
+        <script src="book.js"></script>
+
+        <!-- Custom JS scripts -->
+
+
+
+    </div>
+    </body>
+</html>

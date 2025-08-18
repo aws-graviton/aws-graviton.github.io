@@ -1,0 +1,444 @@
+<!DOCTYPE HTML>
+<html lang="en" class="light sidebar-visible" dir="ltr">
+    <head>
+        <!-- Book generated using mdBook -->
+        <meta charset="UTF-8">
+        <title>AWS Lambda - AWS Graviton technical guide</title>
+
+
+        <!-- Custom HTML head -->
+
+        <meta name="description" content="Technical guidance for developers to use the Arm based AWS Graviton instances">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <meta name="theme-color" content="#ffffff">
+
+        <link rel="icon" href="../favicon.svg">
+        <link rel="shortcut icon" href="../favicon.png">
+        <link rel="stylesheet" href="../css/variables.css">
+        <link rel="stylesheet" href="../css/general.css">
+        <link rel="stylesheet" href="../css/chrome.css">
+        <link rel="stylesheet" href="../css/print.css" media="print">
+
+        <!-- Fonts -->
+        <link rel="stylesheet" href="../FontAwesome/css/font-awesome.css">
+        <link rel="stylesheet" href="../fonts/fonts.css">
+
+        <!-- Highlight.js Stylesheets -->
+        <link rel="stylesheet" id="highlight-css" href="../highlight.css">
+        <link rel="stylesheet" id="tomorrow-night-css" href="../tomorrow-night.css">
+        <link rel="stylesheet" id="ayu-highlight-css" href="../ayu-highlight.css">
+
+        <!-- Custom theme stylesheets -->
+
+
+        <!-- Provide site root and default themes to javascript -->
+        <script>
+            const path_to_root = "../";
+            const default_light_theme = "light";
+            const default_dark_theme = "navy";
+            window.path_to_searchindex_js = "../searchindex.js";
+        </script>
+        <!-- Start loading toc.js asap -->
+        <script src="../toc.js"></script>
+    </head>
+    <body>
+    <div id="mdbook-help-container">
+        <div id="mdbook-help-popup">
+            <h2 class="mdbook-help-title">Keyboard shortcuts</h2>
+            <div>
+                <p>Press <kbd>←</kbd> or <kbd>→</kbd> to navigate between chapters</p>
+                <p>Press <kbd>S</kbd> or <kbd>/</kbd> to search in the book</p>
+                <p>Press <kbd>?</kbd> to show this help</p>
+                <p>Press <kbd>Esc</kbd> to hide this help</p>
+            </div>
+        </div>
+    </div>
+    <div id="body-container">
+        <!-- Work around some values being stored in localStorage wrapped in quotes -->
+        <script>
+            try {
+                let theme = localStorage.getItem('mdbook-theme');
+                let sidebar = localStorage.getItem('mdbook-sidebar');
+
+                if (theme.startsWith('"') && theme.endsWith('"')) {
+                    localStorage.setItem('mdbook-theme', theme.slice(1, theme.length - 1));
+                }
+
+                if (sidebar.startsWith('"') && sidebar.endsWith('"')) {
+                    localStorage.setItem('mdbook-sidebar', sidebar.slice(1, sidebar.length - 1));
+                }
+            } catch (e) { }
+        </script>
+
+        <!-- Set the theme before any content is loaded, prevents flash -->
+        <script>
+            const default_theme = window.matchMedia("(prefers-color-scheme: dark)").matches ? default_dark_theme : default_light_theme;
+            let theme;
+            try { theme = localStorage.getItem('mdbook-theme'); } catch(e) { }
+            if (theme === null || theme === undefined) { theme = default_theme; }
+            const html = document.documentElement;
+            html.classList.remove('light')
+            html.classList.add(theme);
+            html.classList.add("js");
+        </script>
+
+        <input type="checkbox" id="sidebar-toggle-anchor" class="hidden">
+
+        <!-- Hide / unhide sidebar before it is displayed -->
+        <script>
+            let sidebar = null;
+            const sidebar_toggle = document.getElementById("sidebar-toggle-anchor");
+            if (document.body.clientWidth >= 1080) {
+                try { sidebar = localStorage.getItem('mdbook-sidebar'); } catch(e) { }
+                sidebar = sidebar || 'visible';
+            } else {
+                sidebar = 'hidden';
+                sidebar_toggle.checked = false;
+            }
+            if (sidebar === 'visible') {
+                sidebar_toggle.checked = true;
+            } else {
+                html.classList.remove('sidebar-visible');
+            }
+        </script>
+
+        <nav id="sidebar" class="sidebar" aria-label="Table of contents">
+            <!-- populated by js -->
+            <mdbook-sidebar-scrollbox class="sidebar-scrollbox"></mdbook-sidebar-scrollbox>
+            <noscript>
+                <iframe class="sidebar-iframe-outer" src="../toc.html"></iframe>
+            </noscript>
+            <div id="sidebar-resize-handle" class="sidebar-resize-handle">
+                <div class="sidebar-resize-indicator"></div>
+            </div>
+        </nav>
+
+        <div id="page-wrapper" class="page-wrapper">
+
+            <div class="page">
+                <div id="menu-bar-hover-placeholder"></div>
+                <div id="menu-bar" class="menu-bar sticky">
+                    <div class="left-buttons">
+                        <label id="sidebar-toggle" class="icon-button" for="sidebar-toggle-anchor" title="Toggle Table of Contents" aria-label="Toggle Table of Contents" aria-controls="sidebar">
+                            <i class="fa fa-bars"></i>
+                        </label>
+                        <button id="theme-toggle" class="icon-button" type="button" title="Change theme" aria-label="Change theme" aria-haspopup="true" aria-expanded="false" aria-controls="theme-list">
+                            <i class="fa fa-paint-brush"></i>
+                        </button>
+                        <ul id="theme-list" class="theme-popup" aria-label="Themes" role="menu">
+                            <li role="none"><button role="menuitem" class="theme" id="default_theme">Auto</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="light">Light</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="rust">Rust</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="coal">Coal</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="navy">Navy</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="ayu">Ayu</button></li>
+                        </ul>
+                        <button id="search-toggle" class="icon-button" type="button" title="Search (`/`)" aria-label="Toggle Searchbar" aria-expanded="false" aria-keyshortcuts="/ s" aria-controls="searchbar">
+                            <i class="fa fa-search"></i>
+                        </button>
+                    </div>
+
+                    <h1 class="menu-title">AWS Graviton technical guide</h1>
+
+                    <div class="right-buttons">
+                        <a href="../print.html" title="Print this book" aria-label="Print this book">
+                            <i id="print-button" class="fa fa-print"></i>
+                        </a>
+                        <a href="https://github.com/aws/aws-graviton-getting-started" title="Git repository" aria-label="Git repository">
+                            <i id="git-repository-button" class="fa fa-github"></i>
+                        </a>
+
+                    </div>
+                </div>
+
+                <div id="search-wrapper" class="hidden">
+                    <form id="searchbar-outer" class="searchbar-outer">
+                        <div class="search-wrapper">
+                            <input type="search" id="searchbar" name="searchbar" placeholder="Search this book ..." aria-controls="searchresults-outer" aria-describedby="searchresults-header">
+                            <div class="spinner-wrapper">
+                                <i class="fa fa-spinner fa-spin"></i>
+                            </div>
+                        </div>
+                    </form>
+                    <div id="searchresults-outer" class="searchresults-outer hidden">
+                        <div id="searchresults-header" class="searchresults-header"></div>
+                        <ul id="searchresults">
+                        </ul>
+                    </div>
+                </div>
+
+                <!-- Apply ARIA attributes after the sidebar and the sidebar toggle button are added to the DOM -->
+                <script>
+                    document.getElementById('sidebar-toggle').setAttribute('aria-expanded', sidebar === 'visible');
+                    document.getElementById('sidebar').setAttribute('aria-hidden', sidebar !== 'visible');
+                    Array.from(document.querySelectorAll('#sidebar a')).forEach(function(link) {
+                        link.setAttribute('tabIndex', sidebar === 'visible' ? 0 : -1);
+                    });
+                </script>
+
+                <div id="content" class="content">
+                    <main>
+                        <h1 id="aws-lambda-on-graviton2"><a class="header" href="#aws-lambda-on-graviton2">AWS Lambda on Graviton2</a></h1>
+<p><a href="https://aws.amazon.com/lambda/">AWS Lambda</a> now allows you to configure new and existing functions to run on Arm-based AWS Graviton2 processors in addition to x86-based functions. Using this processor architecture option allows you to get up to 34% better price performance. Duration charges, billed with <a href="https://aws.amazon.com/blogs/aws/new-for-aws-lambda-1ms-billing-granularity-adds-cost-savings/">millisecond granularity</a>, are 20 percent lower when compared to current x86 pricing. This also applies to duration charges when using <a href="https://aws.amazon.com/blogs/aws/new-provisioned-concurrency-for-lambda-functions/">Provisioned Concurrency</a>. Compute <a href="https://aws.amazon.com/blogs/aws/savings-plan-update-save-up-to-17-on-your-lambda-workloads/">Savings Plans</a> supports Lambda functions powered by Graviton2.</p>
+<p>The blog post <a href="https://aws.amazon.com/blogs/compute/migrating-aws-lambda-functions-to-arm-based-aws-graviton2-processors/">Migrating AWS Lambda functions to Arm-based AWS Graviton2 processors</a> shows some considerations when moving from x86 to arm64 as the migration process is code and workload dependent.</p>
+<p>This page highlights some of the migration considerations and also provides some simple to deploy demos you can use to explore how to build and migrate to Lambda functions using Arm/Graviton2.</p>
+<p>The architecture change does not affect the way your functions are invoked or how they communicate their responses back. Integrations with APIs, services, applications, or tools are not affected by the new architecture and continue to work as before.
+The following runtimes, which use <a href="https://aws.amazon.com/amazon-linux-2/">Amazon Linux 2</a>, are supported on Arm:</p>
+<ul>
+<li>Node.js 12 and above</li>
+<li>Python 3.8 and above</li>
+<li>Java 8 (java8.al2) and above</li>
+<li>.NET Core 3.1 and above</li>
+<li>Ruby 2.7 and above</li>
+<li><a href="https://docs.aws.amazon.com/lambda/latest/dg/runtimes-custom.html">Custom runtime</a> (provided.al2) and above</li>
+</ul>
+<h2 id="migrating-x86-lambda-functions-to-arm64"><a class="header" href="#migrating-x86-lambda-functions-to-arm64">Migrating x86 Lambda functions to arm64</a></h2>
+<h3 id="functions-without-architecture-specific-dependencies-or-binaries"><a class="header" href="#functions-without-architecture-specific-dependencies-or-binaries">Functions without architecture-specific dependencies or binaries</a></h3>
+<p>Many Lambda functions may only need a configuration change to take advantage of the price/performance of Graviton2. Other functions may require repackaging the Lambda function using Arm-specific dependencies, or rebuilding the function binary or container image.</p>
+<p>If your functions don’t use architecture-specific dependencies or binaries, you can switch from one architecture to the other with a single configuration change. Many functions using interpreted languages such as Node.js and Python, or functions compiled to Java bytecode, can switch without any changes. Ensure you check binaries in dependencies, Lambda layers, and Lambda extensions.</p>
+<h3 id="building-function-code-for-graviton2"><a class="header" href="#building-function-code-for-graviton2">Building function code for Graviton2</a></h3>
+<p>For compiled languages like Rust and Go, you can use the <code>provided.al2</code> or <code>provided.al2023</code>  <a href="https://docs.aws.amazon.com/lambda/latest/dg/runtimes-custom.html">custom runtimes</a>, which supports Arm. You provide a binary that communicates with the <a href="https://docs.aws.amazon.com/lambda/latest/dg/runtimes-api.html">Lambda Runtime API</a>.</p>
+<p>When compiling for Go, set <code>GOARCH</code> to <code>arm64</code>.</p>
+<pre><code>GOOS=linux GOARCH=arm64 go build
+</code></pre>
+<p>When compiling for Rust, set the <code>target</code>.</p>
+<pre><code>cargo build --release -- target-cpu=neoverse-n1
+</code></pre>
+<p>The default installation of Python <code>pip</code> on some Linux distributions is out of date (&lt;19.3). To install binary wheel packages released for Graviton, upgrade the pip installation using:</p>
+<pre><code>sudo python3 -m pip install --upgrade pip
+</code></pre>
+<p>Functions packaged as container images must be built for the architecture (x86 or arm64) they are going to use. There are arm64 architecture versions of the <a href="https://docs.aws.amazon.com/lambda/latest/dg/runtimes-images.html#runtimes-images-lp">AWS provided base images for Lambda</a>. To specify a container image for arm64, use the arm64 specific image tag, for example, for Node.js 20:</p>
+<pre><code>public.ecr.aws/lambda/nodejs:20-arm64
+public.ecr.aws/lambda/nodejs:latest-arm64
+public.ecr.aws/lambda/nodejs:20.2024.01.05.14-arm64
+</code></pre>
+<p>Arm64 images are also available from <a href="https://hub.docker.com/u/amazon">Docker Hub</a>.
+You can also use arbitrary Linux base images in addition to the AWS provided Amazon Linux 2 images. Images that support arm64 include <a href="https://alpinelinux.org/">Alpine</a> Linux 3.12.7 or later, <a href="https://www.debian.org/">Debian</a> 10 and 11, Ubuntu 18.04 and 20.04. For more information and details of other supported Linux versions, see <a href="https://github.com/aws/aws-graviton-getting-started/blob/main/os.md#operating-systems-available-for-graviton-based-instances">Operating systems available for Graviton based instances</a>.</p>
+<p>The <a href="https://github.com/alexcasalboni/aws-lambda-power-tuning">AWS Lambda Power Tuning</a> open-source project runs your functions using different settings to suggest a configuration to minimize costs and maximize performance. The tool allows you to compare two results on the same chart and incorporate arm64-based pricing. This is useful to compare two versions of the same function, one using x86 and the other arm64.</p>
+<h2 id="demo-building-lambda-functions-for-graviton2"><a class="header" href="#demo-building-lambda-functions-for-graviton2">DEMO: Building Lambda functions for Graviton2</a></h2>
+<p>Demo requirements:</p>
+<ul>
+<li><a href="https://aws.amazon.com/serverless/sam/">AWS Serverless Application Model (AWS SAM)</a></li>
+<li><a href="https://docs.docker.com/get-docker/">Docker</a></li>
+</ul>
+<p>Clone the repository and change into the demo directory</p>
+<pre><code>git clone https://github.com/aws/aws-graviton-getting-started
+cd aws-graviton-getting-started/aws-lambda/GravitonLambdaNumber
+</code></pre>
+<h3 id="migrating-a-lambda-function-from-x86-to-arm64"><a class="header" href="#migrating-a-lambda-function-from-x86-to-arm64">Migrating a Lambda function from x86 to arm64</a></h3>
+<p>This demo shows how to migrate an existing Lambda function from x86 to arm64 using an x86 based workstation.
+The Node.js function code in <a href="/src/app.js"><code>/src/app.js</code></a> uses the <a href="https://www.npmjs.com/package/axios">axios</a> client to connect to a third part service, <a href="http://numbersapi.com/">http://numbersapi.com/</a>, to find interesting facts about numbers. As the axios library is not a binary file, it can seamlessly work on Graviton2 without compilation.</p>
+<p>The existing application consists of an API endpoint which invokes the Lambda function, retrieves the number fact, and returns the response.</p>
+<p>Build the existing x86 function version using AWS SAM.</p>
+<pre><code>sam build
+</code></pre>
+<p><img src="/aws-lambda/img/sambuild.png" alt="sam build" /></p>
+<p>Deploy the function to your AWS account:</p>
+<pre><code>sam deploy --stack-name GravitonLambdaNumber -g
+</code></pre>
+<p>Accept the initial defaults, and ensure you enter Y for <code>LambdaNumberFunction may not have authorization defined, Is this okay? [y/N]: y</code></p>
+<p><img src="/aws-lambda/img/samdeploy-g.png" alt="sam deploy -g" /></p>
+<p>AWS SAM deploys the infrastructure and outputs an APIBasePath</p>
+<p><img src="/aws-lambda/img/ApiBasePath.png" alt="ApiBasePath" /></p>
+<p>Use <code>curl</code> and make a POST request to the APIBasePath URL with a number as a date.</p>
+<pre><code>curl -X POST https://6ioqy4z9ee.execute-api.us-east-1.amazonaws.com -H 'Content-Type: application/json' -d '{ "number": "345", "type": "date" }'
+</code></pre>
+<p>The Lambda function should respond with the <code>x64</code> processor architecture and a fact about the date.</p>
+<p><img src="/aws-lambda/img/curlx86.png" alt="curl x86" /></p>
+<p>Amend the processor architecture within the AWS SAM <a href="./GravitonLambdaNumber/template.yml">template.yml</a> file.
+replace</p>
+<pre><code>Architectures:
+- x86_64
+</code></pre>
+<p>with</p>
+<pre><code>Architectures:
+- arm64
+</code></pre>
+<p>Build the function using an arm64 architecture and deploy the change to the cloud.</p>
+<pre><code>sam build
+sam deploy
+</code></pre>
+<p>Use the same <code>curl</code> command, making a POST request to the APIBasePath URL with a number as a date.</p>
+<pre><code>curl -X POST https://6ioqy4z9ee.execute-api.us-east-1.amazonaws.com -H 'Content-Type: application/json' -d '{ "number": "345", "type": "date" }'
+</code></pre>
+<p>The Lambda function should respond with the <code>arm64</code> processor architecture and a fact about the date.</p>
+<p><img src="/aws-lambda/img/curlarm64.png" alt="curl arm64" /></p>
+<p>The function has seamlessly migrated from x86 to arm64.</p>
+<h3 id="building-a-lambda-function-with-binary-dependencies"><a class="header" href="#building-a-lambda-function-with-binary-dependencies">Building a Lambda function with binary dependencies</a></h3>
+<p>This function has no binary dependencies. If you do have a function that required compilation for arm64, AWS SAM can use an arm64 build container image to create the artifacts for arm64.
+This functionality works both ways. You can build arm64 specific dependencies on an x86 workstation and also build x86 specific dependencies on an arm64 workstation.</p>
+<p>Specify <code>--use-container</code> to use the build container.</p>
+<pre><code>sam build --use-container
+</code></pre>
+<p><img src="/aws-lambda/img/sambuildcontainer.png" alt="sam build --use-container" /></p>
+<h3 id="local-testing"><a class="header" href="#local-testing">Local testing</a></h3>
+<p>You can test the arm64 function locally using either AWS SAM or Docker natively.</p>
+<p>When using AWS SAM, you can use <a href="%5Btemplate.yml%5D(https://docs.aws.amazon.com/serverless-application-model/latest/developerguide/sam-cli-command-reference-sam-local-invoke.html)"><code>sam local invoke</code></a> to test your function locally, passing in a sample <code>event.json</code></p>
+<pre><code>sam local invoke LambdaNumberFunction -e ./test/event.json
+</code></pre>
+<p><img src="/aws-lambda/img/samlocalinvoke.png" alt="sam local invoke" /></p>
+<h3 id="building-arm64-lambda-functions-as-container-images"><a class="header" href="#building-arm64-lambda-functions-as-container-images">Building arm64 Lambda functions as container images</a></h3>
+<p>You can build arm64 functions as container images. You  can use <a href="https://aws.amazon.com/blogs/compute/using-container-image-support-for-aws-lambda-with-aws-sam/">AWS SAM natively</a> to build container images.</p>
+<p>You can also use Docker native commands instead of AWS SAM.
+To build a container image of this function using Docker, use the <a href="./GravitonLambdaNumber/src/Dockerfile">Dockerfile</a> and specify the <code>nodejs:20-arm64</code> base image.</p>
+<pre><code>FROM public.ecr.aws/lambda/nodejs:20-arm64
+COPY app.js package*.json $LAMBDA_TASK_ROOT
+RUN npm install
+CMD [ "app.lambdaHandler" ]
+</code></pre>
+<p>Build the container image.</p>
+<pre><code>docker build -t dockernumber-arm ./src 
+</code></pre>
+<p><img src="/aws-lambda/img/dockerbuild.png" alt="docker build" /></p>
+<p>Inspect the container image to confirm the <code>Architecture</code>.</p>
+<pre><code>docker inspect dockernumber-arm | grep Architecture 
+</code></pre>
+<p><img src="/aws-lambda/img/dockerinspect.png" alt="docker inspect" /></p>
+<p>You can locally test the function using <code>docker run</code>
+In another terminal window run the Lambda function docker container image.</p>
+<pre><code>docker run -p 9000:8080 dockernumber-arm:latest
+</code></pre>
+<p><img src="/aws-lambda/img/dockerrun.png" alt="docker run" /></p>
+<p>Use <code>curl</code> to invoke the Lambda function using the local docker endpoint, passing in a sample <code>event.json</code>.</p>
+<pre><code>curl -XPOST "http://localhost:9000/2015-03-31/functions/function/invocations" -d @./test/event.json
+</code></pre>
+<p><img src="/aws-lambda/img/dockerrunresponse.png" alt="docker run response" /></p>
+<p>You can view the local logs in the <code>docker run</code> terminal window.</p>
+<p>To create a Lambda function from the local image, first create an [Amazon Elastic Container Registry (ECR)]](https://aws.amazon.com/ecr/) repository and login to ECR.
+Substitute the AWS account number <code>123456789012</code> and AWS Region values with your details</p>
+<pre><code>aws ecr create-repository --repository-name dockernumber-arm --image-scanning-configuration scanOnPush=true
+aws ecr get-login-password --region us-east-1 | docker login --username AWS --password-stdin 123456789012.dkr.ecr.us-east-1.amazonaws.com
+</code></pre>
+<p>Tag and push the docker image to ECR.</p>
+<pre><code>docker tag dockernumber-arm:latest 123456789012.dkr.ecr.us-east-1.amazonaws.com/dockernumber-arm:latest
+docker push 123456789012.dkr.ecr.us-east-1.amazonaws.com/dockernumber-arm:latest
+</code></pre>
+<p>You can then create a Lambda function from the container image using the AWS Management Console, AWS CLI, or other tools.
+<img src="/aws-lambda/img/createfunctionfromimage.png" alt="Create function from image" /></p>
+<h2 id="comparing-x86-and-arm64-performance-and-cost"><a class="header" href="#comparing-x86-and-arm64-performance-and-cost">Comparing x86 and arm64 performance and cost.</a></h2>
+<p>You can use the <a href="https://github.com/alexcasalboni/aws-lambda-power-tuning">AWS Lambda Power Tuning</a> open-source project to suggest a configuration to minimize costs and maximize performance. The tool allows you to compare two results on the same chart and incorporate arm64-based pricing. This is useful to compare two versions of the same function, one using x86 and the other arm64.</p>
+<p>A demo application computes prime numbers. The AWS SAM <a href="template.yml">template.yml</a> file contains two Lambda functions, one for x86 and one for arm64. Both functions use the same Python source code in <a href="./src/app.py"><code>./src/app.py</code></a> to compute the prime numbers.</p>
+<p>Ensure the repository is cloned from the previous demo and change into the directory.</p>
+<pre><code>cd ../PythonPrime
+</code></pre>
+<p>Build the application within the AWS SAM build container images and deploy to the cloud.
+Accept the default <code>sam deploy</code> prompts.</p>
+<pre><code>sam build --use-container
+sam deploy --stack-name PythonPrime -g
+</code></pre>
+<p>Note the Output values of the two Lambda functions:
+<img src="/aws-lambda/img/primefunctions.png" alt="Prime Functions" /></p>
+<h3 id="deploy-the-aws-lambda-power-tuning-state-machine"><a class="header" href="#deploy-the-aws-lambda-power-tuning-state-machine">Deploy the AWS Lambda Power Tuning State Machine</a></h3>
+<p>Navigate to <a href="https://serverlessrepo.aws.amazon.com/applications/arn:aws:serverlessrepo:us-east-1:451282441545:applications~aws-lambda-power-tuning">https://serverlessrepo.aws.amazon.com/applications/arn:aws:serverlessrepo:us-east-1:451282441545:applications~aws-lambda-power-tuning</a> and choose <strong>Deploy</strong>.
+Select <em>I acknowledge that this app creates custom IAM roles</em> and choose <strong>Deploy</strong>.</p>
+<p>Once deployed, under <em>Resources</em>, choose the <em>powerTuningStateMachine</em>.</p>
+<p>Choose <strong>Start execution</strong>
+For the state machine input, specify the ARN of the x86 Lambda function from the AWS SAM Outputs, and set the memory <code>powerValues</code> to check. Run 10 invocations for each memory configuration, in parallel, specifying the Lambda function payload.
+The following is an example input.</p>
+<pre><code>{
+	"lambdaARN": "arn:aws:lambda:us-east-1:123456789012:function:gravitonpythonprime-PythonPrimeX86Function-3Gge9WXmHObZ",
+	"powerValues": [
+		128,
+		256,
+		512,
+		1024,
+		1536,
+		2048,
+		3008,
+		10240
+	],
+	"num": 10,
+	"parallelInvocation": true,
+	"payload": {
+		"queryStringParameters": {
+			"max": "1000000"
+		}
+	}
+}
+</code></pre>
+<p>Select <em>Open in a new browser tab</em> and choose <strong>Start execution</strong>.
+The Lambda Power Tuning state machine runs for each configured memory value.
+<img src="/aws-lambda/img/powertuningstatemachine.png" alt="PowerTuningStateMachine" /></p>
+<p>Once complete, the <em>Execution event history</em> final step, <em>ExecutionSucceeded</em> contains a visualization URL.</p>
+<pre><code>{
+  "output": {
+    "power": 512,
+    "cost": 0.000050971200000000004,
+    "duration": 6067.418333333332,
+    "stateMachine": {
+      "executionCost": 0.00035,
+      "lambdaCost": 0.007068295500000001,
+      "visualization": "https://lambda-power-tuning.show/#gAAAAQACAAQABgAIwAsAKA==;5njERiCGREZZm71F9rxARW12AkU66d5EDqzeRLFs30Q=;a4NdODSTXTjpyVU42k9ZOLixXDipans4V224ONx8nTk="
+    }
+  },
+  "outputDetails": {
+    "truncated": false
+  }
+}
+</code></pre>
+<p>Browse to the lambda-power-tuning URL to view the average <em>Invocation time (ms)</em> and <em>Invocation Cost (USD)</em> for each memory value for the x86 function.</p>
+<p><img src="/aws-lambda/img/powertuningx86results.png" alt="PowerTuning x86 results" /></p>
+<p>Navigate back to the Step Functions console and run another state machine, specifying the ARN of the arm64 Lambda function from the AWS SAM Outputs.
+Once complete, copy the visualization URL from the <em>Execution event history</em> final step, <em>ExecutionSucceeded</em>.</p>
+<p>In the <em>lambda-power-tuning</em> browser tab showing the x86 results, choose <strong>Compare</strong>.
+Enter <strong>x86</strong> as name for function 1
+Enter <strong>arm64</strong> as the name for function 2
+Paste in the URL from the arm64 function and choose <strong>Compare</strong>.</p>
+<p><img src="/aws-lambda/img/powertuningcompare.png" alt="PowerTuning Compare" /></p>
+<p>View the comparison between the <em>x86</em> and the <em>arm64</em> function.</p>
+<p><img src="/aws-lambda/img/powertuningcomparison.png" alt="PowerTuning Comparison" /></p>
+<p>At 2048 MB, the arm64 function is 29% faster and 43% cheaper than the identical Lambda function running on x86!
+Power Tuning gives you a data driven approach to select the optimal memory configuration for your Lambda functions. This allows you to also compare x86 and arm64 and may allow you to reduce the memory configuration of your arm64 Lambda functions, further reducing costs.</p>
+
+                    </main>
+
+                    <nav class="nav-wrapper" aria-label="Page navigation">
+                        <!-- Mobile navigation buttons -->
+                            <a rel="prev" href="../DataAnalytics.html" class="mobile-nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
+                                <i class="fa fa-angle-left"></i>
+                            </a>
+
+                            <a rel="next prefetch" href="../os.html" class="mobile-nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
+                                <i class="fa fa-angle-right"></i>
+                            </a>
+
+                        <div style="clear: both"></div>
+                    </nav>
+                </div>
+            </div>
+
+            <nav class="nav-wide-wrapper" aria-label="Page navigation">
+                    <a rel="prev" href="../DataAnalytics.html" class="nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
+                        <i class="fa fa-angle-left"></i>
+                    </a>
+
+                    <a rel="next prefetch" href="../os.html" class="nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
+                        <i class="fa fa-angle-right"></i>
+                    </a>
+            </nav>
+
+        </div>
+
+
+
+
+        <script>
+            window.playground_copyable = true;
+        </script>
+
+
+        <script src="../elasticlunr.min.js"></script>
+        <script src="../mark.min.js"></script>
+        <script src="../searcher.js"></script>
+
+        <script src="../clipboard.min.js"></script>
+        <script src="../highlight.js"></script>
+        <script src="../book.js"></script>
+
+        <!-- Custom JS scripts -->
+
+
+
+    </div>
+    </body>
+</html>

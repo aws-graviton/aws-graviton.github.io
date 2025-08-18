@@ -1,0 +1,332 @@
+<!DOCTYPE HTML>
+<html lang="en" class="light sidebar-visible" dir="ltr">
+    <head>
+        <!-- Book generated using mdBook -->
+        <meta charset="UTF-8">
+        <title>Optimizing performance - AWS Graviton technical guide</title>
+
+
+        <!-- Custom HTML head -->
+
+        <meta name="description" content="Technical guidance for developers to use the Arm based AWS Graviton instances">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <meta name="theme-color" content="#ffffff">
+
+        <link rel="icon" href="../favicon.svg">
+        <link rel="shortcut icon" href="../favicon.png">
+        <link rel="stylesheet" href="../css/variables.css">
+        <link rel="stylesheet" href="../css/general.css">
+        <link rel="stylesheet" href="../css/chrome.css">
+        <link rel="stylesheet" href="../css/print.css" media="print">
+
+        <!-- Fonts -->
+        <link rel="stylesheet" href="../FontAwesome/css/font-awesome.css">
+        <link rel="stylesheet" href="../fonts/fonts.css">
+
+        <!-- Highlight.js Stylesheets -->
+        <link rel="stylesheet" id="highlight-css" href="../highlight.css">
+        <link rel="stylesheet" id="tomorrow-night-css" href="../tomorrow-night.css">
+        <link rel="stylesheet" id="ayu-highlight-css" href="../ayu-highlight.css">
+
+        <!-- Custom theme stylesheets -->
+
+
+        <!-- Provide site root and default themes to javascript -->
+        <script>
+            const path_to_root = "../";
+            const default_light_theme = "light";
+            const default_dark_theme = "navy";
+            window.path_to_searchindex_js = "../searchindex.js";
+        </script>
+        <!-- Start loading toc.js asap -->
+        <script src="../toc.js"></script>
+    </head>
+    <body>
+    <div id="mdbook-help-container">
+        <div id="mdbook-help-popup">
+            <h2 class="mdbook-help-title">Keyboard shortcuts</h2>
+            <div>
+                <p>Press <kbd>←</kbd> or <kbd>→</kbd> to navigate between chapters</p>
+                <p>Press <kbd>S</kbd> or <kbd>/</kbd> to search in the book</p>
+                <p>Press <kbd>?</kbd> to show this help</p>
+                <p>Press <kbd>Esc</kbd> to hide this help</p>
+            </div>
+        </div>
+    </div>
+    <div id="body-container">
+        <!-- Work around some values being stored in localStorage wrapped in quotes -->
+        <script>
+            try {
+                let theme = localStorage.getItem('mdbook-theme');
+                let sidebar = localStorage.getItem('mdbook-sidebar');
+
+                if (theme.startsWith('"') && theme.endsWith('"')) {
+                    localStorage.setItem('mdbook-theme', theme.slice(1, theme.length - 1));
+                }
+
+                if (sidebar.startsWith('"') && sidebar.endsWith('"')) {
+                    localStorage.setItem('mdbook-sidebar', sidebar.slice(1, sidebar.length - 1));
+                }
+            } catch (e) { }
+        </script>
+
+        <!-- Set the theme before any content is loaded, prevents flash -->
+        <script>
+            const default_theme = window.matchMedia("(prefers-color-scheme: dark)").matches ? default_dark_theme : default_light_theme;
+            let theme;
+            try { theme = localStorage.getItem('mdbook-theme'); } catch(e) { }
+            if (theme === null || theme === undefined) { theme = default_theme; }
+            const html = document.documentElement;
+            html.classList.remove('light')
+            html.classList.add(theme);
+            html.classList.add("js");
+        </script>
+
+        <input type="checkbox" id="sidebar-toggle-anchor" class="hidden">
+
+        <!-- Hide / unhide sidebar before it is displayed -->
+        <script>
+            let sidebar = null;
+            const sidebar_toggle = document.getElementById("sidebar-toggle-anchor");
+            if (document.body.clientWidth >= 1080) {
+                try { sidebar = localStorage.getItem('mdbook-sidebar'); } catch(e) { }
+                sidebar = sidebar || 'visible';
+            } else {
+                sidebar = 'hidden';
+                sidebar_toggle.checked = false;
+            }
+            if (sidebar === 'visible') {
+                sidebar_toggle.checked = true;
+            } else {
+                html.classList.remove('sidebar-visible');
+            }
+        </script>
+
+        <nav id="sidebar" class="sidebar" aria-label="Table of contents">
+            <!-- populated by js -->
+            <mdbook-sidebar-scrollbox class="sidebar-scrollbox"></mdbook-sidebar-scrollbox>
+            <noscript>
+                <iframe class="sidebar-iframe-outer" src="../toc.html"></iframe>
+            </noscript>
+            <div id="sidebar-resize-handle" class="sidebar-resize-handle">
+                <div class="sidebar-resize-indicator"></div>
+            </div>
+        </nav>
+
+        <div id="page-wrapper" class="page-wrapper">
+
+            <div class="page">
+                <div id="menu-bar-hover-placeholder"></div>
+                <div id="menu-bar" class="menu-bar sticky">
+                    <div class="left-buttons">
+                        <label id="sidebar-toggle" class="icon-button" for="sidebar-toggle-anchor" title="Toggle Table of Contents" aria-label="Toggle Table of Contents" aria-controls="sidebar">
+                            <i class="fa fa-bars"></i>
+                        </label>
+                        <button id="theme-toggle" class="icon-button" type="button" title="Change theme" aria-label="Change theme" aria-haspopup="true" aria-expanded="false" aria-controls="theme-list">
+                            <i class="fa fa-paint-brush"></i>
+                        </button>
+                        <ul id="theme-list" class="theme-popup" aria-label="Themes" role="menu">
+                            <li role="none"><button role="menuitem" class="theme" id="default_theme">Auto</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="light">Light</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="rust">Rust</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="coal">Coal</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="navy">Navy</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="ayu">Ayu</button></li>
+                        </ul>
+                        <button id="search-toggle" class="icon-button" type="button" title="Search (`/`)" aria-label="Toggle Searchbar" aria-expanded="false" aria-keyshortcuts="/ s" aria-controls="searchbar">
+                            <i class="fa fa-search"></i>
+                        </button>
+                    </div>
+
+                    <h1 class="menu-title">AWS Graviton technical guide</h1>
+
+                    <div class="right-buttons">
+                        <a href="../print.html" title="Print this book" aria-label="Print this book">
+                            <i id="print-button" class="fa fa-print"></i>
+                        </a>
+                        <a href="https://github.com/aws/aws-graviton-getting-started" title="Git repository" aria-label="Git repository">
+                            <i id="git-repository-button" class="fa fa-github"></i>
+                        </a>
+
+                    </div>
+                </div>
+
+                <div id="search-wrapper" class="hidden">
+                    <form id="searchbar-outer" class="searchbar-outer">
+                        <div class="search-wrapper">
+                            <input type="search" id="searchbar" name="searchbar" placeholder="Search this book ..." aria-controls="searchresults-outer" aria-describedby="searchresults-header">
+                            <div class="spinner-wrapper">
+                                <i class="fa fa-spinner fa-spin"></i>
+                            </div>
+                        </div>
+                    </form>
+                    <div id="searchresults-outer" class="searchresults-outer hidden">
+                        <div id="searchresults-header" class="searchresults-header"></div>
+                        <ul id="searchresults">
+                        </ul>
+                    </div>
+                </div>
+
+                <!-- Apply ARIA attributes after the sidebar and the sidebar toggle button are added to the DOM -->
+                <script>
+                    document.getElementById('sidebar-toggle').setAttribute('aria-expanded', sidebar === 'visible');
+                    document.getElementById('sidebar').setAttribute('aria-hidden', sidebar !== 'visible');
+                    Array.from(document.querySelectorAll('#sidebar a')).forEach(function(link) {
+                        link.setAttribute('tabIndex', sidebar === 'visible' ? 0 : -1);
+                    });
+                </script>
+
+                <div id="content" class="content">
+                    <main>
+                        <h1 id="optimizing-performance"><a class="header" href="#optimizing-performance">Optimizing performance</a></h1>
+<p><a href="./README.html">Graviton Performance Runbook toplevel</a></p>
+<p>This section describes multiple different optimization suggestions to try on Graviton based instances to attain higher performance for your service.  Each sub-section defines some optimization recommendations that can help improve performance if you see a particular signature after measuring the performance using the previous checklists.</p>
+<h2 id="optimizing-for-large-instruction-footprint"><a class="header" href="#optimizing-for-large-instruction-footprint">Optimizing for large instruction footprint</a></h2>
+<ol>
+<li>On C/C++ applications, <code>-flto</code>, <code>-Os</code>, and <a href="https://gcc.gnu.org/wiki/AutoFDO/Tutorial">Feedback Directed Optimization</a> can help with code layout using GCC.</li>
+<li>On Java, <code>-XX:-TieredCompilation</code>, <code>-XX:ReservedCodeCacheSize</code> and <code>-XX:InitialCodeCacheSize</code> can be tuned to reduce the pressure the JIT places on the instruction footprint. The JDK defaults to setting up a 256MB region by default for the code-cache which over time can fill, become fragmented, and live code may become sparse.
+<ol>
+<li>We recommend setting the code cache initially to: <code>-XX:-TieredCompilation -XX:ReservedCodeCacheSize=64M -XX:InitialCodeCacheSize=64M</code> and then tuning the size up or down as required.</li>
+<li>Experiment with setting <code>-XX:+TieredCompilation</code> to gain faster start-up time and better optimized code.</li>
+<li>When tuning the code JVM code cache, watch for <code>code cache full</code> error messages in the logs indicating that the cache has been set too small.  A full code cache can lead to worse performance.</li>
+</ol>
+</li>
+</ol>
+<h2 id="optimizing-for-high-tlb-miss-rates"><a class="header" href="#optimizing-for-high-tlb-miss-rates">Optimizing for high TLB miss rates</a></h2>
+<p>A TLB (translation lookaside buffer) is a cache that holds recent virtual address to physical address translations for the CPU to use.  Making sure this cache never misses can improve application performance.</p>
+<ol>
+<li>Enable Transparent Huge Pages (THP)
+<code>echo always &gt; /sys/kernel/mm/transparent_hugepage/enabled</code> -or- <code>echo madvise &gt; /sys/kernel/mm/transparent_hugepage/enabled</code></li>
+<li>On Linux kernels &gt;=6.9 Transparent Huge Pages (THP) has been extended with <a href="https://lwn.net/Articles/937239/">Folios</a> that create 16kB, and 64kB huge pages in addition to 2MB pages. This allows the Linux kernel to use huge pages in more places to increase performance by reducing TLB pressure.  All folio sizes can be set using <code>inherit</code> to use the setting of the top-level THP setting, or set independently to select the sizes to use.  Can also set each folio using <code>never</code>, <code>always</code> and <code>madvise</code>.
+<ol>
+<li>To use 16kB pages: <code>echo inherit &gt; /sys/kernel/mm/transparent_hugepage/hugepages-16kB/enabled</code></li>
+<li>To use 64kB pages: <code>echo inherit &gt; /sys/kernel/mm/transparent_hugepage/hugepages-64kB/enabled</code></li>
+<li>To use 2MB pages: <code>echo inherit &gt; /sys/kernel/mm/transparent_hugepage/hugepages-2048kB/enabled</code></li>
+</ol>
+</li>
+<li>If your application can use pinned hugepages because it uses mmap directly, try reserving huge pages directly via the OS.  This can be done by two methods.
+<ol>
+<li>At runtime: <code>sysctl -w vm.nr_hugepages=X</code></li>
+<li>At boot time by specifying on the kernel command line in <code>/etc/default/grub</code>: <code>hugepagesz=2M hugepages=512</code></li>
+</ol>
+</li>
+<li>For Java, hugepages can be used for both the code-heap and data-heap by adding the below flags to your JVM command line
+<ol>
+<li><code>-XX:+UseTransparentHugePages</code> when THP is set to at least <code>madvise</code></li>
+<li><code>-XX:+UseLargePages</code> if you have pre-allocated huge pages through <code>sysctl</code> or the kernel command line.</li>
+</ol>
+</li>
+</ol>
+<p>Using huge-pages should generally improve performance on all EC2 instance types, but there can be cases where using exclusively
+huge-pages may lead to performance degradation.  Therefore, it is always recommended to fully test your application after enabling and/or
+allocating huge-pages.</p>
+<h2 id="porting-and-optimizing-assembly-routines"><a class="header" href="#porting-and-optimizing-assembly-routines">Porting and optimizing assembly routines</a></h2>
+<ol>
+<li>If you need to port an optimized routine that uses x86 vector instruction instrinsics to Graviton’s vector instructions (called NEON instructions), you can use the <a href="https://github.com/DLTcollab/sse2neon">SSE2NEON</a> library to assist in the porting.  While SSE2NEON won’t produce optimal code, it generally gets close enough to reduce the performance penalty of not using the vector intrinsics.</li>
+<li>For additional information on the vector instructions used on Graviton
+<ol>
+<li><a href="https://developer.arm.com/architectures/instruction-sets/intrinsics/">Arm instrinsics guide</a></li>
+<li><a href="https://developer.arm.com/documentation/pjdoc466751330-9707/2-0">Graviton2 core software optimization guide</a></li>
+<li><a href="https://developer.arm.com/documentation/pjdoc466751330-9685/latest/">Graviton3 core software optimization guide</a></li>
+<li><a href="https://developer.arm.com/documentation/PJDOC-466751330-593177/latest/">Graviton4 core software optimization guide</a></li>
+</ol>
+</li>
+</ol>
+<h2 id="optimizing-synchronization-heavy-optimizations"><a class="header" href="#optimizing-synchronization-heavy-optimizations">Optimizing synchronization heavy optimizations</a></h2>
+<ol>
+<li>Look for specialized back-off routines for custom locks tuned using x86 <code>PAUSE</code> or the equivalent x86 <code>rep; nop</code> sequence. Graviton2 should use a single <code>ISB</code> instruction as a drop in replacement, for an example and explanation see recent commit to the <a href="https://github.com/wiredtiger/wiredtiger/pull/6080/files#diff-08a92383c3904f531b067c488d6d6e34ddad0e3008313982b1b0712c0c3a7598">Wired Tiger storage layer</a>.</li>
+<li>If a locking routine tries to acquire a lock in a fast path before forcing the thread to sleep via the OS to wait, try experimenting with modifying the fast path to attempt the fast path a few additional times before executing down the slow path. <a href="https://github.com/twitter/finagle/blob/develop/finagle-stats-core/src/main/scala/com/twitter/finagle/stats/NonReentrantReadWriteLock.scala">An example of this from the Finagle code-base where on Graviton2 we will spin longer for a lock before sleeping</a>.</li>
+<li>If you do not intend to run your application on Graviton1, try compiling your code on GCC using <code>-march=armv8.2-a</code> instead of using <code>-moutline-atomics</code> to reduce overhead of using synchronization builtins.</li>
+</ol>
+<h2 id="network-heavy-workload-optimizations"><a class="header" href="#network-heavy-workload-optimizations">Network heavy workload optimizations</a></h2>
+<ol>
+<li>Check ENA device tunings with <code>ethtool -c ethN</code> where <code>N</code> is the device number and check <code>Adaptive RX</code> setting. By default on instances without extra ENI’s this will be <code>eth0</code>.
+<ol>
+<li>Set to <code>ethtool -C ethN adpative-rx off</code> for a latency sensitive workload</li>
+<li>ENA tunings via <code>ethtool</code> can be made permanent by editing <code>/etc/sysconfig/network-scripts/ifcfg-ethN</code> files.</li>
+</ol>
+</li>
+<li>Disable <code>irqbalance</code> from dynamically moving IRQ processing between vCPUs and set dedicated cores to process each IRQ.  Example script below:</li>
+</ol>
+<pre><code class="language-bash"># Assign eth0 ENA interrupts to the first N-1 cores
+systemctl stop irqbalance
+  
+irqs=$(grep "eth0-Tx-Rx" /proc/interrupts | awk -F':' '{print $1}')
+cpu=0
+for i in $irqs; do
+  echo $cpu &gt; /proc/irq/$i/smp_affinity_list
+  let cpu=${cpu}+1
+done
+</code></pre>
+<ol start="3">
+<li>Disable Receive Packet Steering (RPS) to avoid contention and extra IPIs.
+<ol>
+<li><code>cat /sys/class/net/ethN/queues/rx-N/rps_cpus</code> and verify they are set to <code>0</code>. In general RPS is not needed on Graviton2 and newer.</li>
+<li>You can try using RPS if your situation is unique.  Read the <a href="https://www.kernel.org/doc/Documentation/networking/scaling.txt">documentation on RPS</a> to understand further how it might help. Also refer to <a href="https://aws.amazon.com/blogs/compute/optimizing-network-intensive-workloads-on-amazon-ec2-a1-instances/">Optimizing network intensive workloads on Amazon EC2 A1 Instances</a> for concrete examples.</li>
+</ol>
+</li>
+</ol>
+<h2 id="metal-instance-io-optimizations"><a class="header" href="#metal-instance-io-optimizations">Metal instance IO optimizations</a></h2>
+<ol>
+<li>If on Graviton2 and newer metal instances, try disabling the System MMU (Memory Management Unit) to speed up IO handling:</li>
+</ol>
+<pre><code class="language-bash">%&gt; cd ~/aws-gravition-getting-started/perfrunbook/utilities
+# Configure the SMMU to be off on metal, which is the default on x86.
+# Leave the SMMU on if you require the additional security protections it offers.
+# Virtualized instances do not expose an SMMU to instances.
+%&gt; sudo ./configure_graviton_metal_iommu.sh off
+%&gt; sudo shutdown now -r
+</code></pre>
+
+                    </main>
+
+                    <nav class="nav-wrapper" aria-label="Page navigation">
+                        <!-- Mobile navigation buttons -->
+                            <a rel="prev" href="../perfrunbook/debug_hw_perf.html" class="mobile-nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
+                                <i class="fa fa-angle-left"></i>
+                            </a>
+
+                            <a rel="next prefetch" href="../perfrunbook/appendix.html" class="mobile-nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
+                                <i class="fa fa-angle-right"></i>
+                            </a>
+
+                        <div style="clear: both"></div>
+                    </nav>
+                </div>
+            </div>
+
+            <nav class="nav-wide-wrapper" aria-label="Page navigation">
+                    <a rel="prev" href="../perfrunbook/debug_hw_perf.html" class="nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
+                        <i class="fa fa-angle-left"></i>
+                    </a>
+
+                    <a rel="next prefetch" href="../perfrunbook/appendix.html" class="nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
+                        <i class="fa fa-angle-right"></i>
+                    </a>
+            </nav>
+
+        </div>
+
+
+
+
+        <script>
+            window.playground_copyable = true;
+        </script>
+
+
+        <script src="../elasticlunr.min.js"></script>
+        <script src="../mark.min.js"></script>
+        <script src="../searcher.js"></script>
+
+        <script src="../clipboard.min.js"></script>
+        <script src="../highlight.js"></script>
+        <script src="../book.js"></script>
+
+        <!-- Custom JS scripts -->
+
+
+
+    </div>
+    </body>
+</html>

@@ -1,0 +1,8 @@
+{
+    "version":"2.0",
+    "routeKey":"POST /",
+    "rawPath":"/",
+    "rawQueryString":"",
+    "body":"{ \"number\": \"234\", \"type\": \"date\" }",
+    "isBase64Encoded":false
+ }
