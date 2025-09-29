@@ -223,30 +223,31 @@
 <h1 id="transitioning-to-graviton"><a class="header" href="#transitioning-to-graviton">Transitioning to Graviton</a></h1>
 <p>If you are new to Graviton and want to understand how to identify target workloads, how to plan a transition project, how to test your workloads on AWS Graviton and finally how deploy in production, please read <a href="transition-guide.html">the key considerations to take into account when transitioning workloads to AWS Graviton based Amazon EC2 instances</a>.</p>
 <h1 id="building-for-graviton"><a class="header" href="#building-for-graviton">Building for Graviton</a></h1>
-<p>|Processor	|Graviton2	|Graviton3(E)	| Graviton4 |
-|---	|---	|---	|--- |
-|Instances	|<a href="https://aws.amazon.com/ec2/instance-types/m6g/">M6g/M6gd</a>, <a href="https://aws.amazon.com/ec2/instance-types/c6g/">C6g/C6gd/C6gn</a>, <a href="https://aws.amazon.com/ec2/instance-types/r6g/">R6g/R6gd</a>, <a href="https://aws.amazon.com/ec2/instance-types/t4g">T4g</a>, <a href="https://aws.amazon.com/ec2/instance-types/x2/">X2gd</a>, <a href="https://aws.amazon.com/ec2/instance-types/g5g/">G5g</a>, and <a href="https://aws.amazon.com/ec2/instance-types/i4g/">I4g/Im4gn/Is4gen</a>	|<a href="https://aws.amazon.com/ec2/instance-types/c7g/">C7g/C7gd/C7gn</a>, <a href="https://aws.amazon.com/ec2/instance-types/m7g/">M7g/M7gd</a>, <a href="https://aws.amazon.com/ec2/instance-types/r7g/">R7g/R7gd</a>, and <a href="https://aws.amazon.com/ec2/instance-types/hpc7g/">Hpc7g</a>	|<a href="https://aws.amazon.com/ec2/instance-types/c8g/">C8g</a>, <a href="https://aws.amazon.com/ec2/instance-types/m8g/">M8g</a>, <a href="https://aws.amazon.com/ec2/instance-types/r8g/">R8g</a>, <a href="https://aws.amazon.com/ec2/instance-types/x8g/">X8g</a>, and <a href="https://aws.amazon.com/ec2/instance-types/i8g/">I8g</a> |
-|Core	|<a href="https://developer.arm.com/documentation/100616/0301">Neoverse-N1</a>	|<a href="https://developer.arm.com/documentation/101427/latest/">Neoverse-V1</a>	|<a href="https://developer.arm.com/documentation/102375/latest">Neoverse-V2</a> |
-|Frequency	|2500MHz	|2600MHz	|2800MHz (2700MHz for 48xlarge) |
-|Turbo supported	|No	|No	|No |
-|Software Optimization Guide (Instruction Throughput and Latency)|<a href="https://developer.arm.com/documentation/pjdoc466751330-9707/latest/">SWOG</a>|<a href="https://developer.arm.com/documentation/pjdoc466751330-9685/latest/">SWOG</a> |<a href="https://developer.arm.com/documentation/PJDOC-466751330-593177/latest/">SWOG</a> |
-|Interconnect	|CMN-600	|CMN-650	|CMN-700 |
-|Architecture revision	|ARMv8.2-a	|ARMv8.4-a	|Armv9.0-a |
-|<a href="https://developer.arm.com/documentation/ka006014/latest/">32bit Backward Compatibility</a> |Userspace only |Userspace only |No support |
-|Additional  features	|fp16, rcpc, dotprod, crypto	|sve, rng, bf16, int8	|sve2, sve-int8, sve-bf16, sve-bitperm, sve-crypto |
-|Recommended <code>-mcpu</code> flag	(<a href="c-c++.html#enabling-arm-architecture-specific-features">more information</a>)|<code>neoverse-n1</code> |<code>neoverse-512tvb</code> |<code>neoverse-512tvb</code> |
-|RNG Instructions	|No	|Yes	|Yes |
-|SIMD instructions	|2x Neon 128bit vectors	|4x Neon 128bit vectors / 2x SVE 256bit	|4x Neon/SVE 128bit vectors |
-|LSE (atomic mem operations)	|yes	|yes	|yes |
-|Pointer Authentication	|no	|yes	|yes |
-|Branch Target Identification |no |no |yes |
-|Cores	|64	|64	|96 per socket (192 for 2-socket 48xlarge) |
-|L1 cache (per core)	|64kB inst / 64kB data	|64kB inst / 64kB data	|64kB inst / 64kB data |
-|L2 cache (per core)	|1MB	|1MB	|2MB |
-|LLC (shared)	|32MB	|32MB	|36MB |
-|Memory (NUMA) nodes | 1 | 1 | 1  (2 for 48xlarge)
-|DRAM	|8x DDR4	|8x DDR5	|12x DDR5 (24x for 48xlarge) |
-|DDR Encryption	|yes	|yes	|yes |</p>
+<div class="table-wrapper"><table><thead><tr><th>Processor</th><th>Graviton2</th><th>Graviton3(E)</th><th>Graviton4</th></tr></thead><tbody>
+<tr><td>Instances</td><td><a href="https://aws.amazon.com/ec2/instance-types/m6g/">M6g/M6gd</a>, <a href="https://aws.amazon.com/ec2/instance-types/c6g/">C6g/C6gd/C6gn</a>, <a href="https://aws.amazon.com/ec2/instance-types/r6g/">R6g/R6gd</a>, <a href="https://aws.amazon.com/ec2/instance-types/t4g">T4g</a>, <a href="https://aws.amazon.com/ec2/instance-types/x2/">X2gd</a>, <a href="https://aws.amazon.com/ec2/instance-types/g5g/">G5g</a>, and <a href="https://aws.amazon.com/ec2/instance-types/i4g/">I4g/Im4gn/Is4gen</a></td><td><a href="https://aws.amazon.com/ec2/instance-types/c7g/">C7g/C7gd/C7gn</a>, <a href="https://aws.amazon.com/ec2/instance-types/m7g/">M7g/M7gd</a>, <a href="https://aws.amazon.com/ec2/instance-types/r7g/">R7g/R7gd</a>, and <a href="https://aws.amazon.com/ec2/instance-types/hpc7g/">Hpc7g</a></td><td><a href="https://aws.amazon.com/ec2/instance-types/c8g/">C8g</a>, <a href="https://aws.amazon.com/ec2/instance-types/m8g/">M8g</a>, <a href="https://aws.amazon.com/ec2/instance-types/r8g/">R8g</a>, <a href="https://aws.amazon.com/ec2/instance-types/x8g/">X8g</a>, and <a href="https://aws.amazon.com/ec2/instance-types/i8g/">I8g</a></td></tr>
+<tr><td>Core</td><td><a href="https://developer.arm.com/documentation/100616/0301">Neoverse-N1</a></td><td><a href="https://developer.arm.com/documentation/101427/latest/">Neoverse-V1</a></td><td><a href="https://developer.arm.com/documentation/102375/latest">Neoverse-V2</a></td></tr>
+<tr><td>Frequency</td><td>2500MHz</td><td>2600MHz</td><td>2800MHz (2700MHz for 48xlarge)</td></tr>
+<tr><td>Turbo supported</td><td>No</td><td>No</td><td>No</td></tr>
+<tr><td>Software Optimization Guide (Instruction Throughput and Latency)</td><td><a href="https://developer.arm.com/documentation/pjdoc466751330-9707/latest/">SWOG</a></td><td><a href="https://developer.arm.com/documentation/pjdoc466751330-9685/latest/">SWOG</a></td><td><a href="https://developer.arm.com/documentation/PJDOC-466751330-593177/latest/">SWOG</a></td></tr>
+<tr><td>Interconnect</td><td>CMN-600</td><td>CMN-650</td><td>CMN-700</td></tr>
+<tr><td>Architecture revision</td><td>ARMv8.2-a</td><td>ARMv8.4-a</td><td>Armv9.0-a</td></tr>
+<tr><td><a href="https://developer.arm.com/documentation/ka006014/latest/">32bit Backward Compatibility</a></td><td>Userspace only</td><td>Userspace only</td><td>No support</td></tr>
+<tr><td>Additional  features</td><td>fp16, rcpc, dotprod, crypto</td><td>sve, rng, bf16, int8</td><td>sve2, sve-int8, sve-bf16, sve-bitperm, sve-crypto</td></tr>
+<tr><td>Recommended <code>-mcpu</code> flag	(<a href="c-c++.html#enabling-arm-architecture-specific-features">more information</a>)</td><td><code>neoverse-n1</code></td><td><code>neoverse-512tvb</code></td><td><code>neoverse-512tvb</code></td></tr>
+<tr><td>RNG Instructions</td><td>No</td><td>Yes</td><td>Yes</td></tr>
+<tr><td>SIMD instructions</td><td>2x Neon 128bit vectors</td><td>4x Neon 128bit vectors / 2x SVE 256bit</td><td>4x Neon/SVE 128bit vectors</td></tr>
+<tr><td>LSE (atomic mem operations)</td><td>yes</td><td>yes</td><td>yes</td></tr>
+<tr><td>Pointer Authentication</td><td>no</td><td>yes</td><td>yes</td></tr>
+<tr><td>Branch Target Identification</td><td>no</td><td>no</td><td>yes</td></tr>
+<tr><td>Cores</td><td>64</td><td>64</td><td>96 per socket (192 for 2-socket 48xlarge)</td></tr>
+<tr><td>L1 cache (per core)</td><td>64kB inst / 64kB data</td><td>64kB inst / 64kB data</td><td>64kB inst / 64kB data</td></tr>
+<tr><td>L2 cache (per core)</td><td>1MB</td><td>1MB</td><td>2MB</td></tr>
+<tr><td>LLC (shared)</td><td>32MB</td><td>32MB</td><td>36MB</td></tr>
+<tr><td>Memory (NUMA) nodes</td><td>1</td><td>1</td><td>1  (2 for 48xlarge)</td></tr>
+<tr><td>DRAM</td><td>8x DDR4</td><td>8x DDR5</td><td>12x DDR5 (24x for 48xlarge)</td></tr>
+<tr><td>DDR Encryption</td><td>yes</td><td>yes</td><td>yes</td></tr>
+</tbody></table>
+</div>
 <h1 id="optimizing-for-graviton"><a class="header" href="#optimizing-for-graviton">Optimizing for Graviton</a></h1>
 <p>Please refer to <a href="optimizing.html">optimizing</a> for general debugging and profiling information.  For detailed checklists on optimizing and debugging performance on Graviton, see our <a href="perfrunbook/README.html">performance runbook</a>.</p>
 <p>Different architectures and systems have differing capabilities, which means some tools you might be familiar with on one architecture don't have equivalent on AWS Graviton. Documented <a href="Monitoring_Tools_on_Graviton.html">Monitoring Tools</a> with some of these utilities.</p>
